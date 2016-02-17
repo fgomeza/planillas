@@ -1,0 +1,54 @@
+﻿@using SistemaDePlanillas.Models
+@{ 
+    var config = (ViewConfig)ViewData["config"];
+    string title = config!= null && config.title != null ? config.title : "Sin especificar titulo o config";
+    string bodyClass = config != null && config.showNavbar ? "body-navbar" : "body-nonNavbar";
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>@title</title>
+        
+        <link rel="stylesheet" href="~/Content/bootstrap.css" />
+        <link rel="stylesheet" href="~/Content/site.css" />
+
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script src="~/Scripts/bootstrap.js"></script>
+        <script src="~/Scripts/site.js"></script>    
+
+    </head>
+    <body>
+        @{
+            if (config != null && config.showNavbar)
+            {
+                @Html.Partial("~/Views/Shared/Navbar.cshtml")
+
+            }
+        }
+        <div class="@bodyClass">
+            <div class="content">
+                @{
+                    if (config != null && config.showMenubar)
+                    {
+                        <div class="row">
+                            <div class="col-md-2">
+                                @Html.Partial("~/Views/Shared/Menubar.cshtml")
+                            </div>
+                            <div class="col-md-10">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    }
+                    else
+                    {           
+                        @RenderBody()
+                    }
+                }
+            </div>
+        </div>
+    </body>
+</html>

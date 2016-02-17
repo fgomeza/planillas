@@ -1,0 +1,11 @@
+﻿<input type="text" id="text" />
+<input type="button" onclick="enviar()" title="Enviar" />
+<script>
+    function enviar(){
+        var text = $("#text").val();
+        $.post("/api/webapi/" + text, {}, function (msj) {
+            alert(msj);
+        })
+    }
+
+</script>
