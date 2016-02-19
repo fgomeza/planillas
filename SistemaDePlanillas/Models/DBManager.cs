@@ -9,7 +9,13 @@ namespace SistemaDePlanillas.Models
 {
     public class DBManager
     {
+<<<<<<< HEAD
         //comentario salvaje >:D
+=======
+
+
+        // prueba
+>>>>>>> origin/master
         private static DBManager single;
         private NpgsqlConnection cnx;
         // private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
