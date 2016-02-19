@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models
     {
 
 
-        // prueba
+        // prueba2
         private static DBManager single;
         private NpgsqlConnection cnx;
         // private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
