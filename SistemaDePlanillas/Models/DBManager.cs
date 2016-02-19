@@ -10,6 +10,7 @@ namespace SistemaDePlanillas.Models
     public class DBManager
     {
         //comentario 2
+        //comentario 3
 
         private static DBManager single;
         private NpgsqlConnection cnx;
