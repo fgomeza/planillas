@@ -9,6 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         static string add1()
         {
+
             var res=DBManager.getInstance().addExtra(1, "detalle", 42525252);
             if (res.status == 0)
             {
