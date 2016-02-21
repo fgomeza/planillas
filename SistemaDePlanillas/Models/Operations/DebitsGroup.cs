@@ -7,10 +7,9 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        static string add1()
+        static string add1(User user, int employee, string detail, int amount)
         {
-
-            var res=DBManager.getInstance().addExtra(1, "detalle", 42525252);
+            var res = DBManager.getInstance().addDebit(employee, detail, amount);
             if (res.status == 0)
             {
                 return "{status:'OK'}";
