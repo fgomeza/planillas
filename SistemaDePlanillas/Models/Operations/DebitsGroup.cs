@@ -9,6 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         static string add1(User user, int employee, string detail, int amount)
         {
+
             var res = DBManager.getInstance().addDebit(employee, detail, amount);
             if (res.status == 0)
             {
