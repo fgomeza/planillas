@@ -7,11 +7,11 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        static string add1(User user, int employee, string detail, int amount)
+        public static string AddFixedDebit(User user, int employee, string detail, int amount)
         {
 
-            var res = DBManager.getInstance().addDebit(employee, detail, amount);
-            if (res.status == 0)
+            var response = DBManager.getInstance().addDebit(employee, detail, amount);
+            if (response.status == 0)
             {
                 return "{status:'OK'}";
             }
