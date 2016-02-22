@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Controllers
                 var Session = HttpContext.Current.Session;
 
                 SessionManager sm = SessionManager.getInstance();
-
+            
                 //checks if the user is logged
                 if (!sm.isLogged(Session))
                 {
