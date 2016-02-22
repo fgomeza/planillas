@@ -3,9 +3,16 @@
 <script>
     function enviar(){
         var text = $("#text").val();
-        $.post("/api/webapi/" + text, {}, function (msj) {
-            alert(msj);
-        })
+        var dataJSON = { name: text};
+        $.ajax({
+            url: "api/Default",
+            type: "GET",
+            //data: JSON.stringify(dataJSON),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) { alert(data); },
+            error: function () { alert('error'); }
+        });
     }
 
 </script>
