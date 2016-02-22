@@ -42,17 +42,15 @@ namespace SistemaDePlanillas.Controllers
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
 
                 //formatting the class name
-                string groupType = group.ToLower();
-                groupType = groupType.First().ToString().ToUpper() + groupType.Substring(1);
-                groupType = "SistemaDePlanillas.Models.Operations." + groupType + "Group";
+                string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
 
                 //Uses reflexion to get the correct method
-                Type type = Type.GetType(groupType);
+                Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
                     return "{status:'ERROR', error:12, detail:'No se encuentra el grupo: " + group + ", imposible realizar operacion'}";
                 }
-                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase);
                 if (method == null)
                 {
                     return "{status:'ERROR', error:13, detail:'No se encuentra la operacion: " + group + "/" + operation + "'}";
