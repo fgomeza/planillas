@@ -7,10 +7,10 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        static string add1(User user, int employee, string detail, int amount)
+        public static string add1(User user, long employee, string detail, long amount)
         {
 
-            var res = DBManager.getInstance().addDebit(employee, detail, amount);
+            var res = DBManager.getInstance().addDebit((int)employee, detail, amount);
             if (res.status == 0)
             {
                 return "{status:'OK'}";
@@ -20,5 +20,11 @@ namespace SistemaDePlanillas.Models.Operations
                 return "{status:'ERROR', error:43141, detail:'Paso algo grave :('}";
             }
         }
+
+        public static string test(User user, string texto, long numero, double dec)
+        {
+            return "Recibido: "+user.name+","+texto+"," + numero+"," + dec;
+        }
+
     }
 }
