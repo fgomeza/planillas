@@ -11,8 +11,8 @@ namespace SistemaDePlanillas.Models
     {
 
         private static DBManager single;
-        private NpgsqlConnection cnx;
-        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
+        private NpgsqlConnection connection;
+        private string stringConnect = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=admin;";
         // Francisco
         // private string stringConnect = "Server=localhost;Port=5432;Database=planillas;User Id=postgres;Password=postgres;";
         private string OK = "OK";
@@ -27,11 +27,11 @@ namespace SistemaDePlanillas.Models
         private bool connect()
         {   try
             {
-                cnx = new NpgsqlConnection(stringConnect);
-                cnx.Open();
+                connection = new NpgsqlConnection(stringConnect);
+                connection.Open();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -39,14 +39,14 @@ namespace SistemaDePlanillas.Models
 
         public Result<string> addCmsEmployee(string idCard, string CMS, string name, int location, string account)
         {
-            Result<string> res = new Result<string>();
-            res.status= Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status= Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_01", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -65,42 +65,42 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[4].Value = account;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] splitMessage = result.detail.Split(',');
+                    result.status = (splitMessage[0] == OK) ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = splitMessage[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
             
         }
         public Result<string> updateCmsEmployeee(int id, string idCard, string CMS, string name, int location, string account)
         {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_03", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -122,91 +122,91 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[5].Value = account;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] v = result.detail.Split(',');
+                    result.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = v[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
         }
         public Result<List<Employee>> selectAllCmsEmployees(int location)
         {
-            Result<List<Employee>> res = new Result<List<Employee>>();
-            res.status = Result<int>.ERROR;
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_08", cnx);
-                    command.Transaction = tran;
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_08", connection);
+                    command.Transaction = transaction;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
                     command.Parameters[0].Value = location;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
 
-                    res.detail = new List<Employee>();
-                    while (dr.Read())
+                    result.detail = new List<Employee>();
+                    while (dataReader.Read())
                     {
                         Employee emp = new Employee();
-                        emp.id = dr.GetInt64(0);
-                        emp.idCard = dr.GetString(1);
-                        emp.name = dr.GetString(2);
-                        emp.location = dr.GetString(3);
-                        emp.account = dr.GetString(4);
-                        emp.cmsText = dr.GetString(5);
-                        emp.calls = dr.GetInt64(6);
-                        res.detail.Add(emp);
+                        emp.id = dataReader.GetInt64(0);
+                        emp.idCard = dataReader.GetString(1);
+                        emp.name = dataReader.GetString(2);
+                        emp.location = dataReader.GetString(3);
+                        emp.account = dataReader.GetString(4);
+                        emp.cmsText = dataReader.GetString(5);
+                        emp.calls = dataReader.GetInt64(6);
+                        result.detail.Add(emp);
                     }
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    result.status = Result<int>.OK;
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    cnx.Close();
-                    return res;
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                return res;
+                return result;
             }
         }
         public Result<string> updateCalls(int id, int calls)
         {
 
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_10", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_10", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -215,43 +215,43 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Integer;
                     command.Parameters[1].Value = calls;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] v = result.detail.Split(',');
+                    result.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = v[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
         }
 
 
         public Result<string> addNonCmsEmployee(string idCard, string name, int location, string account, float salary)
         {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_02", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -270,41 +270,41 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[4].Value = salary;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] v = result.detail.Split(',');
+                    result.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = v[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
         }
         public Result<string> updateNonCmsEmployeee(int id, string idCard, string name, int location, string account, float salary)
         {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_04", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_04", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -326,165 +326,165 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[5].Value = salary;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] v = result.detail.Split(',');
+                    result.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = v[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
         }
         public Result<List<Employee>> selectAllNonCmsEmployees(int location)
         {
-            Result<List<Employee>> res = new Result<List<Employee>>();
-            res.status = Result<int>.ERROR;
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_09", cnx);
-                    command.Transaction = tran;
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_09", connection);
+                    command.Transaction = transaction;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
                     command.Parameters[0].Value = location;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
 
-                    res.detail = new List<Employee>();
-                    while (dr.Read())
+                    result.detail = new List<Employee>();
+                    while (dataReader.Read())
                     {
                         Employee emp = new Employee();
-                        emp.id = dr.GetInt64(0);
-                        emp.idCard = dr.GetString(1);
-                        emp.name = dr.GetString(2);
-                        emp.location = dr.GetString(3);
-                        emp.account = dr.GetString(4);
-                        emp.salary = dr.GetDouble(5);
-                        res.detail.Add(emp);
+                        emp.id = dataReader.GetInt64(0);
+                        emp.idCard = dataReader.GetString(1);
+                        emp.name = dataReader.GetString(2);
+                        emp.location = dataReader.GetString(3);
+                        emp.account = dataReader.GetString(4);
+                        emp.salary = dataReader.GetDouble(5);
+                        result.detail.Add(emp);
                     }
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    result.status = Result<int>.OK;
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    cnx.Close();
-                    return res;
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                return res;
+                return result;
             }
         }
 
         public Result<string> deleteEmployee(int id)
         {
 
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            Result<string> result = new Result<string>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_05", cnx);
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_05", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
                     command.Parameters[0].Value = id;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                        result.detail = dataReader.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
+                    string[] v = result.detail.Split(',');
+                    result.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
+                    result.detail = v[1];
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
+                    result.detail = "Error en la base de datos.";
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                result.detail = "No se pudo conectar a la base de datos.";
+                return result;
             }
         }
         public Result<Employee> selectEmployee(int id)
         {
-            Result<Employee> res = new Result<Employee>();
-            res.status = Result<int>.ERROR;
+            Result<Employee> result = new Result<Employee>();
+            result.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_06", cnx);
-                    command.Transaction = tran;
+                    NpgsqlTransaction transaction = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_06", connection);
+                    command.Transaction = transaction;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
                     command.Parameters[0].Value = id;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
+                    NpgsqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
                     {
                         Employee emp = new Employee();
                         emp.id = id;
-                        emp.idCard = dr.GetString(0);
-                        emp.name = dr.GetString(1);
-                        emp.location = dr.GetString(2);
-                        emp.account = dr.GetString(3);
-                        emp.cms = dr.GetBoolean(4);
-                        res.detail=emp;
+                        emp.idCard = dataReader.GetString(0);
+                        emp.name = dataReader.GetString(1);
+                        emp.location = dataReader.GetString(2);
+                        emp.account = dataReader.GetString(3);
+                        emp.cms = dataReader.GetBoolean(4);
+                        result.detail=emp;
                     }
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    dataReader.Close();
+                    transaction.Commit();
+                    connection.Close();
+                    result.status = Result<int>.OK;
+                    return result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    cnx.Close();
-                    return res;
+                    connection.Close();
+                    return result;
                 }
             }
             else
             {
-                return res;
+                return result;
             }
         }
         public Result<List<Employee>> selectAllEmployees(int location)
@@ -495,8 +495,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_07", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTR_07", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -520,13 +520,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -544,8 +544,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDF_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -567,13 +567,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -591,8 +591,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDF_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -614,13 +614,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -638,8 +638,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDF_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -655,13 +655,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -679,8 +679,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDF_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -701,13 +701,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -724,8 +724,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDF_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -747,13 +747,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -771,8 +771,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -800,13 +800,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -824,8 +824,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -857,13 +857,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -881,8 +881,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -898,13 +898,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -922,8 +922,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -949,13 +949,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -972,8 +972,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -999,13 +999,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1022,8 +1022,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_06", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_06", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1039,13 +1039,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1063,8 +1063,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_07", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FDC_07", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1082,13 +1082,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1107,8 +1107,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FEX_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1130,13 +1130,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1154,8 +1154,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FEX_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1177,13 +1177,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1201,8 +1201,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FEX_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1218,13 +1218,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1242,8 +1242,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FEX_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1264,13 +1264,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1287,8 +1287,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FEX_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1309,13 +1309,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1333,8 +1333,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1359,13 +1359,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1383,8 +1383,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1412,13 +1412,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1436,8 +1436,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1453,13 +1453,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1477,8 +1477,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1503,13 +1503,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1526,8 +1526,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1552,13 +1552,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1575,8 +1575,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_06", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_06", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1592,13 +1592,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1616,8 +1616,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_07", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FMU_07", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1636,13 +1636,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1661,8 +1661,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1684,13 +1684,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1708,8 +1708,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1734,13 +1734,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1758,8 +1758,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1775,13 +1775,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1799,8 +1799,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1821,13 +1821,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1844,8 +1844,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1865,13 +1865,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1888,8 +1888,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_06", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_06", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1913,13 +1913,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1937,8 +1937,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FSE_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -1954,13 +1954,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -1978,8 +1978,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FSE_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -1998,13 +1998,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2022,8 +2022,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FSE_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2039,13 +2039,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2063,8 +2063,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -2079,13 +2079,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2103,8 +2103,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FRO_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2120,13 +2120,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2144,8 +2144,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FRO_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2164,13 +2164,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2188,8 +2188,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FRO_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2205,13 +2205,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2229,8 +2229,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("Fro_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -2244,13 +2244,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2268,8 +2268,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPRR_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPRR_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2287,13 +2287,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2311,8 +2311,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPRR_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FPRR_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2330,13 +2330,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2354,8 +2354,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FOP_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FOP_03", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2373,13 +2373,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2397,8 +2397,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FGO_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FGO_01", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -2415,13 +2415,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2439,8 +2439,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FOP_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FOP_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -2459,13 +2459,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2483,8 +2483,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_01", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_01", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2515,13 +2515,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2539,8 +2539,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_02", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_02", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2574,13 +2574,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2598,8 +2598,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_03", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_03", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
@@ -2615,13 +2615,13 @@ namespace SistemaDePlanillas.Models
                     res.detail = v[1];
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
                 catch (Exception e)
                 {
                     res.detail = "Error en la base de datos.";
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2639,8 +2639,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_04", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_04", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2664,13 +2664,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2687,8 +2687,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_05", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_05", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -2708,13 +2708,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
@@ -2731,8 +2731,8 @@ namespace SistemaDePlanillas.Models
             {
                 try
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_06", cnx);
+                    NpgsqlTransaction tran = connection.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FUS_06", connection);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
@@ -2763,13 +2763,13 @@ namespace SistemaDePlanillas.Models
                     }
                     dr.Close();
                     tran.Commit();
-                    cnx.Close();
+                    connection.Close();
                     res.status = res.detail.id==-1? Result<int>.ERROR: Result<int>.OK;
                     return res;
                 }
                 catch (Exception e)
                 {
-                    cnx.Close();
+                    connection.Close();
                     return res;
                 }
             }
