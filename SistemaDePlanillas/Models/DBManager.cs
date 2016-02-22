@@ -9,7 +9,12 @@ namespace SistemaDePlanillas.Models
 {
     public class DBManager
     {
+<<<<<<< HEAD
 
+=======
+        //comentario 2
+        //comentario 3
+>>>>>>> refs/remotes/origin/master
         private static DBManager single;
         private NpgsqlConnection connection;
         private string stringConnect = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=admin;";

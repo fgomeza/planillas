@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.SessionState;
 
 namespace SistemaDePlanillas.Models
 {
@@ -66,6 +67,16 @@ namespace SistemaDePlanillas.Models
         }
 
         public User getUser(HttpSessionStateBase session)
+        {
+            return (User)session["user"];
+        }
+
+        public bool isLogged(HttpSessionState session)
+        {
+            return session["user"] != null;
+        }
+
+        public User getUser(HttpSessionState session)
         {
             return (User)session["user"];
         }
