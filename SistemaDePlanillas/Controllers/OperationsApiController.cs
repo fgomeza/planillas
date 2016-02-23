@@ -21,12 +21,11 @@ namespace SistemaDePlanillas.Controllers
                 var Session = HttpContext.Current.Session;
 
                 SessionManager sm = SessionManager.getInstance();
-                ViewManager vm = ViewManager.getInstance();
-
+            
                 //checks if the user is logged
                 if (!sm.isLogged(Session))
                 {
-                    return "{status:'ERROR', error:10, detail:'No se ha iniciado sesion'}";
+                    return Responses.Error(10, "No se ha iniciado sesion");
                 }
 
                 User user = sm.getUser(Session);
@@ -42,36 +41,34 @@ namespace SistemaDePlanillas.Controllers
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
 
                 //formatting the class name
-                string groupType = group.ToLower();
-                groupType = groupType.First().ToString().ToUpper() + groupType.Substring(1);
-                groupType = "SistemaDePlanillas.Models.Operations." + groupType + "Group";
+                string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
 
                 //Uses reflexion to get the correct method
-                Type type = Type.GetType(groupType);
+                Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
-                    return "{status:'ERROR', error:12, detail:'No se encuentra el grupo: " + group + ", imposible realizar operacion'}";
+                    return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
                 }
-                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase);
                 if (method == null)
                 {
-                    return "{status:'ERROR', error:13, detail:'No se encuentra la operacion: " + group + "/" + operation + "'}";
+                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
                 }
-
+                
                 //call the method
                 return (string)method.Invoke(null, parameters);
             }
             catch (TargetParameterCountException)
             {
-                return "{status:'ERROR', error:14, detail: 'No coincide el numero de parametros esperado para: " + group + "/" + operation + "'}";
+                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation);
             }
             catch (ArgumentException)
             {
-                return "{status:'ERROR', error:15, detail: 'No coincide el tipo de los argumentos esperados para: " + group + "/" + operation + "'}";
+                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation);
             }
             catch (Exception e)
             {
-                return "{status:'ERROR', error:-1, detail: 'Ah ocurrido una excepcion no controlada: " + e.Message + "}";
+                return Responses.ExceptionError(e);
             }
         }
 
