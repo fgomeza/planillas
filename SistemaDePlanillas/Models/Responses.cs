@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace SistemaDePlanillas.Models
 {
     public class Responses
     {
         public static readonly string OK= "{status:'OK'}";
+        private static JavaScriptSerializer js = new JavaScriptSerializer();
 
         public static string Error(int errorCode)
         {
@@ -25,13 +27,35 @@ namespace SistemaDePlanillas.Models
             return status == 0 ? OK : Error(status);
         }
 
+        public static string Error(int errorCode, string detail)
+        {
+            return "{status:'ERROR', error:"+errorCode+", detail:'" + detail + "'}";
+        }
+
+        public static string WithData(string JSON)
+        {
+            return "{status:'OK', data:" + JSON + "}";
+        }
+
+        public static string WithData(object data)
+        {
+            return "{status:'OK', data:"+js.Serialize(data)+"}";
+        }
+
     }
 
     public class Errors
     {
-        private Dictionary<int, string> detalles;
+        private Dictionary<int, string> details;
 
         private static Errors instance;
+
+        private Errors()
+        {
+            details = new Dictionary<int, string>();
+            //leer errores de la base de datos
+            //insertarlos
+        }
         
         public static Errors getInstance()
         {
@@ -40,8 +64,7 @@ namespace SistemaDePlanillas.Models
 
         public string getDetail(int errorCode)
         {
-            //return detalles[errorCode];
-            return "detalle del error (por implementar)";
+            return details.ContainsKey(errorCode) ? details[errorCode] : "Error desconocido";
         }
     }
 }
