@@ -13,7 +13,8 @@ namespace SistemaDePlanillas.Controllers
         
         public ActionResult process(string group, string operation)
         {
-            SessionManager sm = SessionManager.getInstance(); 
+            SessionManager sm = SessionManager.getInstance();
+            ViewManager vm = ViewManager.getInstance();
             if (!sm.isLogged(Session))
             {
                 return View("error");
