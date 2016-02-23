@@ -177,6 +177,7 @@
     <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
+    <Compile Include="Models\Responses.cs" />
     <Compile Include="Models\SessionManager.cs" />
     <Compile Include="Models\ViewManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
