@@ -15,6 +15,11 @@ namespace SistemaDePlanillas.Models
                 Errors.getInstance().getDetail(errorCode)+"'}";
         }
 
+        public static string ExceptionError(Exception e)
+        {
+            return "{status:'ERROR', error: -1, detail:'" +e.Message+ "'}";
+        }
+
         public static string Simple(int status)
         {
             return status == 0 ? OK : Error(status);
