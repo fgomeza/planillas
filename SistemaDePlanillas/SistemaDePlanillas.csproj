@@ -174,7 +174,7 @@
     </Compile>
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
-    <Compile Include="Models\ErrorManager.cs" />
+    <Compile Include="Models\MesageManager.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
