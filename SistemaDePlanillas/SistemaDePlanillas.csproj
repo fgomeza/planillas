@@ -164,13 +164,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OperationsApiController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
+    <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\SessionManager.cs" />
     <Compile Include="Models\ViewManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -220,6 +223,7 @@
     <Content Include="Views\Shared\Navbar.cshtml" />
     <Content Include="Views\Operations\Debits\Add.cshtml" />
     <Content Include="Views\Operations\Debits\remove.cshtml" />
+    <Content Include="Views\Home\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

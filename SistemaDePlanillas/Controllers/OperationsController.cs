@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Controllers
     public class OperationsController : Controller
     {
         // GET: Operations
-
+        
         public ActionResult process(string group, string operation)
         {
             SessionManager sm = SessionManager.getInstance();
@@ -33,5 +33,6 @@ namespace SistemaDePlanillas.Controllers
             };
             return View(group+"/"+operation);
         }
+
     }
 }
