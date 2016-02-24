@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Controllers
 {
     public class HomeController : Controller
     {
-        public string Index()
+        public string Login()
         {
             if (!SessionManager.getInstance().isLogged(Session))
             {
@@ -28,9 +28,19 @@ namespace SistemaDePlanillas.Controllers
             return View("index");
         }
 
-        public string holaMundo()
+        public ActionResult Index()
         {
-            return "hola mundo";
+            ViewData["config"] = new ViewConfig
+            {
+                title = "index",
+            };
+            return View("index");
         }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
+
     }
 }

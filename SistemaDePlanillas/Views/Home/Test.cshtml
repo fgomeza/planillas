@@ -1,0 +1,17 @@
+﻿<h1>Super Testing</h1>
+<hr />
+Grupo<input type="text" id="group" />
+Operacion<input type="text" id="operation" />
+Parametros<input type="text" id="args">
+<button type="button" onclick="enviar()">Enviar</button>
+<hr>
+<div id="result"></div>
+<script>
+    var enviar = function () {
+        actionString($("#group").val(), $("#operation").val(), $("#args").val(),
+            function (res) {
+                $("#result").html(res)
+            });
+    }
+
+</script>

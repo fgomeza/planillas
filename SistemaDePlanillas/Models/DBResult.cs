@@ -13,7 +13,6 @@ namespace SistemaDePlanillas.Models
         public T detail;
     }
 
-    //JAFET SE COME DOBLADA
     public class Employee
     {
         public long id;
