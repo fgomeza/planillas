@@ -33,7 +33,7 @@ namespace SistemaDePlanillas.Controllers
                 //checks if the user have privileges to do the current operation
                 //if (!sm.verifyOperation(user, group, operation))
                 //{
-                //    return "{status:'ERROR', error:11, detail:'El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation+"'}";
+                //    return Responses.Error(11, "El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation);
                 //}    
 
                 //add the user to the parameters   
@@ -92,7 +92,7 @@ namespace SistemaDePlanillas.Controllers
                 //checks if the user have privileges to do the current operation
                 //if (!sm.verifyOperation(user, group, operation))
                 //{
-                //    return "{status:'ERROR', error:11, detail:'El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation+"'}";
+                //    return Responses.Error(11, "El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation+"/"+call);
                 //}    
 
                 //add the user to the parameters   
@@ -112,7 +112,7 @@ namespace SistemaDePlanillas.Controllers
                 MethodInfo method = type.GetMethod(operation+"_"+call, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase);
                 if (method == null)
                 {
-                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
+                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation+"/"+call);
                 }
 
                 //call the method
@@ -120,11 +120,11 @@ namespace SistemaDePlanillas.Controllers
             }
             catch (TargetParameterCountException)
             {
-                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation);
+                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation + "/" + call);
             }
             catch (ArgumentException)
             {
-                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation);
+                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation + "/" + call);
             }
             catch (Exception e)
             {
