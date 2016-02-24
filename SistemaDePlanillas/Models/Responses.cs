@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models
         public static readonly string OK= "{\"status\":\"OK\"}";
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
-        public static string Error(int errorCode)
+        public static string Error(long errorCode)
         {
             return "{\"status\":\"ERROR\", \"error\":" + errorCode+ ", \"detail\":\"" +
                 Errors.getInstance().getDetail(errorCode)+"\"}";
@@ -22,12 +22,12 @@ namespace SistemaDePlanillas.Models
             return "{\"status\":\"ERROR\", \"error\": -1, \"detail\":\"" + e.Message+ "\", \"stackTrace\": \"" + e.StackTrace+ "\"}";
         }
 
-        public static string Simple(int status)
+        public static string Simple(long status)
         {
             return status == 0 ? OK : Error(status);
         }
 
-        public static string Error(int errorCode, string detail)
+        public static string Error(long errorCode, string detail)
         {
             return "{\"status\":\"ERROR\", \"error\":"+errorCode+", \"detail\":\"" + detail + "\"}";
         }
@@ -37,7 +37,7 @@ namespace SistemaDePlanillas.Models
             return "{\"status\":\"OK\", \"data\":"+js.Serialize(data)+"}";
         }
 
-        public static string SimpleWithData(int status, object data)
+        public static string SimpleWithData(long status, object data)
         {
             return status == 0 ? WithData(data) : Error(status);
         }
@@ -46,13 +46,13 @@ namespace SistemaDePlanillas.Models
 
     public class Errors
     {
-        private Dictionary<int, string> details;
+        private Dictionary<long, string> details;
 
         private static Errors instance;
 
         private Errors()
         {
-            details = new Dictionary<int, string>();
+            details = new Dictionary<long, string>();
             //leer errores de la base de datos
             //insertarlos
         }
@@ -62,7 +62,7 @@ namespace SistemaDePlanillas.Models
             return instance != null ? instance : (instance = new Errors());
         }
 
-        public string getDetail(int errorCode)
+        public string getDetail(long errorCode)
         {
             return details.ContainsKey(errorCode) ? details[errorCode] : "Error desconocido";
         }
