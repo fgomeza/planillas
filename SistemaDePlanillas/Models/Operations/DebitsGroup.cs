@@ -15,5 +15,13 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(dataBaseResponse.status);
 
         }
+
+        public static string test(User user)
+        {
+
+            DBManager.getInstance().addExtra(5, "6565", 656.75f);
+            return "fasfsa";
+        }
+
     }
 }
