@@ -2,30 +2,76 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using System.Web.Script.Serialization;
 namespace SistemaDePlanillas.Models.Operations
 {
     public class ExtraGroup
     {
-        public string AddExtras()
+        public string AddExtras(long employeeId, string detail,float amount)
         {
-            return "";
+            try
+            {
+                DBManager.getInstance().addExtra((int)employeeId, detail, amount);
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
-        public string RemoveExtras()
+        public string RemoveExtras(long extraId)
         {
-            return "";
+            try
+            {
+                DBManager.getInstance().deleteExtra((int)extraId);
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
-        public string UpdateExtras()
+
+        public string UpdateExtras(long extraId, string detail, float amount)
         {
-            return "";
+            try
+            {
+                DBManager.getInstance().updateExtra((int)extraId, detail, amount);
+                return "";
+            }
+            catch (Exception)
+            {
+
+                return "";
+            }
+            
         }
-        public string ListAllExtras()
+        public string ListAllExtras(long employeeId)
         {
-            return "";
+            try
+            {
+                List<Extra> allExtras = DBManager.getInstance().selectExtras((int)employeeId).detail;
+                return MessageManager.Serializer.Serialize(allExtras);
+            }
+            catch (Exception)
+            {
+
+                return "";
+            }
+      
         }
-        public string FindExtraById()
+        public string FindExtraById(long extraId)
         {
-            return "";
+            try
+            {
+                Extra extra = DBManager.getInstance().selectExtra((int)extraId).detail;
+                return MessageManager.Serializer.Serialize(extra);
+            }
+            catch (Exception)
+            {
+                return "";
+                
+            }
         }
     }
 }

@@ -7,25 +7,73 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class PenaltyGroup
     {
-        public string AddPenalty()
+        public string AddPenalty(long employeeId, string detail, float amount)
         {
-            return "";
+            try
+            {
+                //DBManager.getInstance().addPenalty(employeeId, detail, amount);
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
-        public string RemovePenalty()
+        public string RemoveExtras(long penaltyId)
         {
-            return "";
+            try
+            {
+                //DBManager.getInstance().deletePenalty((int)penaltyId);
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
-        public string UpdatePenalty()
+
+        public string UpdateExtras(long penaltyId, string detail, float amount)
         {
-            return "";
+            try
+            {
+                //DBManager.getInstance().updatePenalty((int)penaltyId, detail, amount);
+                return "";
+            }
+            catch (Exception)
+            {
+
+                return "";
+            }
+
         }
-        public string ListAllPenaltys()
+        public string ListAllPenalties(long employeeId)
         {
-            return "";
+            try
+            {
+                //List<Extra> allExtras = DBManager.getInstance().selectPenalties((int)employeeId).detail;
+                //return MessageManager.Serializer.Serialize(allExtras);
+                return "";
+            }
+            catch (Exception)
+            {
+
+                return "";
+            }
+
         }
-        public string FindPenaltyById(int id)
+        public string FindPenaltyById(long extraId)
         {
-            return "";
+            try
+            {
+                //Extra extra = DBManager.getInstance().selectPenalty((int)extraId).detail;
+                //return MessageManager.Serializer.Serialize(extra);
+                return "";
+            }
+            catch (Exception)
+            {
+                return "";
+
+            }
         }
     }
 }

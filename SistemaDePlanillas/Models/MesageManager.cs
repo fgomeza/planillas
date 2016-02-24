@@ -10,10 +10,10 @@ namespace SistemaDePlanillas.Models
     /// Esta clases gestiona el lanzamiendo de mensajes entre modulos 
     /// hace a la ves de repositorio comun de errores
     /// </summary>
-    public class MesageManager
+    public class MessageManager
     {
         private static Dictionary<int, Message> reposotory = new Dictionary<int, Message>();
-        private static JavaScriptSerializer serializer = new JavaScriptSerializer();
+        public static JavaScriptSerializer Serializer = new JavaScriptSerializer();
         private static bool isLoad = false;
 
         /// <summary>
