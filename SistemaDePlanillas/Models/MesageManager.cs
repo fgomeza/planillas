@@ -51,7 +51,7 @@ namespace SistemaDePlanillas.Models
         {
             if (!isLoad)
                 loadDictionary();
-            Message error = (reposotory.ContainsKey(code)) ? reposotory[code] : null;
+            Message error = (reposotory.ContainsKey(code)) ? reposotory[code] : new Message(TypeStatus.NOT_FOUND);
             return (error == null) ? "{status:'Error no encontrado'}" : Serializer.Serialize(error);
         }
     }
@@ -79,6 +79,14 @@ namespace SistemaDePlanillas.Models
             Status = ((TypeStatus)status).ToString();
             Details = details;
         }
+
+        public Message(TypeStatus status)
+        {
+            Code = -1;
+            Status = status.ToString();
+            Details = "Error no encontrado";
+        }
+
         public int Code
         {
             get { return _code; }
@@ -104,7 +112,8 @@ namespace SistemaDePlanillas.Models
     /// </summary>
     public enum TypeStatus
     {
-        Error,
-        success
+        ERROR,
+        OK,
+        NOT_FOUND
     }
 }
