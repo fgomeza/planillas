@@ -13,8 +13,8 @@ namespace SistemaDePlanillas
 
             config.Routes.MapHttpRoute(
                 name: "OperationsApi",
-                routeTemplate: "api/Action/{group}/{operation}",
-                defaults: new {controller="OperationsApi"}
+                routeTemplate: "api/Action/{group}/{operation}/{call}",
+                defaults: new { controller = "OperationsApi", call = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
