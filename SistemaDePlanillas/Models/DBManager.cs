@@ -9,12 +9,10 @@ namespace SistemaDePlanillas.Models
 {
     public class DBManager
     {
-        //comentario 2
-        //comentario 3
+
         private static DBManager single;
         private NpgsqlConnection cnx;
         private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
-        // Francisco se la come todita
         // private string stringConnect = "Server=localhost;Port=5432;Database=planillas;User Id=postgres;Password=postgres;";
         private string OK = "OK";
 

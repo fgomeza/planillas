@@ -6,10 +6,7 @@ namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public static int OK = 0;
-        public static int ERROR = 1;
-
-        public int status;
+        public long status;
         public T detail;
     }
 
