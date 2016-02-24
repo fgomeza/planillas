@@ -32,14 +32,14 @@ namespace SistemaDePlanillas.Models
             return "{status:'ERROR', error:"+errorCode+", detail:'" + detail + "'}";
         }
 
-        public static string WithData(string JSON)
-        {
-            return "{status:'OK', data:" + JSON + "}";
-        }
-
         public static string WithData(object data)
         {
             return "{status:'OK', data:"+js.Serialize(data)+"}";
+        }
+
+        public static string SimpleWithData(int status, object data)
+        {
+            return status == 0 ? WithData(data) : Error(status);
         }
 
     }
