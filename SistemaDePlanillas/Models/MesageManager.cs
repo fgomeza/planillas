@@ -54,6 +54,7 @@ namespace SistemaDePlanillas.Models
             Message error = (reposotory.ContainsKey(code)) ? reposotory[code] : null;
             return (error == null) ? "{status:'Error no encontrado'}" : Serializer.Serialize(error);
         }
+        public static generateMessage()
     }
 
     /// <summary>

@@ -5,8 +5,18 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models.Operations
 {
+    /// <summary>
+    /// Modulo de mantenimiento de penalizaciones
+    /// </summary>
     public class PenaltyGroup
     {
+        /// <summary>
+        /// Genera una penalizacion y la asocia a un empleado
+        /// </summary>
+        /// <param name="employeeId">Identificador del empleado</param>
+        /// <param name="detail">Motivo de la penalizacion</param>
+        /// <param name="amount">Monto a descontar</param>
+        /// <returns>Estado de la transaccion en formato JSON</returns>
         public string AddPenalty(long employeeId, string detail, float amount)
         {
             try
@@ -19,6 +29,11 @@ namespace SistemaDePlanillas.Models.Operations
                 return "";
             }
         }
+        /// <summary>
+        /// Elimina una penalizacion asociada a un empleado
+        /// </summary>
+        /// <param name="penaltyId">Identificador de la penalizacion</param>
+        /// <returns>>Estado de la transaccion en formato JSON</returns>
         public string RemoveExtras(long penaltyId)
         {
             try
@@ -31,7 +46,13 @@ namespace SistemaDePlanillas.Models.Operations
                 return "";
             }
         }
-
+        /// <summary>
+        /// Actualiza la informacion de una penalizacion
+        /// </summary>
+        /// <param name="penaltyId">Identificador de la penalizacion</param>
+        /// <param name="detail">Motivo de la penalizacion</param>
+        /// <param name="amount">Monto a descontar</param>
+        /// <returns>Estado de la transaccion en formato JSON</returns>
         public string UpdateExtras(long penaltyId, string detail, float amount)
         {
             try
@@ -46,6 +67,14 @@ namespace SistemaDePlanillas.Models.Operations
             }
 
         }
+        /// <summary>
+        /// Accesa a las penalizaciones vinculadas a un empleado
+        /// </summary>
+        /// <param name="employeeId">Identificador del empleado</param>
+        /// <returns>
+        /// Lista con las penalizaciones asociadas al usuario
+        /// Estado de la transaccion en formato JSON
+        /// </returns>
         public string ListAllPenalties(long employeeId)
         {
             try
@@ -61,6 +90,14 @@ namespace SistemaDePlanillas.Models.Operations
             }
 
         }
+        /// <summary>
+        /// Accesa a una penalizacion por su identificador
+        /// </summary>
+        /// <param name="extraId">Identificador de la penalizacion</param>
+        /// <returns>
+        /// Penalizacion asociada al identificador
+        /// Estado de la transaccion en formato JSON
+        /// </returns>
         public string FindPenaltyById(long extraId)
         {
             try
