@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -32,9 +33,24 @@ namespace SistemaDePlanillas.Controllers
         {
             try
             {
+                string name = collection["name"];
+                string username = collection["username"];
+                string password = collection["password"];
+                int role = Int32.Parse(collection["role"]);
+                int location = Int32.Parse(collection["location"]);
+                string email = collection["email"];
+
+                DBManager db = DBManager.getInstance();
+                Result<string> result = db.addUser(name, username, password, role, location, email);
+                Console.WriteLine(result.detail);
                 // TODO: Add insert logic here
 
                 return RedirectToAction("Index");
+            }
+            catch(FormatException ex)
+            {
+                Console.WriteLine("Format exception. UsersController: Create()");
+                return View();
             }
             catch
             {
@@ -67,6 +83,11 @@ namespace SistemaDePlanillas.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(int id)
         {
+            DBManager db = DBManager.getInstance();
+            Result<User> result = db.selectUser(id);
+            
+
+            // Aquí poner el user obtenido (result.detail) en la página, posiblemente mediante 'Request'
             return View();
         }
 
@@ -77,6 +98,11 @@ namespace SistemaDePlanillas.Controllers
             try
             {
                 // TODO: Add delete logic here
+
+                DBManager db = DBManager.getInstance();
+                // validar si collection trae los parámetros corretos
+                Result<string> result = db.deleteUser(id);
+                Console.WriteLine(result.detail);
 
                 return RedirectToAction("Index");
             }
