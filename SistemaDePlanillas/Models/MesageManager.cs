@@ -51,8 +51,11 @@ namespace SistemaDePlanillas.Models
         {
             if (!isLoad)
                 loadDictionary();
-            Message error = (reposotory.ContainsKey(code)) ? reposotory[code] : new Message(TypeStatus.NOT_FOUND);
-            return (error == null) ? "{status:'Error no encontrado'}" : Serializer.Serialize(error);
+
+            if (reposotory.ContainsKey(code))
+                return Serializer.Serialize(reposotory[code]);
+            
+            return Serializer.Serialize(new Message(TypeStatus.NOT_FOUND)); 
         }
     }
 
