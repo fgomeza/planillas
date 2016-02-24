@@ -41,6 +41,13 @@ namespace SistemaDePlanillas.Controllers
                 parameters[0] = user;
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
 
+                //types array for calling the correct overload of the method
+                Type[] paramsTypes = new Type[parameters.Length];
+                for(int i=0; i<parameters.Length; i++)
+                {
+                    paramsTypes[i] = parameters[i].GetType();
+                }
+
                 //formatting the class name
                 string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
 
@@ -50,7 +57,7 @@ namespace SistemaDePlanillas.Controllers
                 {
                     return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
                 }
-                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase);
+                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
                     return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
@@ -100,8 +107,16 @@ namespace SistemaDePlanillas.Controllers
                 parameters[0] = user;
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
 
+                //types array for calling the correct overload of the method
+                Type[] paramsTypes = new Type[parameters.Length];
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    paramsTypes[i] = parameters[i].GetType();
+                }
+
                 //formatting the class name
                 string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
+                operation = operation + "_" + call;
 
                 //Uses reflexion to get the correct method
                 Type type = Type.GetType(groupType, false, true);
@@ -109,10 +124,10 @@ namespace SistemaDePlanillas.Controllers
                 {
                     return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
                 }
-                MethodInfo method = type.GetMethod(operation+"_"+call, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase);
+                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);             
                 if (method == null)
                 {
-                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation+"/"+call);
+                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
                 }
 
                 //call the method
