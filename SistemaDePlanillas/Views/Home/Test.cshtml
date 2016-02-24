@@ -5,7 +5,7 @@ Operacion<input type="text" id="operation" />
 Parametros<input type="text" id="args">
 <button type="button" onclick="enviar()">Enviar</button>
 <hr>
-<div id="result"></div>
+<pre id="result"></pre>
 <script>
     var enviar = function () {
         actionString($("#group").val(), $("#operation").val(), $("#args").val(),
