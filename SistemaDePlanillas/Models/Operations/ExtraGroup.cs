@@ -80,7 +80,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 List<Extra> allExtras = DBManager.getInstance().selectExtras((int)employeeId).detail;
-                return MessageManager.Serializer.Serialize(allExtras);
+                return "";
             }
             catch (Exception)
             {
@@ -102,12 +102,11 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 Extra extra = DBManager.getInstance().selectExtra((int)extraId).detail;
-                return MessageManager.Serializer.Serialize(extra);
+                return "";
             }
             catch (Exception)
             {
                 return "";
-                
             }
         }
     }
