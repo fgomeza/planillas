@@ -23,10 +23,10 @@ namespace SistemaDePlanillas.Models
         {
             /*Esto es un pseudo origen de datos*/
             List<Message> ErrorList = new List<Message>();
-            ErrorList.Add(new Message(1,0, "Error tipo 1"));
-            ErrorList.Add(new Message(2,0, "Error tipo 2"));
-            ErrorList.Add(new Message(3,0, "Error tipo 3"));
-            ErrorList.Add(new Message(4,1, "Error tipo 4"));
+            ErrorList.Add(new Message(1, 0, "Error tipo 1"));
+            ErrorList.Add(new Message(2, 0, "Error tipo 2"));
+            ErrorList.Add(new Message(3, 0, "Error tipo 3"));
+            ErrorList.Add(new Message(4, 1, "Error tipo 4"));
             /*de aca consulta a la base de datos*/
             foreach (Message message in ErrorList)
                 reposotory.Add(message.Code, message);
@@ -46,16 +46,36 @@ namespace SistemaDePlanillas.Models
         /// </summary>
         /// <param name="code">Codigo de error a solicitar</param>
         /// <returns>informacion del error en formato JSON, null</returns>
-        
+
         public static string ErrorByCode(int code)
         {
             if (!isLoad)
                 loadDictionary();
-
             if (reposotory.ContainsKey(code))
+            {
                 return Serializer.Serialize(reposotory[code]);
-            
-            return Serializer.Serialize(new Message(TypeStatus.NOT_FOUND)); 
+            }
+            return Serializer.Serialize(new Message(TypeStatus.NOT_FOUND));
+        }
+
+        /// <summary>
+        /// Genera un mensaje de transaccion exitosa
+        /// </summary>
+        /// <returns>Mensaje de transaccion exitosa en formato JSON</returns>
+        public static string SucesseMessage()
+        {
+            return Serializer.Serialize(new Message(0, TypeStatus.OK, "Operacion exitosa"));
+        }
+
+        /// <summary>
+        /// Encapsula un objeto dentro de un mensaje JSON
+        /// </summary>
+        /// <param name="data">Objeto a encapsular</param>
+        /// <returns>Mensaje en formato JSON con el objeto encapsulado</returns>
+        public static string sendObject(Object data)
+        {
+            return Serializer.Serialize(new Message(-2, 1, Serializer.Serialize(data)));
+
         }
     }
 
@@ -73,21 +93,21 @@ namespace SistemaDePlanillas.Models
         {
             Code = code;
             Status = status.ToString();
-            Details = details;
+            Data = details;
         }
 
         public Message(int code, int status, string details)
         {
             Code = code;
             Status = ((TypeStatus)status).ToString();
-            Details = details;
+            Data = details;
         }
 
         public Message(TypeStatus status)
         {
             Code = -1;
             Status = status.ToString();
-            Details = "Error no encontrado";
+            Data = "Error desconocido";
         }
 
         public int Code
@@ -102,13 +122,11 @@ namespace SistemaDePlanillas.Models
             set { _status = value; }
         }
 
-        public string Details
+        public string Data
         {
             get { return _details; }
             set { _details = value; }
         }
-       
-
     }
     /// <summary>
     /// Enum que hace de representacion numerica del estado de un mensaje
@@ -119,4 +137,5 @@ namespace SistemaDePlanillas.Models
         OK,
         NOT_FOUND
     }
+
 }
