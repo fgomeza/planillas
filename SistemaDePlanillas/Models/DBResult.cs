@@ -6,7 +6,7 @@ namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public long status;
+        public long status = -1;
         public T detail;
     }
 
@@ -38,6 +38,7 @@ namespace SistemaDePlanillas.Models
         public long employee;
         public string detail;
         public double amount;
+        public long type;
     }
 
     public class PaymentDebit
@@ -51,6 +52,7 @@ namespace SistemaDePlanillas.Models
         public long missingPayments;
         public double remainingDebt;
         public double payment;
+        public long type;
     }
     public class Extra
     {
@@ -95,14 +97,15 @@ namespace SistemaDePlanillas.Models
         public NavbarConfig navbar;
         public long id;
         public string name;
+        public long location;
         public Dictionary<string, HashSet<string>> privileges;
 
-        public Role(long id, string name, List<Tuple<string,string>> privs)
+        public Role(long id, string name, List<Tuple<string, string>> privs)
         {
             this.id = id;
             this.name = name;
             privileges = new Dictionary<string, HashSet<string>>();
-            foreach(var priv in privs)
+            foreach (var priv in privs)
             {
                 if (!privileges.ContainsKey(priv.Item1))
                 {
@@ -145,7 +148,7 @@ namespace SistemaDePlanillas.Models
             this.icon = "".Equals(icon) ? "" : "glyphicon glyphicon-" + icon;
             this.rightAlign = rightAlign;
             this.operations = new Dictionary<string, Operation>();
-            foreach(Operation op in operations)
+            foreach (Operation op in operations)
             {
                 this.operations[op.name] = op;
             }
