@@ -80,7 +80,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 List<Extra> allExtras = DBManager.getInstance().selectExtras((int)employeeId).detail;
-                return MessageManager.Serializer.Serialize(allExtras);
+                return "";
             }
             catch (Exception)
             {
@@ -97,17 +97,16 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string FindExtraById(long extraId)
+        public string Get_ByIdExtra(long extraId)
         {
             try
             {
                 Extra extra = DBManager.getInstance().selectExtra((int)extraId).detail;
-                return MessageManager.Serializer.Serialize(extra);
+                return "";
             }
             catch (Exception)
             {
                 return "";
-                
             }
         }
     }
