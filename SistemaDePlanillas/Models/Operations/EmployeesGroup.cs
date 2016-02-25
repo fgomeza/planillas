@@ -7,6 +7,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class EmployeesGroup
     {
+
         //employees/add/cms (string,string,string,string)
         public static string add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
         {
