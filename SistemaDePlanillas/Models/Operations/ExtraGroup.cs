@@ -17,7 +17,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string AddExtras(long employeeId, string detail,float amount)
+        public string add_Extras(long employeeId, string detail,float amount)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// </summary>
         /// <param name="extraId">identificador del pago extra</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string RemoveExtras(long extraId)
+        public string remove_Extras(long extraId)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string UpdateExtras(long extraId, string detail, float amount)
+        public string modify_Extras(long extraId, string detail, float amount)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con los cagos extra asociados al empleado
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string ListAllExtras(long employeeId)
+        public string get_Extras(long employeeId)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string Get_ByIdExtra(long extraId)
+        public string get_Extra(long extraId)
         {
             try
             {

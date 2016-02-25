@@ -17,7 +17,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string AddPenalty(long employeeId, string detail, float amount)
+        public string add_Penalty(long employeeId, string detail, float amount)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string UpdateExtras(long penaltyId, string detail, float amount)
+        public string update_Extras(long penaltyId, string detail, float amount)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con las penalizaciones asociadas al usuario
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string ListAllPenalties(long employeeId)
+        public string get_Penalties(long employeeId)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// Penalizacion asociada al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string FindPenaltyById(long extraId)
+        public string get_Penalty(long extraId)
         {
             try
             {
