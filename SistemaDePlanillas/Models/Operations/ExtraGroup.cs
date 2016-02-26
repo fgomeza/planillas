@@ -17,16 +17,16 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string add_Extras(long employeeId, string detail,float amount)
+        public static string add(User user,long employeeId, string detail,double amount)
         {
             try
             {
-                DBManager.getInstance().addExtra((int)employeeId, detail, amount);
-                return "";
+                var result = DBManager.getInstance().addExtra(employeeId, detail, (float)amount).status;
+                return Responses.Simple(result);
             }
             catch (Exception)
             {
-                return "";
+                return Responses.Error(-1);
             }
         }
         /// <summary>
@@ -34,11 +34,11 @@ namespace SistemaDePlanillas.Models.Operations
         /// </summary>
         /// <param name="extraId">identificador del pago extra</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string remove_Extras(long extraId)
+        public string remove(long extraId)
         {
             try
             {
-                DBManager.getInstance().deleteExtra((int)extraId);
+                DBManager.getInstance().deleteExtra(extraId);
                 return "";
             }
             catch (Exception)
@@ -53,11 +53,11 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string modify_Extras(long extraId, string detail, float amount)
+        public string modify(long extraId, string detail, float amount)
         {
             try
             {
-                DBManager.getInstance().updateExtra((int)extraId, detail, amount);
+                DBManager.getInstance().updateExtra(extraId, detail, amount);
                 return "";
             }
             catch (Exception)
@@ -75,11 +75,11 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con los cagos extra asociados al empleado
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get_Extras(long employeeId)
+        public string get_all(long employeeId)
         {
             try
             {
-                List<Extra> allExtras = DBManager.getInstance().selectExtras((int)employeeId).detail;
+                List<Extra> allExtras = DBManager.getInstance().selectExtras(employeeId).detail;
                 return "";
             }
             catch (Exception)
@@ -97,11 +97,11 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get_Extra(long extraId)
+        public string get(long extraId)
         {
             try
             {
-                Extra extra = DBManager.getInstance().selectExtra((int)extraId).detail;
+                Extra extra = DBManager.getInstance().selectExtra(extraId).detail;
                 return "";
             }
             catch (Exception)
