@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models.Operations
     /// <summary>
     /// Modulo de mantenimiento de penalizaciones
     /// </summary>
-    public class PenaltyGroup
+    public class RecessGroup
     {
         /// <summary>
         /// Genera una penalizacion y la asocia a un empleado
@@ -17,33 +17,33 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string add_Penalty(long employeeId, string detail, float amount)
+        public static string add(User user,long employeeId, string detail, float amount,long months)
         {
             try
             {
-                //DBManager.getInstance().addPenalty(employeeId, detail, amount);
-                return "";
+                var result = DBManager.getInstance().addRecess(employeeId, detail, amount,months).status;
+                return Responses.Simple(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "";
+                return Responses.ExceptionError(ex);
             }
         }
         /// <summary>
         /// Elimina una penalizacion asociada a un empleado
         /// </summary>
-        /// <param name="penaltyId">Identificador de la penalizacion</param>
+        /// <param name="recessId">Identificador de la penalizacion</param>
         /// <returns>>Estado de la transaccion en formato JSON</returns>
-        public string RemoveExtras(long penaltyId)
+        public static string remove(User user,long recessId)
         {
             try
             {
-                //DBManager.getInstance().deletePenalty((int)penaltyId);
-                return "";
+                var result = DBManager.getInstance().deleteRecess(recessId).status;
+                return Responses.Simple(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "";
+                return Responses.ExceptionError(ex);
             }
         }
         /// <summary>
@@ -53,17 +53,17 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string update_Extras(long penaltyId, string detail, float amount)
+        public static string modify(User user,long penaltyId, string detail, float amount,long months,double remainingdebt)
         {
             try
             {
-                //DBManager.getInstance().updatePenalty((int)penaltyId, detail, amount);
-                return "";
+                var result =  DBManager.getInstance().updateRecess(penaltyId, detail, amount, months, remainingdebt);
+                return Responses.SimpleWithData(result.status, result.detail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return "";
+                return Responses.ExceptionError(ex);
             }
 
         }
@@ -75,18 +75,17 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con las penalizaciones asociadas al usuario
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get_Penalties(long employeeId)
+        public static string get_all(User user,long employeeId)
         {
             try
             {
-                //List<Extra> allExtras = DBManager.getInstance().selectPenalties((int)employeeId).detail;
-                //return MessageManager.Serializer.Serialize(allExtras);
-                return "";
+                var result = DBManager.getInstance().selectAllRecess(employeeId);
+                return Responses.SimpleWithData(result.status, result.detail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return "";
+                return Responses.ExceptionError(ex);
             }
 
         }
@@ -98,17 +97,16 @@ namespace SistemaDePlanillas.Models.Operations
         /// Penalizacion asociada al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get_Penalty(long extraId)
+        public static string get(User user,long recessId)
         {
             try
             {
-                //Extra extra = DBManager.getInstance().selectPenalty((int)extraId).detail;
-                //return MessageManager.Serializer.Serialize(extra);
-                return "";
+                var result = DBManager.getInstance().selectRecess(recessId);
+                return Responses.SimpleWithData(result.status, result.detail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "";
+                return Responses.ExceptionError(ex);
 
             }
         }

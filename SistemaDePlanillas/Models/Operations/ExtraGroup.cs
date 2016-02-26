@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models.Operations
     /// <summary>
     /// Modulo para manteminiemto de horas extras
     /// </summary>
-    public class ExtraGroup
+    public class ExtrasGroup
     {
         /// <summary>
         /// Genera un pago extra y lo asocia a un empleado
@@ -24,9 +24,9 @@ namespace SistemaDePlanillas.Models.Operations
                 var result = DBManager.getInstance().addExtra(employeeId, detail, (float)amount).status;
                 return Responses.Simple(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Responses.Error(-1);
+                return Responses.ExceptionError(ex);
             }
         }
         /// <summary>
@@ -34,16 +34,16 @@ namespace SistemaDePlanillas.Models.Operations
         /// </summary>
         /// <param name="extraId">identificador del pago extra</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string remove(long extraId)
+        public static string remove(User user,long extraId)
         {
             try
             {
-                DBManager.getInstance().deleteExtra(extraId);
-                return "";
+                var result = DBManager.getInstance().deleteExtra(extraId).status;
+                return Responses.Simple(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "";
+                return Responses.ExceptionError(ex);
             }
         }
         /// <summary>
@@ -53,17 +53,17 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public string modify(long extraId, string detail, float amount)
+        public static string modify(User user,long extraId, string detail, float amount)
         {
             try
             {
-                DBManager.getInstance().updateExtra(extraId, detail, amount);
-                return "";
+                var result = DBManager.getInstance().updateExtra(extraId, detail, amount).status;
+                return Responses.Simple(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return "";
+                return Responses.ExceptionError(ex);
             }
             
         }
@@ -75,17 +75,17 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con los cagos extra asociados al empleado
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get_all(long employeeId)
+        public static string get_all(User user,long employeeId)
         {
             try
             {
-                List<Extra> allExtras = DBManager.getInstance().selectExtras(employeeId).detail;
-                return "";
+                var result = DBManager.getInstance().selectExtras(employeeId);
+                return Responses.SimpleWithData(result.status,result.detail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return "";
+                return Responses.ExceptionError(ex);
             }
       
         }
@@ -97,16 +97,16 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public string get(long extraId)
+        public static string get(User user,long extraId)
         {
             try
             {
-                Extra extra = DBManager.getInstance().selectExtra(extraId).detail;
-                return "";
+                var result = DBManager.getInstance().selectExtra(extraId);
+                return Responses.SimpleWithData(result.status, result.detail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "";
+                return Responses.ExceptionError(ex);
             }
         }
     }

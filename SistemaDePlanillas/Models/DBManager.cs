@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Models
         private static long DBERR = 18;
         private static DBManager single;
         private NpgsqlConnection cnx;
-        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
+        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=admin;";
         // private string stringConnect = "Server=localhost;Port=5432;Database=planillas;User Id=postgres;Password=postgres;";
 
         private DBManager() { }
@@ -1346,7 +1346,6 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        recess.payment = dr.GetDouble(7);
                         res.detail = recess;
                     }
                     dr.Close();
@@ -1395,7 +1394,6 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        recess.payment = dr.GetDouble(7);
                         res.detail.Add(recess);
                     }
                     dr.Close();
