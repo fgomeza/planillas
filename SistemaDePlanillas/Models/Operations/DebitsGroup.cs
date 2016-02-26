@@ -11,8 +11,9 @@ namespace SistemaDePlanillas.Models.Operations
         public static string AddFixedDebit(User user, long employee, string detail, long amount)
         {
 
-            var dataBaseResponse = DBManager.getInstance().addDebit((int)employee, detail, amount);
-            return Responses.Simple(dataBaseResponse.status);
+            //var dataBaseResponse = DBManager.getInstance().addDebit(employee, detail, amount);
+            //return Responses.Simple(dataBaseResponse.status);
+            return null;
 
         }
 
