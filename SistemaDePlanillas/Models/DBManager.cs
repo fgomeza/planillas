@@ -1987,7 +1987,7 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<List<Role>> selectRoles(long location)
+        public Result<List<Role>> selectRoles()
         {
             Result<List<Role>> res = new Result<List<Role>>();
             if (connect())
