@@ -37,7 +37,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var dataBaseResponse = DBManager.getInstance().selectDebits(employee);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
             }
             catch (Exception e)
             {
@@ -49,7 +49,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.getInstance().selectPaymentDebits(employee);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.getInstance().selectDebit(idDebit);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.getInstance().selectPaymentDebit(idDebit);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
             }
             catch (Exception e)
             {
