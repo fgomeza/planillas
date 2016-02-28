@@ -1887,6 +1887,7 @@ namespace SistemaDePlanillas.Models
                     NpgsqlCommand command = new NpgsqlCommand("FRO_01", cnx);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[0].Value = name;

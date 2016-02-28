@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,6 +22,7 @@ namespace SistemaDePlanillas
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);           
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            InitialConfig.init();
         }
 
         protected void Application_PostAuthorizeRequest()
