@@ -30,7 +30,12 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        private Role getRole(long id)
+        public IEnumerable<Role> getRoles()
+        {
+            return roles.Values;
+        }
+
+        public Role getRole(long id)
         {
                 return roles[id];
         }
