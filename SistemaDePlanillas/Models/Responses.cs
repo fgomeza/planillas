@@ -19,7 +19,7 @@ namespace SistemaDePlanillas.Models
 
         public static string ExceptionError(Exception e)
         {
-            return "{\"status\":\"ERROR\", \"error\": -1, \"detail\":\"" + e.Message+ "\", \"stackTrace\": \"" + e.StackTrace+ "\"}";
+            return "{\"status\":\"ERROR\", \"error\": -1, \"detail\":\"" + e.Message+ "\"}";
         }
 
         public static string Simple(long status)
