@@ -1787,7 +1787,6 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-
         public Result<string> deleteLocation(long id)
         {
             Result<string> res = new Result<string>();
@@ -2489,6 +2488,286 @@ namespace SistemaDePlanillas.Models
                     tran.Commit();
                     cnx.Close();
                     res.status = OK;
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> addFixedDebitType(string name, long location)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[1].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> deleteFixedDebitType(long id)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_03", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<List<DebitType>> selectFixedDebitTypes(long location)
+        {
+            Result<List<DebitType>> res = new Result<List<DebitType>>();
+            res.detail = new List<DebitType>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_04", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        DebitType dt = new DebitType();
+                        dt.id = dr.GetInt64(0);
+                        dt.name = dr.GetString(1);
+                        res.detail.Add(dt);
+                    }
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> addPaymentDebitType(string name,float interestRate,long months, long location)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
+                    command.Parameters[1].Value = interestRate;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[2].Value = months;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> updatePaymentDebitType(long id,string name, float interestRate, long months)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_02", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[1].Value = name;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
+                    command.Parameters[2].Value = interestRate;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = months;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> deletePaymentDebitType(long id)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_03", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<List<DebitType>> selectPaymentDebitTypes(long location)
+        {
+            Result<List<DebitType>> res = new Result<List<DebitType>>();
+            res.detail = new List<DebitType>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_04", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        DebitType dt = new DebitType();
+                        dt.id = dr.GetInt64(0);
+                        dt.name = dr.GetString(1);
+                        dt.interestRate = dr.GetFloat(2);
+                        dt.months = dr.GetInt64(3);
+                        res.detail.Add(dt);
+                    }
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
                 }
                 catch (NpgsqlException e)
                 {
