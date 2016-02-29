@@ -32,6 +32,15 @@ namespace SistemaDePlanillas.Models
         public string file;
     }
 
+    public class DebitType
+    {
+        public long id;
+        public string name;
+        public float interestRate;
+        public long months;
+        public int location;
+    }
+
     public class Debit
     {
         public long id;
