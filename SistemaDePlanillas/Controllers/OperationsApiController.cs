@@ -65,7 +65,7 @@ namespace SistemaDePlanillas.Controllers
                 }
                 
                 //call the method
-                string result = (string)method.Invoke(null, parameters);
+                return string result = (string)method.Invoke(null, parameters);
             }
             catch (TargetParameterCountException)
             {
