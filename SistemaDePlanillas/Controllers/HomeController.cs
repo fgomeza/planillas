@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Controllers
         {
             if (!SessionManager.getInstance().isLogged(Session))
             {
-                SessionManager.getInstance().login("tutox", "pass123", Session);
+                SessionManager.getInstance().login("JonnCh", "123", Session);
             }
             return SessionManager.getInstance().getUser(Session).name+ ", home/about para ver barra de navegacion";
         }
@@ -30,11 +30,8 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Index()
         {
-            ViewData["config"] = new ViewConfig
-            {
-                title = "index",
-            };
-            return View("index");
+            Login();
+            return Redirect("/test");
         }
 
         public ActionResult Test()

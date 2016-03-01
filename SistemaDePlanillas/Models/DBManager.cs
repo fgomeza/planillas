@@ -9,12 +9,12 @@ namespace SistemaDePlanillas.Models
 {
     public class DBManager
     {
-
+        private static long OK = 0;
+        private static long DBERR = 18;
         private static DBManager single;
         private NpgsqlConnection cnx;
-        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
+        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=admin;";
         // private string stringConnect = "Server=localhost;Port=5432;Database=planillas;User Id=postgres;Password=postgres;";
-        private string OK = "OK";
 
         private DBManager() { }
 
@@ -24,7 +24,8 @@ namespace SistemaDePlanillas.Models
         }
 
         private bool connect()
-        {   try
+        {
+            try
             {
                 cnx = new NpgsqlConnection(stringConnect);
                 cnx.Open();
@@ -36,12 +37,12 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        public Result<string> addCmsEmployee(string idCard, string CMS, string name, int location, string account)
+        public Result<string> addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
             Result<string> res = new Result<string>();
-            res.status= Result<int>.ERROR;
             if (connect())
             {
+                var x = cnx.ConnectionLifeTime;
                 try
                 {
                     NpgsqlTransaction tran = cnx.BeginTransaction();
@@ -54,46 +55,40 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value =idCard;
+                    command.Parameters[0].Value = idCard;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = CMS;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[2].Value = name;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[3].Value = location;
                     command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[4].Value = account;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
+                        res.status = dr.GetInt64(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
-            
+            return res;
         }
-        public Result<string> updateCmsEmployeee(int id, string idCard, string CMS, string name, int location, string account)
+
+        public Result<string> updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -108,7 +103,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = idCard;
@@ -116,40 +111,35 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[2].Value = CMS;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[3].Value = name;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[4].Value = location;
                     command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[5].Value = account;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
+                        res.status = dr.GetInt64(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Employee>> selectAllCmsEmployees(int location)
+
+        public Result<List<Employee>> selectAllCmsEmployees(long location)
         {
             Result<List<Employee>> res = new Result<List<Employee>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -160,7 +150,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -181,25 +171,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateCalls(int id, int calls)
-        {
 
+        public Result<string> updateCalls(long id, long calls)
+        {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -209,42 +198,34 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[1].Value = calls;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = 18;
             }
+            return res;
         }
 
-
-        public Result<string> addNonCmsEmployee(string idCard, string name, int location, string account, float salary)
+        public Result<string> addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -262,7 +243,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = idCard;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = name;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[2].Value = location;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[3].Value = account;
@@ -271,33 +252,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = 18;
             }
+            return res;
         }
-        public Result<string> updateNonCmsEmployeee(int id, string idCard, string name, int location, string account, float salary)
+
+        public Result<string> updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, float salary)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -312,13 +287,13 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = idCard;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[2].Value = name;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[3].Value = location;
                     command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[4].Value = account;
@@ -327,33 +302,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = 18;
             }
+            return res;
         }
-        public Result<List<Employee>> selectAllNonCmsEmployees(int location)
+
+        public Result<List<Employee>> selectAllNonCmsEmployees(long location)
         {
             Result<List<Employee>> res = new Result<List<Employee>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -364,7 +333,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -384,26 +353,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> deleteEmployee(int id)
+        public Result<string> deleteEmployee(long id)
         {
-
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -412,38 +379,32 @@ namespace SistemaDePlanillas.Models
                     NpgsqlCommand command = new NpgsqlCommand("FTR_05", cnx);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = 18;
             }
+            return res;
         }
-        public Result<Employee> selectEmployee(int id)
+
+        public Result<Employee> selectEmployee(long id)
         {
             Result<Employee> res = new Result<Employee>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -454,7 +415,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -467,29 +428,29 @@ namespace SistemaDePlanillas.Models
                         emp.location = dr.GetString(2);
                         emp.account = dr.GetString(3);
                         emp.cms = dr.GetBoolean(4);
-                        res.detail=emp;
+                        res.detail = emp;
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Employee>> selectAllEmployees(int location)
+
+        public Result<List<Employee>> selectAllEmployees(long location)
         {
             Result<List<Employee>> res = new Result<List<Employee>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -500,7 +461,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -520,25 +481,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addDebit(int employee, string detail, double amount)
+        public Result<string> addDebit(long employee, string detail, double amount, long type)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -549,43 +509,40 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[2].Value = amount;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = type;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateDebit(int idDebit, string detail, double amount)
+
+        public Result<string> updateDebit(long idDebit, string detail, double amount)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -597,7 +554,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
@@ -606,33 +563,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteDebit(int idDebit)
+
+        public Result<string> deleteDebit(long idDebit)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -642,38 +593,32 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<Debit> selectDebit(int idDebit)
+
+        public Result<Debit> selectDebit(long idDebit)
         {
             Result<Debit> res = new Result<Debit>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -684,7 +629,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -696,29 +641,30 @@ namespace SistemaDePlanillas.Models
                         deb.employee = dr.GetInt64(1);
                         deb.detail = dr.GetString(2);
                         deb.amount = dr.GetDouble(3);
+                        deb.type = dr.GetInt64(4);
                         res.detail = deb;
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Debit>> selectDebits(int employee)
+
+        public Result<List<Debit>> selectDebits(long employee)
         {
             Result<List<Debit>> res = new Result<List<Debit>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -729,7 +675,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -742,30 +688,30 @@ namespace SistemaDePlanillas.Models
                         deb.employee = dr.GetInt64(1);
                         deb.detail = dr.GetString(2);
                         deb.amount = dr.GetDouble(3);
+                        deb.type = dr.GetInt64(4);
                         res.detail.Add(deb);
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addPaymentDebit(int employee, string detail, double total, double interestRate, int months)
+        public Result<string> addPaymentDebit(long employee, string detail, double total, double interestRate, long months, long type)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -778,8 +724,9 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
@@ -787,38 +734,34 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[2].Value = total;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[3].Value = interestRate;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[4].Value = months;
+                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[5].Value = type;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updatePaymentDebit(int idDebit, string detail, float total, double interestRate, int months, double remainingDebt)
+
+        public Result<string> updatePaymentDebit(long idDebit, string detail, float total, double interestRate, long months, double remainingDebt)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -833,7 +776,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
@@ -841,7 +784,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[2].Value = total;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[3].Value = interestRate;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[4].Value = months;
                     command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[5].Value = remainingDebt;
@@ -849,33 +792,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deletePaymentDebit(int idDebit)
+
+        public Result<string> deletePaymentDebit(long idDebit)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -885,38 +822,32 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<PaymentDebit> selectPaymentDebit(int idDebit)
+
+        public Result<PaymentDebit> selectPaymentDebit(long idDebit)
         {
             Result<PaymentDebit> res = new Result<PaymentDebit>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -927,7 +858,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -943,30 +874,30 @@ namespace SistemaDePlanillas.Models
                         Pdeb.paymentsMade = dr.GetInt64(5);
                         Pdeb.missingPayments = dr.GetInt64(6);
                         Pdeb.remainingDebt = dr.GetDouble(7);
-                        Pdeb.payment = dr.GetDouble(8);
+                        Pdeb.type = dr.GetInt64(8);
                         res.detail = Pdeb;
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = 0;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<PaymentDebit>> selectPaymentDebits(int employee)
+
+        public Result<List<PaymentDebit>> selectPaymentDebits(long employee)
         {
             Result<List<PaymentDebit>> res = new Result<List<PaymentDebit>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -977,7 +908,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -993,71 +924,30 @@ namespace SistemaDePlanillas.Models
                         Pdeb.paymentsMade = dr.GetInt64(5);
                         Pdeb.missingPayments = dr.GetInt64(6);
                         Pdeb.remainingDebt = dr.GetDouble(7);
-                        Pdeb.payment = dr.GetDouble(8);
+                        Pdeb.type = dr.GetInt64(8);
                         res.detail.Add(Pdeb);
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = 18;
             }
+            return res;
         }
-        public Result<String> payDebit(int idDebit)
+
+        public Result<String> payDebit(long idDebit, float amount)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_06", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new NpgsqlParameter());
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = idDebit;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
-                }
-                catch (Exception e)
-                {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
-                }
-            }
-            else
-            {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
-            }
-        }
-        public Result<String> payDebit(int idDebit, float amount)
-        {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1067,41 +957,34 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idDebit;
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = amount;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
+                    command.Parameters[1].Value = amount;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addExtra(int employee, string detail, float amount)
+        public Result<string> addExtra(long employee, string detail, float amount)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1113,7 +996,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
@@ -1122,33 +1005,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateExtra(int idExtra, string detail, float amount)
+
+        public Result<string> updateExtra(long idExtra, string detail, float amount)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1160,7 +1037,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idExtra;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
@@ -1169,33 +1046,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteExtra(int idExtra)
+
+        public Result<string> deleteExtra(long idExtra)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1205,38 +1076,33 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idExtra;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
                     return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<Extra> selectExtra(int idExtra)
+
+        public Result<Extra> selectExtra(long idExtra)
         {
             Result<Extra> res = new Result<Extra>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1247,7 +1113,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idExtra;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1264,24 +1130,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Extra>> selectExtras(int employee)
+
+        public Result<List<Extra>> selectExtras(long employee)
         {
             Result<List<Extra>> res = new Result<List<Extra>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1292,7 +1158,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1309,25 +1175,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addRecess(int employee, string detail, float amount, int months)
+        public Result<string> addRecess(long employee, string detail, float amount, long months)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1340,44 +1205,39 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[2].Value = amount;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[3].Value = months;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
+                        res.status = dr.GetInt64(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateRecess(int idRecess, string detail, double amount, int months, double remainingDebt)
+
+        public Result<string> updateRecess(long idRecess, string detail, double amount, long months, double remainingDebt)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1391,46 +1251,40 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idRecess;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = detail;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[2].Value = amount;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[3].Value = months;
                     command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[4].Value = remainingDebt;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteRecess(int idRecess)
+
+        public Result<string> deleteRecess(long idRecess)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1440,38 +1294,33 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idRecess;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
                     return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<Recess> selectRecess(int idRecess)
+
+        public Result<Recess> selectRecess(long idRecess)
         {
             Result<Recess> res = new Result<Recess>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1482,7 +1331,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idRecess;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1497,30 +1346,29 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        recess.payment = dr.GetDouble(7);
                         res.detail = recess;
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Recess>> selectAllRecess(int employee)
+
+        public Result<List<Recess>> selectAllRecess(long employee)
         {
             Result<List<Recess>> res = new Result<List<Recess>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1531,7 +1379,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1546,71 +1394,29 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        recess.payment = dr.GetDouble(7);
                         res.detail.Add(recess);
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<String> payRecess(int idRecess)
+
+        public Result<String> payRecess(long idRecess, float amount)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_06", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new NpgsqlParameter());
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = idRecess;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
-                }
-                catch (Exception e)
-                {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
-                }
-            }
-            else
-            {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
-            }
-        }
-        public Result<String> payRecess(int idRecess, float amount)
-        {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1621,41 +1427,35 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idRecess;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
                     command.Parameters[1].Value = amount;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
+
         }
 
-        public Result<string> addPayroll(DateTime date, int user, string file)
+        public Result<string> addPayroll(DateTime date, long user, string file, long location)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1666,43 +1466,40 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Date;
                     command.Parameters[0].Value = date;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[1].Value = user;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[2].Value = file;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updatePayroll(int idPay, DateTime date, int user, string file)
+
+        public Result<string> updatePayroll(long idPay, DateTime date, long user, string file)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1715,44 +1512,38 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idPay;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Date;
                     command.Parameters[1].Value = date;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[2].Value = user;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[3].Value = file;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deletePayroll(int idPay)
+
+        public Result<string> deletePayroll(long idPay)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1762,38 +1553,32 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idPay;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<Payroll> selectPayroll(int idPay)
+
+        public Result<Payroll> selectPayroll(long idPay)
         {
             Result<Payroll> res = new Result<Payroll>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1804,7 +1589,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idPay;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1821,24 +1606,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<Payroll>> selectAllPayroll(int idPay)
+
+        public Result<List<Payroll>> selectAllPayroll(long idPay)
         {
             Result<List<Payroll>> res = new Result<List<Payroll>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1849,7 +1634,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = idPay;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -1865,24 +1650,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
+
         public Result<List<Payroll>> selectPayroll(DateTime ini, DateTime end)
         {
             Result<List<Payroll>> res = new Result<List<Payroll>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1913,25 +1698,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
         public Result<string> addLocation(string name)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1946,33 +1730,27 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = 18;
             }
+            return res;
         }
-        public Result<string> updateLocation(int id, string name)
+
+        public Result<string> updateLocation(long id, string name)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -1983,8 +1761,8 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = name;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = name;
 
@@ -1992,31 +1770,26 @@ namespace SistemaDePlanillas.Models
                     while (dr.Read())
                         res.detail = dr.GetString(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteLocation(int id)
+
+        public Result<string> deleteLocation(long id)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2026,38 +1799,33 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
+                        res.status = dr.GetInt64(0);
 
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
+
         public Result<List<Location>> selectLocations()
         {
             Result<List<Location>> res = new Result<List<Location>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2079,25 +1847,35 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addRole(string name)
+        public Result<string> addRole(string name, long location, List<Tuple<string, string>> privileges) // group-operation
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
+            long role = addRole(name, location).detail;
+            foreach (var x in privileges)
+            {
+                Privilege(role, x.Item1, x.Item2);
+            }
+            return res;
+        }
+
+        private Result<long> addRole(string name, long location)
+        {
+            Result<long> res = new Result<long>();
             if (connect())
             {
                 try
@@ -2106,39 +1884,37 @@ namespace SistemaDePlanillas.Models
                     NpgsqlCommand command = new NpgsqlCommand("FRO_01", cnx);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[1].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.detail = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateRole(int id, string name)
+
+        public Result<string> updateRole(long id, string name)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2149,40 +1925,34 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[0].Value = name;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteRole(int id)
+
+        public Result<string> deleteRole(long id)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2192,38 +1962,32 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
+
         public Result<List<Role>> selectRoles()
         {
             Result<List<Role>> res = new Result<List<Role>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2239,116 +2003,69 @@ namespace SistemaDePlanillas.Models
                     {
                         long id = dr.GetInt64(0);
                         string name = dr.GetString(1);
-                        res.detail.Add(new Role(id,name, selectRolePrivileges(id).detail));
+                        res.detail.Add(new Role(id, name, selectRolePrivileges(id).detail));
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> Privilege(int role, int privilege)
+        private Result<string> Privilege(long role, string group, string privilege)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
                 {
                     NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPRR_01", cnx);
+                    NpgsqlCommand command = new NpgsqlCommand("FOP_01", cnx);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = role;
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = privilege;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[1].Value = privilege;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[2].Value = group;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deletePrivilege(int role, int privilege)
-        {
-            Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPRR_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = role;
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = privilege;
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
-                    dr.Close();
-                    tran.Commit();
-                    cnx.Close();
-                    return res;
-                }
-                catch (Exception e)
-                {
-                    res.detail = "Error en la base de datos.";
-                    cnx.Close();
-                    return res;
-                }
-            }
-            else
-            {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
-            }
-        }
-        public Result<List<Tuple<string,string>>> selectRolePrivileges(long role)
+        public Result<List<Tuple<string, string>>> selectRolePrivileges(long role) //group-operation
         {
             Result<List<Tuple<string, string>>> res = new Result<List<Tuple<string, string>>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2359,39 +2076,38 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = role;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     res.detail = new List<Tuple<string, string>>();
                     while (dr.Read())
                     {
-                        string op = dr.GetString(0);
-                        string group = dr.GetString(1);
-                        res.detail.Add(new Tuple<string,string>(group,op));
+                        string group = dr.GetString(0);
+                        string op = dr.GetString(1);
+                        res.detail.Add(new Tuple<string, string>(group, op));
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
         public Result<List<OperationsGroup>> selectOperationsGroups()
         {
             Result<List<OperationsGroup>> res = new Result<List<OperationsGroup>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2405,35 +2121,33 @@ namespace SistemaDePlanillas.Models
                     res.detail = new List<OperationsGroup>();
                     while (dr.Read())
                     {
-                        long id = dr.GetInt64(0);
+                        string name = dr.GetString(0);
                         string desc = dr.GetString(1);
-                        string name = dr.GetString(2);
-                        string icon = dr.GetString(3);
-                        bool align = dr.GetBoolean(4);
-                        res.detail.Add(new OperationsGroup(desc,name,icon,align,selectAllOperations(id,name).detail));
+                        string icon = dr.GetString(2);
+                        bool align = dr.GetBoolean(3);
+                        res.detail.Add(new OperationsGroup(desc, name, icon, align, selectAllOperations(name).detail));
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        
-        public Result<List<Operation>> selectAllOperations(long group, string groupName)
+
+        public Result<List<Operation>> selectAllOperations(string groupName)
         {
             Result<List<Operation>> res = new Result<List<Operation>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2445,39 +2159,39 @@ namespace SistemaDePlanillas.Models
 
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
-                    command.Parameters[0].Value = group;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[0].Value = groupName;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     res.detail = new List<Operation>();
                     while (dr.Read())
                     {
+                        string name = dr.GetString(0);
                         string desc = dr.GetString(1);
-                        string name = dr.GetString(2);
                         res.detail.Add(new Operation(desc, name, groupName));
                     }
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
+                    res.status = OK;
                     return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
-        public Result<string> addUser(string name, string username, string password, int role, int location, string email)
+        public Result<string> addUser(string name, string username, string password, long role, long location, string email)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2498,42 +2212,36 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[1].Value = username;
                     command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[2].Value = password;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[3].Value = role;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[4].Value = location;
                     command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[5].Value = email;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> updateUser(int id, string name, string username, string password, int role, int location, string email)
+
+        public Result<string> updateUser(long id, string name, string username, string password, long role, long location, string email)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2549,7 +2257,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
                     command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[1].Value = name;
@@ -2557,42 +2265,36 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[2].Value = username;
                     command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[3].Value = password;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[4].Value = role;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[5].Value = location;
                     command.Parameters[6].NpgsqlDbType = NpgsqlDbType.Text;
                     command.Parameters[6].Value = email;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<string> deleteUser(int id)
+
+        public Result<string> deleteUser(long id)
         {
             Result<string> res = new Result<string>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2602,38 +2304,32 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
-                        res.detail = dr.GetString(0);
-
-                    string[] v = res.detail.Split(',');
-                    res.status = v[0] == OK ? Result<int>.OK : Result<int>.ERROR;
-                    res.detail = v[1];
+                        res.status = dr.GetInt64(0);
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    return res;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
-                    res.detail = "Error en la base de datos.";
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                res.detail = "No se pudo conectar a la base de datos.";
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
+
         public Result<User> selectUser(long id)
         {
             Result<User> res = new Result<User>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2644,7 +2340,7 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new NpgsqlParameter());
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Integer;
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
@@ -2664,24 +2360,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
-        public Result<List<User>> selectAllUsers()
+
+        public Result<List<User>> selectAllUsers(long location)
         {
             Result<List<User>> res = new Result<List<User>>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2690,7 +2386,10 @@ namespace SistemaDePlanillas.Models
                     NpgsqlCommand command = new NpgsqlCommand("FUS_05", cnx);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
 
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = location;
                     NpgsqlDataReader dr = command.ExecuteReader();
                     res.detail = new List<User>();
                     while (dr.Read())
@@ -2708,24 +2407,24 @@ namespace SistemaDePlanillas.Models
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
+
         public Result<User> login(string username, string password)
         {
             Result<User> res = new Result<User>();
-            res.status = Result<int>.ERROR;
             if (connect())
             {
                 try
@@ -2746,37 +2445,342 @@ namespace SistemaDePlanillas.Models
 
                     while (dr.Read())
                     {
-                        bool log = dr.GetBoolean(0);
-                        string desc = dr.GetString(1);
-                        if (log)
-                        {
-                            long id = dr.GetInt64(2);
-                            res.detail = selectUser(id).detail;
-                        }
-                        else
-                        {
-                            res.detail = new User();
-                            res.detail.id = -1;
-                            res.detail.name = desc;
-                        }
+                        res.detail = selectUser(dr.GetInt64(0)).detail;
                     }
+
                     dr.Close();
                     tran.Commit();
                     cnx.Close();
-                    res.status = res.detail.id==-1? Result<int>.ERROR: Result<int>.OK;
-                    return res;
+                    res.status = OK;
                 }
-                catch (Exception e)
+                catch (NpgsqlException e)
                 {
+                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
                 }
             }
             else
             {
-                return res;
+                res.status = DBERR;
             }
+            return res;
         }
 
+        public Result<List<Tuple<long, string>>> selectAllErrors()
+        {
+            Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FERR_04", cnx);
+                    command.Transaction = tran;
+                    command.CommandType = CommandType.StoredProcedure;
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    res.detail = new List<Tuple<long, string>>();
+                    while (dr.Read())
+                    {
+                        Tuple<long, string> t = new Tuple<long, string>(dr.GetInt64(0), dr.GetString(1));
+                        res.detail.Add(t);
+                    }
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                    res.status = OK;
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> addFixedDebitType(string name, long location)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[1].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> deleteFixedDebitType(long id)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_03", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<List<DebitType>> selectFixedDebitTypes(long location)
+        {
+            Result<List<DebitType>> res = new Result<List<DebitType>>();
+            res.detail = new List<DebitType>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_04", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        DebitType dt = new DebitType();
+                        dt.id = dr.GetInt64(0);
+                        dt.name = dr.GetString(1);
+                        res.detail.Add(dt);
+                    }
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> addPaymentDebitType(string name,float interestRate,long months, long location)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
+                    command.Parameters[1].Value = interestRate;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[2].Value = months;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> updatePaymentDebitType(long id,string name, float interestRate, long months)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_02", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[1].Value = name;
+                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
+                    command.Parameters[2].Value = interestRate;
+                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[3].Value = months;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<string> deletePaymentDebitType(long id)
+        {
+            Result<string> res = new Result<string>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_03", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = id;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                        res.status = dr.GetInt64(0);
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
+
+        public Result<List<DebitType>> selectPaymentDebitTypes(long location)
+        {
+            Result<List<DebitType>> res = new Result<List<DebitType>>();
+            res.detail = new List<DebitType>();
+            if (connect())
+            {
+                try
+                {
+                    NpgsqlTransaction tran = cnx.BeginTransaction();
+                    NpgsqlCommand command = new NpgsqlCommand("FTDC_04", cnx);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+
+                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
+                    command.Parameters[0].Value = location;
+
+                    NpgsqlDataReader dr = command.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        DebitType dt = new DebitType();
+                        dt.id = dr.GetInt64(0);
+                        dt.name = dr.GetString(1);
+                        dt.interestRate = dr.GetFloat(2);
+                        dt.months = dr.GetInt64(3);
+                        res.detail.Add(dt);
+                    }
+                    dr.Close();
+                    tran.Commit();
+                    cnx.Close();
+                }
+                catch (NpgsqlException e)
+                {
+                    res.status = long.Parse(e.MessageText);
+                    cnx.Close();
+                }
+            }
+            else
+            {
+                res.status = DBERR;
+            }
+            return res;
+        }
     }
-    }
+
+}

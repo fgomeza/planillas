@@ -30,7 +30,12 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        private Role getRole(long id)
+        public IEnumerable<Role> getRoles()
+        {
+            return roles.Values;
+        }
+
+        public Role getRole(long id)
         {
                 return roles[id];
         }
@@ -82,12 +87,17 @@ namespace SistemaDePlanillas.Models
         }
 
         public bool login(string username, string password, HttpSessionStateBase session)
-        {        
-            User user = DBManager.getInstance().login(username,password).detail;
-            user.session = session;
-            session["user"] = user;
-            loggedUsers[user.id] = user;
-            return true;
+        {
+            var result = DBManager.getInstance().login(username, password);
+            if (result.status == 0)
+            {
+                User user = result.detail;
+                user.session = session;
+                session["user"] = user;
+                loggedUsers[user.id] = user;
+                return true;
+            }
+            return false;
         }
 
         public bool logout(HttpSessionStateBase session)

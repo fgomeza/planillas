@@ -163,6 +163,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\InitialConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -175,8 +176,10 @@
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
+    <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
+    <Compile Include="Models\Operations\RolesGroup.cs" />
     <Compile Include="Models\Responses.cs" />
     <Compile Include="Models\SessionManager.cs" />
     <Compile Include="Models\ViewManager.cs" />
@@ -231,6 +234,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Testing\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
