@@ -25,7 +25,7 @@ namespace SistemaDePlanillas.Controllers
                 title = "Operaciones disponibles para el rol",
                 showNavbar = true,
             };
-            return View("index");
+            return View("index"); 
         }
 
         public ActionResult Index()
