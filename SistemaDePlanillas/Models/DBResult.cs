@@ -109,10 +109,11 @@ namespace SistemaDePlanillas.Models
         public long location;
         public Dictionary<string, HashSet<string>> privileges;
 
-        public Role(long id, string name, List<Tuple<string, string>> privs)
+        public Role(long id, string name, long location, List<Tuple<string, string>> privs)
         {
             this.id = id;
             this.name = name;
+            this.location = location;
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {

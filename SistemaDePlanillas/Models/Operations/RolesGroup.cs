@@ -18,17 +18,20 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.WithData(result);
         }
 
-        public static string add(User user, string name, string privileges)
+        public static string add(User user, string name, IEnumerable<object> privileges)
         {
-            string[] privsArray = privileges.Replace(" ", "").Split(new string[] { "," }, StringSplitOptions.None);
             try {
                 var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privsArray)
+                foreach (var priv in privileges)
                 {
-                    string[] pair = priv.Split(new string[] { "/" }, StringSplitOptions.None);
+                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
                     privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
                 }
                 var result = DBManager.getInstance().addRole(name, user.location, privsList);
+                if (result.status == 0)
+                {
+                    SessionManager.getInstance().updateRoles();
+                }
                 return Responses.Simple(result.status);
             }
             catch(Exception e)
@@ -49,25 +52,32 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string modify(User user, long id, string privileges)
+        public static string remove(User user, long id)
         {
-            string[] privsArray = privileges.Replace(" ", "").Split(new string[] { "," }, StringSplitOptions.None);
+            var result = DBManager.getInstance().deleteRole(id);
+            SessionManager.getInstance().updateRoles();
+            return Responses.Simple(result.status);
+        }
+
+        public static string modify(User user, long id,string name, IEnumerable<object> privs)
+        {
             try
             {
                 var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privsArray)
+                foreach (var priv in privs)
                 {
-                    string[] pair = priv.Split(new string[] { "/" }, StringSplitOptions.None);
+                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
                     privsList.Add(new Tuple<string, string>(pair[0], pair[1]));
                 }
-                //var result = DBManager.getInstance().addRole(name, user.location, privsList);
-                //return Responses.Simple(result.status);
-                return null;
+                var result = DBManager.getInstance().updateRole(id, name, privsList);
+                SessionManager.getInstance().updateRoles();
+                return Responses.Simple(result.status);
             }
             catch (Exception e)
             {
                 return Responses.ExceptionError(e);
             }
         }
+
     }
 }
