@@ -231,11 +231,12 @@
     <Content Include="Views\Operations\Debits\Add.cshtml" />
     <Content Include="Views\Operations\Debits\remove.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Testing\" />
-    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
