@@ -176,6 +176,7 @@
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
+    <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />

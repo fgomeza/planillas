@@ -1865,11 +1865,23 @@ namespace SistemaDePlanillas.Models
         public Result<string> addRole(string name, long location, List<Tuple<string, string>> privileges) // group-operation
         {
             Result<string> res = new Result<string>();
-            long role = addRole(name, location).detail;
+            var result = addRole(name, location);
+            if (result.status != OK)
+            {
+                res.status = result.status;
+                return res;
+            }
             foreach (var x in privileges)
             {
-                Privilege(role, x.Item1, x.Item2);
+                var res2 = Privilege(result.detail, x.Item1, x.Item2);
+                if (res2.status != OK)
+                {
+                    deleteRole(result.detail);
+                    res.status = res2.status;
+                    return res;
+                }
             }
+            res.status = OK;
             return res;
         }
 
@@ -1912,7 +1924,20 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<string> updateRole(long id, string name)
+        public Result<string> updateRole(long id, string name, List<Tuple<string, string>> privileges)
+        {
+            Result<string> res = updateRole(id,name);
+            if (res.status == OK)
+            {
+                foreach (var x in privileges)
+                {
+                   Privilege(id, x.Item1, x.Item2);
+                }
+            }
+            return res;
+        }
+
+        private Result<string> updateRole(long id, string name)
         {
             Result<string> res = new Result<string>();
             if (connect())
@@ -1927,8 +1952,8 @@ namespace SistemaDePlanillas.Models
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = id;
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
+                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
+                    command.Parameters[1].Value = name;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
@@ -2003,7 +2028,8 @@ namespace SistemaDePlanillas.Models
                     {
                         long id = dr.GetInt64(0);
                         string name = dr.GetString(1);
-                        res.detail.Add(new Role(id, name, selectRolePrivileges(id).detail));
+                        long location = dr.GetInt64(2);
+                        res.detail.Add(new Role(id, name, location, selectRolePrivileges(id).detail));
                     }
                     dr.Close();
                     tran.Commit();
@@ -2033,6 +2059,8 @@ namespace SistemaDePlanillas.Models
                     NpgsqlTransaction tran = cnx.BeginTransaction();
                     NpgsqlCommand command = new NpgsqlCommand("FOP_01", cnx);
                     command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new NpgsqlParameter());
+                    command.Parameters.Add(new NpgsqlParameter());
                     command.Parameters.Add(new NpgsqlParameter());
 
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
@@ -2616,7 +2644,7 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<string> addPaymentDebitType(string name,float interestRate,long months, long location)
+        public Result<string> addPaymentDebitType(string name, float interestRate, long months, long location)
         {
             Result<string> res = new Result<string>();
             if (connect())
@@ -2660,7 +2688,7 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<string> updatePaymentDebitType(long id,string name, float interestRate, long months)
+        public Result<string> updatePaymentDebitType(long id, string name, float interestRate, long months)
         {
             Result<string> res = new Result<string>();
             if (connect())
