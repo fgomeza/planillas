@@ -29,6 +29,10 @@ namespace SistemaDePlanillas.Models.Operations
                     privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
                 }
                 var result = DBManager.getInstance().addRole(name, user.location, privsList);
+                if (result.status == 0)
+                {
+                    //cargar nuevo rol en el session manager
+                }
                 return Responses.Simple(result.status);
             }
             catch(Exception e)

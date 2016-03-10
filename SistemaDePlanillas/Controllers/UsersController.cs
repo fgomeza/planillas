@@ -11,9 +11,9 @@ namespace SistemaDePlanillas.Controllers
     public class UsersController : Controller
     {
         // GET: Users
-        public ActionResult Index()
+        public string Index()
         {
-            return View();
+            return "hola";
         }
 
         // GET: Users/Details/5
