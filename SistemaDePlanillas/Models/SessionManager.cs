@@ -30,6 +30,17 @@ namespace SistemaDePlanillas.Models
             }
         }
 
+        public void updateRoles()
+        {
+            roles = new Dictionary<long, Role>();
+
+            var rolesList = DBManager.getInstance().selectRoles().detail;
+            foreach (Role role in rolesList)
+            {
+                roles[role.id] = role;
+            }
+        }
+
         public IEnumerable<Role> getRoles()
         {
             return roles.Values;
