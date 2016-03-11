@@ -1812,7 +1812,7 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
+                    res.status = long.Parse(e.Code);
                     cnx.Close();
                 }
             }
@@ -1831,7 +1831,7 @@ namespace SistemaDePlanillas.Models
                 try
                 {
                     NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", cnx);
+                    NpgsqlCommand command = new NpgsqlCommand("FSE_04", cnx);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 

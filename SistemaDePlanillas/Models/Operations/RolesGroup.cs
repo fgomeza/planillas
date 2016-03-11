@@ -30,11 +30,8 @@ namespace SistemaDePlanillas.Models.Operations
                 var result = DBManager.getInstance().addRole(name, user.location, privsList);
                 if (result.status == 0)
                 {
-<<<<<<< HEAD
                     //cargar nuevo rol en el session manager
-=======
                     SessionManager.getInstance().updateRoles();
->>>>>>> origin/master
                 }
                 return Responses.Simple(result.status);
             }
