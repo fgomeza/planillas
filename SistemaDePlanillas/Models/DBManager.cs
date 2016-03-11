@@ -45,7 +45,6 @@ namespace SistemaDePlanillas.Models
             Result<string> res = new Result<string>();
             if (connect())
             {
-                var x = cnx.ConnectionLifeTime;
                 try
                 {
                     NpgsqlTransaction tran = cnx.BeginTransaction();
@@ -78,8 +77,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try {res.status = long.Parse(e.MessageText);}
+                    catch (Exception){throw e;}
                 }
             }
             else
@@ -129,8 +129,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -178,8 +179,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -215,8 +217,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -262,8 +265,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -312,8 +316,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -360,8 +365,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -394,13 +400,14 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = 18;
+                res.status = DBERR;
             }
             return res;
         }
@@ -440,8 +447,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -488,8 +496,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -532,8 +541,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -573,8 +583,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -608,8 +619,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -654,8 +666,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -701,8 +714,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -751,8 +765,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -802,8 +817,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -837,8 +853,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -887,8 +904,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -937,8 +955,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -974,8 +993,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1015,8 +1035,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1056,8 +1077,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1091,9 +1113,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
-                    return res;
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1137,8 +1159,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1182,8 +1205,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1227,8 +1251,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1274,8 +1299,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1310,8 +1336,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1358,8 +1385,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1406,8 +1434,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1444,8 +1473,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1489,8 +1519,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1533,8 +1564,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1568,8 +1600,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1613,8 +1646,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1657,8 +1691,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1705,8 +1740,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1740,13 +1776,14 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = 18;
+                res.status = DBERR;
             }
             return res;
         }
@@ -1779,8 +1816,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1815,8 +1853,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1834,7 +1873,7 @@ namespace SistemaDePlanillas.Models
                 try
                 {
                     NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", cnx);
+                    NpgsqlCommand command = new NpgsqlCommand("FSE_04", cnx);
                     command.Transaction = tran;
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -1854,8 +1893,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1916,8 +1956,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -1967,8 +2008,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2002,8 +2044,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2041,8 +2084,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2082,8 +2126,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2092,7 +2137,6 @@ namespace SistemaDePlanillas.Models
             }
             return res;
         }
-
 
         public Result<List<Tuple<string, string>>> selectRolePrivileges(long role) //group-operation
         {
@@ -2125,8 +2169,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2165,8 +2210,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2209,8 +2255,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2259,8 +2306,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2312,8 +2360,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2347,8 +2396,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2395,8 +2445,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2442,8 +2493,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2486,8 +2538,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2522,8 +2575,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2560,8 +2614,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2595,8 +2650,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2636,8 +2692,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2680,8 +2737,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2724,8 +2782,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2759,8 +2818,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else
@@ -2802,8 +2862,9 @@ namespace SistemaDePlanillas.Models
                 }
                 catch (NpgsqlException e)
                 {
-                    res.status = long.Parse(e.MessageText);
                     cnx.Close();
+                    try { res.status = long.Parse(e.MessageText); }
+                    catch (Exception) { throw e; }
                 }
             }
             else

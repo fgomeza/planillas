@@ -1,0 +1,51 @@
+
+res.status = dr.GetInt64(0);
+res.status = long.Parse(e.MessageText);
+res.status = DBERR;
+return res;
+
+ERRORES
+
+1	TRABAJADOR INEXISTENTE
+2	DÉBITO INEXISTENTE
+3	EXTRA INEXISTENTE
+4	MULTA INEXISTENTE
+5	OPERACION YA ASIGNADA
+6	OPERACION INEXISTENTE
+7	ROLE INEXISTENTE
+8	OPERACION NO ASIGNADA
+9	NOMBRE DE ROLE YA EXISTENTE
+10	NOMBRE DE SEDE YA EXISTENTE
+11	SEDE INEXISTENTE
+12	NUMERO DE CEDULA YA EXISTENTE
+13	CODIGO CMS YA EXISTENTE
+14	USUARIO INEXISTENTE
+15	CONTRASEÑA INCORRECTA
+16	MONTO A PAGAR SUPERIOR A LA DEUDA
+17	PLANILLA INEXISTENTE
+18	Error al conectar a la base de datos
+19	No se encuentra el grupo
+20	No se encuentra la operacion
+21	No ha iniciado sesion
+22	El role no cuenta con los privilegios apra la operacion
+23	No coincide el numero de parametros esperado
+24	No coincide el tipo de los parametros esperado
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
