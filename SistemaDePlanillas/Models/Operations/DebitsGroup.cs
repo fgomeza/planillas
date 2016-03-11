@@ -8,6 +8,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
+
         public static string addFixedDebit(User user, long employee, string detail, long amount, long type)
         {
             try {
