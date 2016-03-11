@@ -10,10 +10,12 @@ namespace SistemaDePlanillas.App_Start
     {
         public static void init()
         {
-            DBManager.getInstance();
-            SessionManager.getInstance();
-            ViewManager.getInstance();
-            Errors.getInstance();
+            /*
+            DBManager.Instance;
+            SessionManager.Instance;
+            ViewManager.Instance;
+            Errors.Instance;
+            */
         }
     }
 }

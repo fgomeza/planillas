@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().addExtra(employeeId, detail, (float)amount).status;
+                var result = DBManager.Instance.addExtra(employeeId, detail, (float)amount).status;
                 return Responses.Simple(result);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().deleteExtra(extraId).status;
+                var result = DBManager.Instance.deleteExtra(extraId).status;
                 return Responses.Simple(result);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().updateExtra(extraId, detail, amount).status;
+                var result = DBManager.Instance.updateExtra(extraId, detail, amount).status;
                 return Responses.Simple(result);
             }
             catch (Exception ex)
@@ -79,7 +79,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().selectExtras(employeeId);
+                var result = DBManager.Instance.selectExtras(employeeId);
                 return Responses.SimpleWithData(result.status,result.detail);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().selectExtra(extraId);
+                var result = DBManager.Instance.selectExtra(extraId);
                 return Responses.SimpleWithData(result.status, result.detail);
             }
             catch (Exception ex)

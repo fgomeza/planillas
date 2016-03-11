@@ -9,13 +9,16 @@ namespace SistemaDePlanillas.Models
 {
     public class SessionManager
     {
-        private static SessionManager single;
+        private static readonly SessionManager instance = new SessionManager();
         private Dictionary<long, User> loggedUsers;
         private Dictionary<long, Role> roles;
 
-        public static SessionManager getInstance()
+        public static SessionManager Instance
         {
-            return single != null ? single : single = new SessionManager();
+            get
+            {
+                return instance;
+            }
         }
 
         private SessionManager()
@@ -23,7 +26,7 @@ namespace SistemaDePlanillas.Models
             loggedUsers = new Dictionary<long, User>();
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.getInstance().selectRoles().detail;
+            var rolesList = DBManager.Instance.selectRoles().detail;
             foreach(Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -34,7 +37,7 @@ namespace SistemaDePlanillas.Models
         {
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.getInstance().selectRoles().detail;
+            var rolesList = DBManager.Instance.selectRoles().detail;
             foreach (Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -99,7 +102,7 @@ namespace SistemaDePlanillas.Models
 
         public bool login(string username, string password, HttpSessionStateBase session)
         {
-            var result = DBManager.getInstance().login(username, password);
+            var result = DBManager.Instance.login(username, password);
             if (result.status == 0)
             {
                 User user = result.detail;

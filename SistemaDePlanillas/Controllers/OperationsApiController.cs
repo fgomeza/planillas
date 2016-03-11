@@ -22,7 +22,7 @@ namespace SistemaDePlanillas.Controllers
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 
-                SessionManager sm = SessionManager.getInstance();
+                SessionManager sm = SessionManager.Instance;
             
                 //checks if the user is logged
                 if (!sm.isLogged(Session))
@@ -88,7 +88,7 @@ namespace SistemaDePlanillas.Controllers
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 
-                SessionManager sm = SessionManager.getInstance();
+                SessionManager sm = SessionManager.Instance;
 
                 //checks if the user is logged
                 if (!sm.isLogged(Session))

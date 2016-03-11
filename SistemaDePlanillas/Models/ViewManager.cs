@@ -8,22 +8,25 @@ namespace SistemaDePlanillas.Models
 {
     public  class ViewManager
     {
-        static private ViewManager single;
+        static private readonly ViewManager instance = new ViewManager();
         private Dictionary<string, OperationsGroup> groups;
 
         private ViewManager()
         {
             groups = new Dictionary<string, OperationsGroup>();
-            var groupsList = DBManager.getInstance().selectOperationsGroups().detail;
+            var groupsList = DBManager.Instance.selectOperationsGroups().detail;
             foreach(var group in groupsList)
             {
                 groups[group.name] = group;
             }
         }
 
-        public static ViewManager getInstance()
+        public static ViewManager Instance
         {
-            return single != null ? single : single = new ViewManager();
+            get
+            {
+                return instance;
+            }
         }  
         
         public OperationsGroup getOperationsGroup(string name)
@@ -57,7 +60,7 @@ namespace SistemaDePlanillas.Models
             leftMenus = new List<MenubarConfig>();
             rightMenus = new List<MenubarConfig>();
             menus = new Dictionary<string, MenubarConfig>();
-            ViewManager vm = ViewManager.getInstance();
+            ViewManager vm = ViewManager.Instance;
             foreach(KeyValuePair<string, HashSet<string>> grupo in privileges)
             {
                 OperationsGroup og = vm.getOperationsGroup(grupo.Key);

@@ -128,7 +128,7 @@ namespace SistemaDePlanillas.Models
 
         public void update()
         {
-            var privs = DBManager.getInstance().selectRolePrivileges(id).detail;
+            var privs = DBManager.Instance.selectRolePrivileges(id).detail;
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {

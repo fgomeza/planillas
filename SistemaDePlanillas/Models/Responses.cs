@@ -14,7 +14,7 @@ namespace SistemaDePlanillas.Models
         public static string Error(long errorCode)
         {
             return "{\"status\":\"ERROR\", \"error\":" + errorCode+ ", \"detail\":\"" +
-                Errors.getInstance().getDetail(errorCode)+"\"}";
+                Errors.Instance.getDetail(errorCode)+"\"}";
         }
 
         public static string ExceptionError(Exception e)
@@ -48,7 +48,7 @@ namespace SistemaDePlanillas.Models
     {
         private Dictionary<long, string> details;
 
-        private static Errors instance;
+        private static readonly Errors instance = new Errors();
 
         private Errors()
         {
@@ -57,9 +57,12 @@ namespace SistemaDePlanillas.Models
             //insertarlos
         }
         
-        public static Errors getInstance()
+        public static Errors Instance
         {
-            return instance != null ? instance : (instance = new Errors());
+            get
+            {
+                return instance;
+            }
         }
 
         public string getDetail(long errorCode)

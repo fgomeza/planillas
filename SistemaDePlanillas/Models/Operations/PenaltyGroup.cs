@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().addRecess(employeeId, detail, amount,months).status;
+                var result = DBManager.Instance.addRecess(employeeId, detail, amount,months).status;
                 return Responses.Simple(result);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().deleteRecess(recessId).status;
+                var result = DBManager.Instance.deleteRecess(recessId).status;
                 return Responses.Simple(result);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result =  DBManager.getInstance().updateRecess(penaltyId, detail, amount, months, remainingdebt);
+                var result =  DBManager.Instance.updateRecess(penaltyId, detail, amount, months, remainingdebt);
                 return Responses.SimpleWithData(result.status, result.detail);
             }
             catch (Exception ex)
@@ -79,7 +79,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().selectAllRecess(employeeId);
+                var result = DBManager.Instance.selectAllRecess(employeeId);
                 return Responses.SimpleWithData(result.status, result.detail);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.getInstance().selectRecess(recessId);
+                var result = DBManager.Instance.selectRecess(recessId);
                 return Responses.SimpleWithData(result.status, result.detail);
             }
             catch (Exception ex)

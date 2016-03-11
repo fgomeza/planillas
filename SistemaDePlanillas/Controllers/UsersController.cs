@@ -41,7 +41,7 @@ namespace SistemaDePlanillas.Controllers
                 int location = Int32.Parse(collection["location"]);
                 string email = collection["email"];
 
-                DBManager db = DBManager.getInstance();
+                DBManager db = DBManager.Instance;
                 Result<string> result = db.addUser(name, username, password, role, location, email);
                 Console.WriteLine(result.detail);
                 // TODO: Add insert logic here
@@ -84,7 +84,7 @@ namespace SistemaDePlanillas.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(int id)
         {
-            DBManager db = DBManager.getInstance();
+            DBManager db = DBManager.Instance;
             Result<User> result = db.selectUser(id);
             
 
@@ -100,7 +100,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 // TODO: Add delete logic here
 
-                DBManager db = DBManager.getInstance();
+                DBManager db = DBManager.Instance;
                 // validar si collection trae los parámetros corretos
                 Result<string> result = db.deleteUser(id);
                 Console.WriteLine(result.detail);

@@ -11,11 +11,11 @@ namespace SistemaDePlanillas.Controllers
     {
         public string Login()
         {
-            if (!SessionManager.getInstance().isLogged(Session))
+            if (!SessionManager.Instance.isLogged(Session))
             {
-                SessionManager.getInstance().login("JonnCh", "123", Session);
+                SessionManager.Instance.login("JonnCh", "123", Session);
             }
-            return SessionManager.getInstance().getUser(Session).name+ ", home/about para ver barra de navegacion";
+            return SessionManager.Instance.getUser(Session).name+ ", home/about para ver barra de navegacion";
         }
 
         public ActionResult About()
@@ -31,7 +31,8 @@ namespace SistemaDePlanillas.Controllers
         public ActionResult Index()
         {
             Login();
-			return redirect("/test");
+            //return redirect("/test");
+            return View();
         }
 
         public ActionResult Test()

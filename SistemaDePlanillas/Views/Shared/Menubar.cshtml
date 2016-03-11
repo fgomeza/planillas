@@ -3,7 +3,7 @@
     var config = (ViewConfig)ViewData["config"];
     string menu = config != null ? config.activeMenu : null;
     string active = config != null && config.activeOption != null ? config.activeOption : "";
-    var menuBar = SessionManager.getInstance().getMenuBarConfig((User)Session["user"], menu);
+    var menuBar = SessionManager.Instance.getMenuBarConfig((User)Session["user"], menu);
 }
 
 <div class="sidebar-nav">

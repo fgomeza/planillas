@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static string get(User user)
         {
-            var roles = SessionManager.getInstance().getRoles();
+            var roles = SessionManager.Instance.getRoles();
             var result = new List<object>();
             foreach(var role in roles)
             {
@@ -27,10 +27,10 @@ namespace SistemaDePlanillas.Models.Operations
                     string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
                     privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
                 }
-                var result = DBManager.getInstance().addRole(name, user.location, privsList);
+                var result = DBManager.Instance.addRole(name, user.location, privsList);
                 if (result.status == 0)
                 {
-                    SessionManager.getInstance().updateRoles();
+                    SessionManager.Instance.updateRoles();
                 }
                 return Responses.Simple(result.status);
             }
@@ -43,7 +43,7 @@ namespace SistemaDePlanillas.Models.Operations
         public static string get(User user, long id)
         {
             try {
-                var role = SessionManager.getInstance().getRole(id);
+                var role = SessionManager.Instance.getRole(id);
                 return Responses.WithData(new { id = role.id, name = role.name, privileges = role.privileges });
             }
             catch(Exception e)
@@ -54,8 +54,8 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string remove(User user, long id)
         {
-            var result = DBManager.getInstance().deleteRole(id);
-            SessionManager.getInstance().updateRoles();
+            var result = DBManager.Instance.deleteRole(id);
+            SessionManager.Instance.updateRoles();
             return Responses.Simple(result.status);
         }
 
@@ -69,8 +69,8 @@ namespace SistemaDePlanillas.Models.Operations
                     string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
                     privsList.Add(new Tuple<string, string>(pair[0], pair[1]));
                 }
-                var result = DBManager.getInstance().updateRole(id, name, privsList);
-                SessionManager.getInstance().updateRoles();
+                var result = DBManager.Instance.updateRole(id, name, privsList);
+                SessionManager.Instance.updateRoles();
                 return Responses.Simple(result.status);
             }
             catch (Exception e)
