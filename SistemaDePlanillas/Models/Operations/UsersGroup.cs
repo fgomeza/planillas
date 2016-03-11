@@ -39,7 +39,8 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string root_get(User user) 
         {
-            return int.Parse("gaga").ToString();
+            System.IO.StreamReader file = new System.IO.StreamReader("c:\\test.txt");
+            return "{}";
         }
 
     }
