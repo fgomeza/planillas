@@ -7,7 +7,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitTypesGroup
     {
-        public static string addType1(User user, string name)
+        public static string add_Type1(User user, string name)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string addType2(User user, string name,float interestRate,long months)
+        public static string add_Type2(User user, string name,float interestRate,long months)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string removeType1(User user, long id)
+        public static string remove_Type1(User user, long id)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string removeType2(User user, long id)
+        public static string remove_Type2(User user, long id)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string selectType1(User user)
+        public static string select_Type1(User user)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string selectType2(User user)
+        public static string select_Type2(User user)
         {
             try
             {

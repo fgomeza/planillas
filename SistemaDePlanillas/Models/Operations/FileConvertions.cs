@@ -64,7 +64,7 @@ namespace SistemaDePlanillas.Models.Operations
                 }
                 return list;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

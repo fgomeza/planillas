@@ -53,8 +53,9 @@ namespace SistemaDePlanillas.Models
         private Errors()
         {
             details = new Dictionary<long, string>();
-            //leer errores de la base de datos
-            //insertarlos
+            var err = DBManager.Instance.selectAllErrors().detail;
+            foreach (var x in err)
+                details.Add(x.Item1,x.Item2);
         }
         
         public static Errors Instance

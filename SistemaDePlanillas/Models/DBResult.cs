@@ -6,7 +6,7 @@ namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public long status = -1;
+        public long status = 0;
         public T detail;
     }
 

@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     public class DebitsGroup
     {
 
-        public static string addFixedDebit(User user, long employee, string detail, long amount, long type)
+        public static string add_Fixed(User user, long employee, string detail, long amount, long type)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string addPaymentDebit(User user, long employee, string detail, double total, double interestRate, long months, long type)
+        public static string add_Payment(User user, long employee, string detail, double total, double interestRate, long months, long type)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, detail, total, interestRate, months, type);
@@ -33,7 +33,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
         
-        public static string getFixedDebits(User user, long employee)
+        public static string get_AllFixed(User user, long employee)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string getPaymentDebits(User user, long employee)
+        public static string get_AllPayment(User user, long employee)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebits(employee);
@@ -58,7 +58,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string getFixedDebit(User user, long idDebit)
+        public static string get_Fixed(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectDebit(idDebit);
@@ -70,7 +70,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string getPaymentDebit(User user, long idDebit)
+        public static string get_Payment(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebit(idDebit);
@@ -82,7 +82,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string modifyFixedDebit(User user, long idDebit, string detail, long amount)
+        public static string modify_Fixed(User user, long idDebit, string detail, long amount)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updateDebit(idDebit, detail, amount);
@@ -94,7 +94,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string modifyPaymentDebit(User user, long idDebit, string detail, float total, double interestRate, long months, double remainingDebt)
+        public static string modify_Payment(User user, long idDebit, string detail, float total, double interestRate, long months, double remainingDebt)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, detail, total, interestRate, months, remainingDebt);
@@ -106,7 +106,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string removeFixedDebit(User user, long idDebit)
+        public static string remove_Fixed(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.deleteDebit(idDebit);
@@ -118,7 +118,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string removePaymentDebit(User user, long idDebit)
+        public static string remove_Payment(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.deletePaymentDebit(idDebit);
@@ -128,13 +128,6 @@ namespace SistemaDePlanillas.Models.Operations
             {
                 return Responses.ExceptionError(e);
             }
-        }
-
-        public static string test(User user)
-        {
-
-            DBManager.Instance.addExtra(5, "6565", 656.75f);
-            return "fasfsa";
         }
 
     }
