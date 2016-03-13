@@ -50,7 +50,7 @@ namespace SistemaDePlanillas.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch(FormatException ex)
+            catch(FormatException)
             {
                 Console.WriteLine("Format exception. UsersController: Create()");
                 return View();
