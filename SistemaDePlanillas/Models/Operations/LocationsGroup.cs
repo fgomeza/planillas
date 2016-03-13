@@ -9,25 +9,25 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static string add(User user, string name)
         {
-            var result = DBManager.getInstance().addLocation(name);
+            var result = DBManager.Instance.addLocation(name);
             return Responses.Simple(result.status);
         }
 
         public static string get(User user) 
         {
-            var result = DBManager.getInstance().selectLocations();
+            var result = DBManager.Instance.selectLocations();
             return Responses.SimpleWithData(result.status, result.detail);
         }
 
         public static string modify(User user, string name)
         {
-            var result = DBManager.getInstance().updateLocation(user.location, name);
+            var result = DBManager.Instance.updateLocation(user.location, name);
             return Responses.Simple(result.status);
         }
 
         public static string remove(User user, long id)
         {
-            var result = DBManager.getInstance().deleteLocation(id);
+            var result = DBManager.Instance.deleteLocation(id);
             return Responses.Simple(result.status);
         }
     }
