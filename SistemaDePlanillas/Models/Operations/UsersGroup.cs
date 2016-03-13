@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -39,8 +40,8 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string root_get(User user) 
         {
-            System.IO.StreamReader file = new System.IO.StreamReader("c:\\test.txt");
-            return "{}";
+            var fileStream = new FileStream(@"c:\test.txt", FileMode.Open, FileAccess.Read);
+            return Responses.WithData(FileConvertions.readFromCMSFile(fileStream));          
         }
 
     }
