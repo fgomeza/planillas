@@ -48,7 +48,7 @@ namespace SistemaDePlanillas.Models
     {
         private Dictionary<long, string> details;
 
-        private static readonly Errors instance = new Errors();
+        private static Errors instance;
 
         private Errors()
         {
@@ -61,7 +61,7 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                return instance;
+                return instance == null ? (instance = new Errors()) : instance;
             }
         }
 
