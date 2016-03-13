@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models
 {
     public class SessionManager
     {
-        private static readonly SessionManager instance = new SessionManager();
+        private static SessionManager instance;
         private Dictionary<long, User> loggedUsers;
         private Dictionary<long, Role> roles;
 
@@ -17,7 +17,7 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                return instance;
+                return instance == null ? (instance = new SessionManager()) : instance;
             }
         }
 

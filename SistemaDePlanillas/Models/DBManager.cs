@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models
     {
         private static long OK = 0;
         private static long DBERR = 18;
-        private static readonly DBManager instance = new DBManager();
+        private static DBManager instance;
         private NpgsqlConnection cnx;
         private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
        // private string stringConnect = "Server=localhost;Port=5432;Database=planillas;User Id=postgres;Password=postgres;";
@@ -22,7 +22,7 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                return instance;
+                return instance == null ? (instance = new DBManager()) : instance;
             }
         }
 

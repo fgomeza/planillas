@@ -27,17 +27,17 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 StreamReader reader = new StreamReader(file);
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 9; i++)
                 {
                     reader.ReadLine();
                 }
 
                 string data = reader.ReadToEnd();
                 string filePattern = @"^([^\t]+\t\d{2}/\d{2}/\d{4}\t\d+\t[^\n]\n)*$";
-                if (!Regex.IsMatch(data, filePattern))
-                {
-                    return null;
-                }
+                //if (!Regex.IsMatch(data, filePattern))
+                //{
+                //    return null;
+                //}
 
                 var employees = new Dictionary<string, CMSRegister>();
                 string dataPattern = @"(?<cmsid>[^\t]+)\t(?<date>\d{2}/\d{2}\d{4})\t(?<calls>\d+)\t[^\n]\n";

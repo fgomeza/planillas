@@ -24,5 +24,9 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    /*max-width: 280px;*/
+}
+
+.input-group, .form-control {
+    width: 100%;
 }

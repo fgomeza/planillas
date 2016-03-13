@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models
 {
     public  class ViewManager
     {
-        static private readonly ViewManager instance = new ViewManager();
+        static private ViewManager instance;
         private Dictionary<string, OperationsGroup> groups;
 
         private ViewManager()
@@ -25,7 +25,7 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                return instance;
+                return instance == null ? (instance = new ViewManager()) : instance;
             }
         }  
         
