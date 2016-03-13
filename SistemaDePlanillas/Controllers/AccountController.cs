@@ -34,7 +34,7 @@ namespace PlanillasFrontEnd.Controllers
         {
             if (ModelState.IsValid && SessionManager.Instance.login(model.username, model.password, Session))
             {
-                return RedirectToAction("Test", "Home");
+                return RedirectToAction("Index", "Users");
             }
             else
             {
