@@ -10,12 +10,10 @@ namespace SistemaDePlanillas.App_Start
     {
         public static void init()
         {
-            /*
-            DBManager.Instance;
-            SessionManager.Instance;
-            ViewManager.Instance;
-            Errors.Instance;
-            */
+            DBManager dbManager = DBManager.Instance;
+            SessionManager sessionManager = SessionManager.Instance;
+            ViewManager viewManager = ViewManager.Instance;
+            Errors errores = Errors.Instance;
         }
     }
 }

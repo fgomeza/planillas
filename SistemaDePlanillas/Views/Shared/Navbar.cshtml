@@ -1,6 +1,7 @@
 ﻿@using SistemaDePlanillas.Models
 @{
     var config = (ViewConfig)ViewData["config"];
+
     string active = config != null && config.activeMenu != null ? config.activeMenu : "";
 }
 
