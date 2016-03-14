@@ -1,6 +1,6 @@
 ﻿// Write your Javascript code.
 
-var action = function (group, operation, args, callback) {
+function action(group, operation, args, callback) {
     $.ajax({
         url: "/api/action/"+group+"/"+operation,
         type: "POST",
@@ -12,7 +12,7 @@ var action = function (group, operation, args, callback) {
     });
 }
 
-var action = function (group, operation, method, args, callback) {
+function actionMethod(group, operation, method, args, callback) {
     $.ajax({
         url: "/api/action/" + group + "/" + operation+"/"+method,
         type: "POST",
@@ -24,7 +24,7 @@ var action = function (group, operation, method, args, callback) {
     });
 }
 
-var actionString = function (group, operation, args, callback) {
+function actionString(group, operation, args, callback) {
     args = "[" + args + "]";
     var x = JSON.parse(args);
     $.ajax({

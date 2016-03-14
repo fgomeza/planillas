@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SistemaDePlanillas.Models;
+using System.Reflection;
 
 namespace SistemaDePlanillas.Controllers
 {
@@ -23,15 +24,15 @@ namespace SistemaDePlanillas.Controllers
             if (!sm.verifyOperation(user, group, operation)){
                 return View("error");
             }
-            ViewData["config"] = new ViewConfig
-            {
-                title = vm.getOperationsGroup(group).desc,
-                activeMenu = group,
-                activeOption = operation,
-                showNavbar = true,
-                showMenubar = true
-            };
-            return View(group+"/"+operation);
+            /*
+            //obtiene la clase
+            Type modelClass=Type.GetType("SistemaDePlanillas.Models.ViewModels." + group + "ViewModel");
+            //crea la instancia pasandole el usuario al constructor
+            object modelInstance=Activator.CreateInstance(type, new object[] { user });
+            //le pasa el modelo a la vista
+            return View(group+"/"+operation, modelInstance);
+            */
+            return View(group + "/" + operation);
         }
 
     }

@@ -189,6 +189,7 @@
     <Compile Include="Models\SessionManager.cs" />
     <Compile Include="Models\ViewManager.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Models\ViewModels\TestViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -240,10 +241,10 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Operations\Employees\get.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Operations\Employees\" />
     <Folder Include="Views\Testing\" />
   </ItemGroup>
   <ItemGroup>
