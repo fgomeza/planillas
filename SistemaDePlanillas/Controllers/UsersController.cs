@@ -1,5 +1,7 @@
 ﻿
 using SistemaDePlanillas.Models;
+using SistemaDePlanillas.Models.Operations;
+using SistemaDePlanillas.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +10,46 @@ using System.Web.Mvc;
 
 namespace SistemaDePlanillas.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         // GET: Users
         public ActionResult Index()
         {
-
-
-            return View();
+            User user = SessionManager.Instance.getUser(Session);
+            if(user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var result = DBManager.Instance.selectAllUsers(user.Location);
+            if(result.status == 0)
+            {
+                List<UserViewModel> UsersList = new List<UserViewModel>();
+                foreach (User Item in result.detail)
+                {
+                    UserViewModel UserViewModel = new UserViewModel()
+                    {
+                        Username = Item.Username,
+                        Name = Item.Name,
+                        Email = Item.Email,
+                        /* Actualmente Role y Location son números.
+                         * Se debe crear una lógica que convierta este índice en el string
+                         * que será renderizado en la vista.
+                         */
+                    };
+                    UsersList.Add(UserViewModel);
+                }
+                GetUsersViewModel ViewModel = new GetUsersViewModel()
+                {
+                    Users = UsersList
+                };
+                return View(ViewModel);
+            }
+            else
+            {
+                ViewBag.Message = "Error code: " + result.status;
+                return View();
+            }
         }
 
         // GET: Users/Details/5

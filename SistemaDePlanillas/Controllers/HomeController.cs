@@ -15,7 +15,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 SessionManager.Instance.login("JonnCh", "123", Session);
             }
-            return SessionManager.Instance.getUser(Session).name+ ", home/about para ver barra de navegacion";
+            return SessionManager.Instance.getUser(Session).Name+ ", home/about para ver barra de navegacion";
         }
 
         public ActionResult About()
@@ -30,7 +30,15 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if(User.Identity.IsAuthenticated)
+            {
+                return View("Test");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
         }
 
         public ActionResult Test()
