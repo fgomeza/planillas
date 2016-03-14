@@ -39,12 +39,14 @@ namespace SistemaDePlanillas.Models
     {
         public string name;
         public string icon;
+        public string desc;
         public List<Tuple<string, string>> options;
 
-        public MenubarConfig(string name, List<Tuple<string, string>> options, string icon)
+        public MenubarConfig(string name, List<Tuple<string, string>> options, string icon, string desc)
         {
             this.name = name;
             this.icon=icon;
+            this.desc = desc;
             this.options = options;
         }
     }
@@ -70,7 +72,7 @@ namespace SistemaDePlanillas.Models
                     Operation op = og.operations[operacion];
                     options.Add(new Tuple<string,string>(op.desc,op.url));
                 }
-                MenubarConfig menu = new MenubarConfig(og.desc, options, og.icon);
+                MenubarConfig menu = new MenubarConfig(og.name, options, og.icon, og.desc);
                 (og.rightAlign ? rightMenus : leftMenus).Add(menu);
                 menus[grupo.Key] = menu;
             }

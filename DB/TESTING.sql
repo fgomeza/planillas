@@ -29,65 +29,69 @@ SELECT * FROM FSE_01('Sede de Tibas');
 
 SELECT * FROM FRO_01('ADMINISTRADOR',1);
 
-INSERT INTO TGO_01 VALUES('users','Usuarios','',true);
-INSERT INTO TGO_01 VALUES('roles','Roles','',true);
-INSERT INTO TGO_01 VALUES('locations','Sedes','',false);
-INSERT INTO TGO_01 VALUES('employees','Asociados','',false);
-INSERT INTO TGO_01 VALUES('debits','Débitos','',false);
-INSERT INTO TGO_01 VALUES('payrolls','Planillas','',false);
-INSERT INTO TGO_01 VALUES('extras','Extras','',false);
-INSERT INTO TGO_01 VALUES('recess','Penalizaciones','',false);
+INSERT INTO TGO_01 VALUES('users','Usuarios','eye-open',true);
+INSERT INTO TGO_01 VALUES('roles','Roles de usuarios','wrench',true);
+INSERT INTO TGO_01 VALUES('locations','Sedes','globe',false);
+INSERT INTO TGO_01 VALUES('employees','Asociados','user',false);
+INSERT INTO TGO_01 VALUES('debits','Débitos de asociados','eur',false);
+INSERT INTO TGO_01 VALUES('payrolls','Planillas','list',false);
+INSERT INTO TGO_01 VALUES('extras','Extras de asociados','plus',false);
+INSERT INTO TGO_01 VALUES('recess','Penalizaciones de asociados','minus',false);
 
-INSERT INTO TOP_01 VALUES ('add','','users');
-INSERT INTO TOP_01 VALUES ('modify','','users');
-INSERT INTO TOP_01 VALUES ('remove','','users');
-INSERT INTO TOP_01 VALUES ('get','','users');
+INSERT INTO TOP_01 VALUES ('add','Agregar usuarios','users');
+INSERT INTO TOP_01 VALUES ('modify','Modificar usuarios','users');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar usuarios','users');
+INSERT INTO TOP_01 VALUES ('get','Ver usuarios','users');
 
-INSERT INTO TOP_01 VALUES ('add','','roles');
-INSERT INTO TOP_01 VALUES ('modify','','roles');
-INSERT INTO TOP_01 VALUES ('remove','','roles');
-INSERT INTO TOP_01 VALUES ('get','','roles');
+INSERT INTO TOP_01 VALUES ('add','Agregar roles','roles');
+INSERT INTO TOP_01 VALUES ('modify','Modificar roles','roles');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar roles','roles');
+INSERT INTO TOP_01 VALUES ('get','Ver roles','roles');
 
-INSERT INTO TOP_01 VALUES ('add','','locations');
-INSERT INTO TOP_01 VALUES ('remove','','locations');
-INSERT INTO TOP_01 VALUES ('get','','locations');
+INSERT INTO TOP_01 VALUES ('add','Agregar sedes','locations');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar sedes','locations');
+INSERT INTO TOP_01 VALUES ('get','Ver sedes','locations');
 
-INSERT INTO TOP_01 VALUES ('add','','employees');
-INSERT INTO TOP_01 VALUES ('modify','','employees');
-INSERT INTO TOP_01 VALUES ('remove','','employees');
-INSERT INTO TOP_01 VALUES ('get','','employees');
+INSERT INTO TOP_01 VALUES ('add','Agregar empleados','employees');
+INSERT INTO TOP_01 VALUES ('modify','Modificar empleados','employees');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar empleados','employees');
+INSERT INTO TOP_01 VALUES ('get','Ver empleados','employees');
 
-INSERT INTO TOP_01 VALUES ('add','','debits');
-INSERT INTO TOP_01 VALUES ('modify','','debits');
-INSERT INTO TOP_01 VALUES ('remove','','debits');
-INSERT INTO TOP_01 VALUES ('get','','debits');
-INSERT INTO TOP_01 VALUES ('addtypes','','debits');
-INSERT INTO TOP_01 VALUES ('modifytypes','','debits');
-INSERT INTO TOP_01 VALUES ('removetypes','','debits');
-INSERT INTO TOP_01 VALUES ('gettypes','','debits');
+INSERT INTO TOP_01 VALUES ('add','Agregar debitos','debits');
+INSERT INTO TOP_01 VALUES ('modify','Modificar debitos','debits');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar debitos','debits');
+INSERT INTO TOP_01 VALUES ('get','Ver debitos','debits');
+INSERT INTO TOP_01 VALUES ('addtypes','Agregar un tipo de debito','debits');
+INSERT INTO TOP_01 VALUES ('modifytypes','Modificar un tipo de debito','debits');
+INSERT INTO TOP_01 VALUES ('removetypes','Eliminar un tipo de debito','debits');
+INSERT INTO TOP_01 VALUES ('gettypes','Ver los tipos de debitos','debits');
 
-INSERT INTO TOP_01 VALUES ('callprice','','payrolls');
-INSERT INTO TOP_01 VALUES ('addcalls','','payrolls');
-INSERT INTO TOP_01 VALUES ('getcalls','','payrolls');
-INSERT INTO TOP_01 VALUES ('generate','','payrolls');
-INSERT INTO TOP_01 VALUES ('aprove','','payrolls');
-INSERT INTO TOP_01 VALUES ('remove','','payrolls');
-INSERT INTO TOP_01 VALUES ('get','','payrolls');
+INSERT INTO TOP_01 VALUES ('callprice','Modificar precio de llamadas','payrolls');
+INSERT INTO TOP_01 VALUES ('addcalls','Agregar registro de llamadas','payrolls');
+INSERT INTO TOP_01 VALUES ('getcalls','Ver las llamadas','payrolls');
+INSERT INTO TOP_01 VALUES ('generate','Generar planilla','payrolls');
+INSERT INTO TOP_01 VALUES ('aprove','Aprovar planilla generada','payrolls');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar planillas del historico','payrolls');
+INSERT INTO TOP_01 VALUES ('get','Ver planillas del historico','payrolls');
 
-INSERT INTO TOP_01 VALUES ('add','','extras');
-INSERT INTO TOP_01 VALUES ('modify','','extras');
-INSERT INTO TOP_01 VALUES ('remove','','extras');
-INSERT INTO TOP_01 VALUES ('get','','extras');
+INSERT INTO TOP_01 VALUES ('add','Agregar extras','extras');
+INSERT INTO TOP_01 VALUES ('modify','Modificar extras','extras');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar extras','extras');
+INSERT INTO TOP_01 VALUES ('get','Ver extras','extras');
 
-INSERT INTO TOP_01 VALUES ('add','','recess');
-INSERT INTO TOP_01 VALUES ('modify','','recess');
-INSERT INTO TOP_01 VALUES ('remove','','recess');
-INSERT INTO TOP_01 VALUES ('get','','recess');
+INSERT INTO TOP_01 VALUES ('add','Agregar penalizaciones','recess');
+INSERT INTO TOP_01 VALUES ('modify','Modificar penalizaciones','recess');
+INSERT INTO TOP_01 VALUES ('remove','Eliminar penalizaciones','recess');
+INSERT INTO TOP_01 VALUES ('get','Ver penalizaciones','recess');
 
 SELECT * FROM FOP_01(1,'add','employees');
 SELECT * FROM FOP_01(1,'modify','employees');
 SELECT * FROM FOP_01(1,'remove','employees');
 SELECT * FROM FOP_01(1,'get','employees');
+SELECT * FROM FOP_01(1,'get','users');
+SELECT * FROM FOP_01(1,'get','extras');
+
+select * from tprr_01;
 
 SELECT * FROM FUS_01('Jonnathan','JonnCh','123',1,1,'jcharpentier@mobilixe.net');
 

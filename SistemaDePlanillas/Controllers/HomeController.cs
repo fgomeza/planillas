@@ -30,8 +30,6 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Index()
         {
-            Login();
-            //return redirect("/test");
             return View();
         }
 

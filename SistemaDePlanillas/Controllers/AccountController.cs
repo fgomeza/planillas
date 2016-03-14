@@ -11,7 +11,7 @@ using System.Web.Mvc;
 namespace PlanillasFrontEnd.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : Controller 
     {
         public AccountController()
         {

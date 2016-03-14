@@ -37,3 +37,14 @@ var actionString = function (group, operation, args, callback) {
         error: function () { callback(JSON.stringify({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' },null,2)); }
     });
 }
+
+
+$(document).ready(function () {
+    $(".alert").addClass("in").fadeOut(4500);
+
+    /* swap open/close side menu icons */
+    $('[data-toggle=collapse]').click(function () {
+        // toggle icon
+        $(this).find("i").toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
+    });
+});

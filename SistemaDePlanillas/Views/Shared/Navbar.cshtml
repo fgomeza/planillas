@@ -1,68 +1,62 @@
 ﻿@using SistemaDePlanillas.Models
-@{
-    var config = (ViewConfig)ViewData["config"];
 
-    string active = config != null && config.activeMenu != null ? config.activeMenu : "";
+@{
+    var navbar = SessionManager.Instance.getNavbarConfig((User)Session["user"]);
 }
 
+<!-- Left column -->
+<ul class="nav nav-stacked">
+    @{
+        string collapseClass;
+        string iconClass;
+        ViewBag.selectedGroup = "extras";
+    }
+    @foreach (var group in navbar.leftMenus)
+    {
+        bool isSelectedGroup = group.name.Equals(ViewBag.selectedGroup);
+        collapseClass = isSelectedGroup ? "in" : "";
+        iconClass = isSelectedGroup ? "down" : "right";
+
+        <li class="nav-header">
+            <a href="#" data-toggle="collapse" data-target="#@group.name">
+                <span class="@group.icon" aria-hidden="true"></span>
+                @if (isSelectedGroup)
+                {
+                    <b> @group.desc</b>
+                }
+                else
+                {
+                    @group.desc
+                }
+                <i class="glyphicon glyphicon-chevron-@iconClass"></i>
+            </a>
+
+            <ul class="nav nav-stacked collapse @collapseClass" id="@group.name">
+                @foreach (var operation in group.options)
+                {
+                    <li><a href="@operation.Item2"> @operation.Item1</a></li>
+                }
+            </ul>
+        </li>
+    }
+</ul>
 
 
-            @{
-                var navbar = SessionManager.Instance.getNavbarConfig((User)Session["user"]);
-            }
-            <div class="navbar navbar-inverse navbar-fixed-top">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/home"><span class="glyphicon glyphicon-home"></span> Sistema de Planillas</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="myNavbar">
-                        <ul class="nav navbar-nav">
-                            @{
-                                foreach (var menu in navbar.leftMenus)
-                                {
-                                    <li class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                            <span class="@menu.icon"></span>
-                                            @menu.name
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            @{
-                                                foreach (var option in menu.options)
-                                                {
-                                                    <li><a href="@option.Item2">@option.Item1</a></li>
-                                                }
-                                            }
-                                        </ul>
-                                    </li>
-                                 }
-                            }
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            @{
-                                foreach (var menu in navbar.rightMenus)
-                                {
-                                    <li class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                            @menu.name
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            @{
-                                                foreach (var option in menu.options)
-                                                {
-                                                    <li><a href="@option.Item2">@option.Item1</a></li>
-                                                }
-                                            }
-                                        </ul>
-                                    </li>                    }
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
+
+<!--
+            <ul class="nav nav-stacked">
+                <li class="nav-header">
+                    <a href="#" data-toggle="collapse" data-target="#userMenu">Settings <i class="glyphicon glyphicon-chevron-down"></i></a>
+                    <ul class="nav nav-stacked collapse in" id="userMenu">
+                        <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+ -->

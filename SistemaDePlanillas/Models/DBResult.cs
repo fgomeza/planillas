@@ -167,7 +167,6 @@ namespace SistemaDePlanillas.Models
 
     public class Operation
     {
-        public readonly int id;
         public readonly string desc;
         public readonly string url;
         public readonly string name;
