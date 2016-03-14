@@ -24,8 +24,9 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    /*max-width: 280px;*/
 }
+
 
 .navbar-static-top {
   margin-bottom:20px;
