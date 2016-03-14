@@ -27,7 +27,7 @@ namespace SistemaDePlanillas.Models.Operations
                     string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
                     privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
                 }
-                var result = DBManager.Instance.addRole(name, user.location, privsList);
+                var result = DBManager.Instance.addRole(name, user.Location, privsList);
                 if (result.status == 0)
                 {
                     //cargar nuevo rol en el session manager

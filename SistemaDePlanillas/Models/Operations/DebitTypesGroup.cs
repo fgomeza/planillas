@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.Instance.addFixedDebitType(name,user.location);
+                var result = DBManager.Instance.addFixedDebitType(name,user.Location);
                 return Responses.Simple(result.status);
             }catch(Exception e)
             {
@@ -23,7 +23,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.Instance.addPaymentDebitType(name,interestRate,months,user.location);
+                var result = DBManager.Instance.addPaymentDebitType(name,interestRate,months,user.Location);
                 return Responses.Simple(result.status);
             }
             catch (Exception e)
@@ -75,7 +75,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.Instance.selectFixedDebitTypes(user.location);
+                var result = DBManager.Instance.selectFixedDebitTypes(user.Location);
                 return Responses.SimpleWithData(result.status,result.detail);
             }
             catch (Exception e)
@@ -88,7 +88,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try
             {
-                var result = DBManager.Instance.selectPaymentDebitTypes(user.location);
+                var result = DBManager.Instance.selectPaymentDebitTypes(user.Location);
                 return Responses.SimpleWithData(result.status, result.detail);
             }
             catch (Exception e)

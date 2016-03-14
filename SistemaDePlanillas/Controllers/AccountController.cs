@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PlanillasFrontEnd.Controllers
 {
@@ -19,6 +20,7 @@ namespace PlanillasFrontEnd.Controllers
 
         //
         // GET: /Account/Login
+        [HttpGet]
         [AllowAnonymous]
         public ActionResult Login()
         {
@@ -32,9 +34,10 @@ namespace PlanillasFrontEnd.Controllers
         //[ValidateAntiForgeryToken]
         public ActionResult Signin(LoginViewModel model)
         {
-            if (ModelState.IsValid && SessionManager.Instance.login(model.username, model.password, Session))
+            if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
-                return RedirectToAction("Index", "Users");
+                FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);
+                return RedirectToAction("Test", "Home");
             }
             else
             {
@@ -49,6 +52,13 @@ namespace PlanillasFrontEnd.Controllers
         public ActionResult ForgotPassword()
         {
             return View();
+        }
+
+        public ActionResult SignOut()
+        {
+            SessionManager.Instance.logout(Session);
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
