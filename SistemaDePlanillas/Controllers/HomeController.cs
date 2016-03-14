@@ -30,7 +30,15 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if(User.Identity.IsAuthenticated)
+            {
+                return View("Test");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
         }
 
         public ActionResult Test()

@@ -31,8 +31,8 @@ namespace PlanillasFrontEnd.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Signin(LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
@@ -41,7 +41,8 @@ namespace PlanillasFrontEnd.Controllers
             }
             else
             {
-                return View("Login");
+                ViewBag.Message = "RememberMe:" + model.RememberMe;
+                return View();
             }
 
         }

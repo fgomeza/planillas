@@ -17,6 +17,10 @@ namespace SistemaDePlanillas.Controllers
         public ActionResult Index()
         {
             User user = SessionManager.Instance.getUser(Session);
+            if(user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var result = DBManager.Instance.selectAllUsers(user.Location);
             if(result.status == 0)
             {
