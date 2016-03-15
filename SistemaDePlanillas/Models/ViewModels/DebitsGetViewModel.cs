@@ -8,9 +8,9 @@ namespace SistemaDePlanillas.Models.ViewModels
     public class DebitsGetViewModel
     {
         public string nombre { get; set; }
-        public DebitsGetViewModel()
+        public DebitsGetViewModel(User user)
         {
-            nombre = "test";
+            nombre = user.Name;
         }
     }
 }

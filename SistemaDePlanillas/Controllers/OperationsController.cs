@@ -15,6 +15,9 @@ namespace SistemaDePlanillas.Controllers
         
         public ActionResult process(string group, string operation)
         {
+            group = group.ToLower();
+            operation = operation.ToLower();
+
             SessionManager sm = SessionManager.Instance;
             ViewManager vm = ViewManager.Instance;
             if (!sm.isLogged(Session))

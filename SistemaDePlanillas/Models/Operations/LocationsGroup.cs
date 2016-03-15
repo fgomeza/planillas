@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string modify(User user, string name)
         {
-            var result = DBManager.Instance.updateLocation(user.location, name);
+            var result = DBManager.Instance.updateLocation(user.Location, name);
             return Responses.Simple(result.status);
         }
 

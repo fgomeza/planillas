@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static string add(User user, string name, string username, string password, string email, long role)
         {
-            var result=DBManager.Instance.addUser(name, username, password, role, user.location, email);
+            var result=DBManager.Instance.addUser(name, username, password, role, user.Location, email);
             return Responses.Simple(result.status);
         }
 
@@ -22,7 +22,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string get(User user)
         {
-            var result = DBManager.Instance.selectAllUsers(user.location);
+            var result = DBManager.Instance.selectAllUsers(user.Location);
             return Responses.SimpleWithData(result.status, result.detail);
         }
 

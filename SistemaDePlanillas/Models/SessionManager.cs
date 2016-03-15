@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Security;
 using System.Web.SessionState;
 
 namespace SistemaDePlanillas.Models
@@ -56,12 +57,12 @@ namespace SistemaDePlanillas.Models
 
         public NavbarConfig getNavbarConfig(User user)
         {
-            return getRole(user.role).navbar;
+            return getRole(user.Role).navbar;
         }
 
         public MenubarConfig getMenuBarConfig(User user, string group)
         {
-            return getRole(user.role).navbar.menus[group];
+            return getRole(user.Role).navbar.menus[group];
         }
 
         public void updateRole(int roleId)
@@ -71,13 +72,13 @@ namespace SistemaDePlanillas.Models
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            var privileges = getRole(user.role).privileges;
+            var privileges = getRole(user.Role).privileges;
             return privileges.ContainsKey(group) && privileges[group].Contains(operation);
         }
 
         public string getRoleName(User user)
         {
-            return getRole(user.role).name;
+            return getRole(user.Role).name;
         }
 
         public bool isLogged(HttpSessionStateBase session)
@@ -108,7 +109,7 @@ namespace SistemaDePlanillas.Models
                 User user = result.detail;
                 user.session = session;
                 session["user"] = user;
-                loggedUsers[user.id] = user;
+                //loggedUsers[user.Id] = user;
                 return true;
             }
             return false;
@@ -117,11 +118,12 @@ namespace SistemaDePlanillas.Models
         public bool logout(HttpSessionStateBase session)
         {
             User user = getUser(session);
-            loggedUsers.Remove(user.id);
+            //loggedUsers.Remove(user.Id);
             session.Remove("user");
             return true;
         }
 
+        /*
         public bool logout(int id)
         {
             User user = loggedUsers[id];
@@ -129,6 +131,6 @@ namespace SistemaDePlanillas.Models
             user.session.Remove("user");
             return true;
         }
-
+        */
     }
 }

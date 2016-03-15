@@ -1,14 +1,35 @@
-﻿<h1>Super Testing</h1>
+﻿@{ 
+    ViewBag.Title = "Super Testing";
+}
 
-@Html.Partial("Navbar")
+<div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-inline" onSubmit="enviar(); return false" action="#">
 
-<hr />
-Grupo<input type="text" id="group" />
-Operacion<input type="text" id="operation" />
-Parametros<input type="text" id="args">
-<button type="button" onclick="enviar()">Enviar</button>
-<hr>
-<pre id="result"></pre>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="group" placeholder="Grupo" />
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" type="text" id="operation" placeholder="Operación" />
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" type="text" id="args" placeholder="Parámetros" />
+                </div>
+
+                <input class="btn btn-default" type="submit"/>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <pre class="well well-lg" id="result"></pre>
+</div>
+
 <script>
     var enviar = function () {
         actionString($("#group").val(), $("#operation").val(), $("#args").val(),
@@ -18,3 +39,4 @@ Parametros<input type="text" id="args">
     }
 
 </script>
+

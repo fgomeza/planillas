@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/add/cms (string,string,string,string)
         public static string add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
         {
-            var result = DBManager.Instance.addCmsEmployee(idCard, idCMS, name, (int)user.location, BCRAccount);
+            var result = DBManager.Instance.addCmsEmployee(idCard, idCMS, name, (int)user.Location, BCRAccount);
             return Responses.Simple(result.status);
         }
 
@@ -25,7 +25,7 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/add/noncms (string,string,string,decimal)
         public static string add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
         {
-            var result = DBManager.Instance.addNonCmsEmployee(idCard, name, (int)user.location, BCRAccount, (float)salary);
+            var result = DBManager.Instance.addNonCmsEmployee(idCard, name, (int)user.Location, BCRAccount, (float)salary);
             return Responses.Simple(result.status);
         }
 
@@ -60,21 +60,21 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/get
         public static string get(User user)
         {
-            var result = DBManager.Instance.selectAllEmployees((int)user.location);
+            var result = DBManager.Instance.selectAllEmployees((int)user.Location);
             return Responses.SimpleWithData(result.status, result.detail);
         }
 
         //employees/get/cms
         public static string get_CMS(User user)
         {
-            var result = DBManager.Instance.selectAllCmsEmployees((int)user.location);
+            var result = DBManager.Instance.selectAllCmsEmployees((int)user.Location);
             return Responses.SimpleWithData(result.status, result.detail);
         }
 
         //employees/get/noncms
         public static string get_nonCMS(User user)
         {
-            var result = DBManager.Instance.selectAllNonCmsEmployees((int)user.location);
+            var result = DBManager.Instance.selectAllNonCmsEmployees((int)user.Location);
             return Responses.SimpleWithData(result.status, result.detail);
         }
 

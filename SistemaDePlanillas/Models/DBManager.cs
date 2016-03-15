@@ -2216,13 +2216,13 @@ namespace SistemaDePlanillas.Models
                     while (dr.Read())
                     {
                         User us = new User();
-                        us.id = dr.GetInt64(0);
-                        us.name = dr.GetString(1);
-                        us.username = dr.GetString(2);
-                        us.password = dr.GetString(3);
-                        us.role = dr.GetInt64(4);
-                        us.location = dr.GetInt64(5);
-                        us.email = dr.GetString(6);
+                        us.Id = dr.GetInt64(0);
+                        us.Name = dr.GetString(1);
+                        us.Username = dr.GetString(2);
+                        us.Password = dr.GetString(3);
+                        us.Role = dr.GetInt64(4);
+                        us.Location = dr.GetInt64(5);
+                        us.Email = dr.GetString(6);
                         res.detail = us;
                     }
                     dr.Close();
@@ -2262,13 +2262,13 @@ namespace SistemaDePlanillas.Models
                     while (dr.Read())
                     {
                         User us = new User();
-                        us.id = dr.GetInt64(0);
-                        us.name = dr.GetString(1);
-                        us.username = dr.GetString(2);
-                        us.password = dr.GetString(3);
-                        us.role = dr.GetInt64(4);
-                        us.location = dr.GetInt64(5);
-                        us.email = dr.GetString(6);
+                        us.Id = dr.GetInt64(0);
+                        us.Name = dr.GetString(1);
+                        us.Username = dr.GetString(2);
+                        us.Password = dr.GetString(3);
+                        us.Role = dr.GetInt64(4);
+                        us.Location = dr.GetInt64(5);
+                        us.Email = dr.GetString(6);
                         res.detail.Add(us);
                     }
                     dr.Close();

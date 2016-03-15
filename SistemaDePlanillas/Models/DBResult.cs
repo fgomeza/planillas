@@ -85,14 +85,14 @@ namespace SistemaDePlanillas.Models
 
     public class User
     {
-        public long id;
-        public string name;
-        public string username;
-        public string password;
-        public long role;
-        public long location;
-        public string email;
-        public HttpSessionStateBase session;
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public long Role { get; set; }
+        public long Location { get; set; }
+        public string Email { get; set; }
+        public HttpSessionStateBase session { get; set; }
     }
 
     public class Location

@@ -1,9 +1,8 @@
-﻿@using SistemaDePlanillas.Models.ViewModels
-@model GetUsersViewModel
-@{
+﻿@{
     ViewBag.Title = "Usuarios";
 }
-<div>
+<div class="page-header">
+    <h2>@ViewBag.Title.</h2>
     <h3>@ViewBag.Message</h3>
 </div>
 
@@ -13,25 +12,20 @@
         <div class="panel-heading">
             <h3 class="panel-title">Lista de usuarios</h3>
         </div>
-        
-        <table class="table table-hover">
+        <div class="panel-body"></div>
+        <table class="table">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Nombre</th>
                     <th>Usuario</th>
+                    <th>Contraseña</th>
+                    <th>Role</th>
+                    <th>Sede</th>
                     <th>Email</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (UserViewModel item in Model.Users)
-                {
-                    <tr>
-                        <td>@item.Username</td>
-                        <td>@item.Name</td>
-                        <td>@item.Email</td>
-                    </tr>
-                }
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>
