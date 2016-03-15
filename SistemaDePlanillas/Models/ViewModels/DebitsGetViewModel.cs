@@ -14,7 +14,7 @@ namespace SistemaDePlanillas.Models.ViewModels
         //definir datos de vista
         public string nombre { get; set; }
 
-        //El constructor puede o no recibir el usuario
+        //El constructor puede o no recibir el usuario o puede omitirse para utilizar el default
         public DebitsGetViewModel(User user)
         {
             nombre = user.Name;
