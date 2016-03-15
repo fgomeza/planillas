@@ -109,7 +109,6 @@ namespace SistemaDePlanillas.Models
                 User user = result.detail;
                 user.session = session;
                 session["user"] = user;
-                //loggedUsers[user.Id] = user;
                 return true;
             }
             return false;
@@ -118,7 +117,6 @@ namespace SistemaDePlanillas.Models
         public bool logout(HttpSessionStateBase session)
         {
             User user = getUser(session);
-            //loggedUsers.Remove(user.Id);
             session.Remove("user");
             return true;
         }

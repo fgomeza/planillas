@@ -11,7 +11,7 @@ using System.Web.Security;
 
 namespace PlanillasFrontEnd.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class AccountController : Controller 
     {
         public AccountController()
@@ -21,7 +21,6 @@ namespace PlanillasFrontEnd.Controllers
         //
         // GET: /Account/Login
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
@@ -30,7 +29,6 @@ namespace PlanillasFrontEnd.Controllers
         //
         // POST: /Account/Login
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
@@ -41,7 +39,9 @@ namespace PlanillasFrontEnd.Controllers
             }
             else
             {
-                ViewBag.Message = "RememberMe:" + model.RememberMe;
+                /*Aquí hace falta una forma de tomar el error que sucedió
+                */
+                ModelState.AddModelError("LoginError", "Usuario o contraseña inválidos");
                 return View();
             }
 
@@ -49,12 +49,13 @@ namespace PlanillasFrontEnd.Controllers
 
         //
         // GET: /Account/ForgotPassword
-        [AllowAnonymous]
+        [HttpGet]
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
+        [HttpGet]
         public ActionResult SignOut()
         {
             SessionManager.Instance.logout(Session);
