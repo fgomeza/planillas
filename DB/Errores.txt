@@ -1,8 +1,4 @@
 
-res.status = dr.GetInt64(0);
-res.status = long.Parse(e.MessageText);
-res.status = DBERR;
-return res;
 
 ERRORES
 
@@ -30,6 +26,28 @@ ERRORES
 22	El role no cuenta con los privilegios apra la operacion
 23	No coincide el numero de parametros esperado
 24	No coincide el tipo de los parametros esperado
+25	El nombre del tipo de debito fijo ya existe.
+26	Tipo de debito fijo inexistente
+27	El nombre del tipo de debito a cuotas ya existe.
+28	Tipo de debito A CUOTAS inexistente
+29	Imposible eliminar por que existen usuarios asociados a este role
+30	Imposible eliminar esta sede por que existen Trabajadores asociados
+31	Imposible eliminar esta sede por que existen roles asociados
+32	Imposible eliminar esta sede por que existen usuarios asociados
+33	Imposible eliminar este trabajador por que tiene débitos asociados
+34	Imposible eliminar este trabajador por que tiene penalizaciones asociadas
+35	Imposible eliminar este tipo por que existen débitos asociados
+
+
+
+
+
+
+
+
+
+
+
 
 
 
