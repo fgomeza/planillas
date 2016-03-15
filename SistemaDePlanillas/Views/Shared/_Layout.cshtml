@@ -16,6 +16,7 @@
 
     </head>
     @{ Html.RenderPartial("TopBanner"); }
+    <div class="alert-danger">@ViewBag.Error</div>
     <body class="body-content">
         @if (Request.IsAuthenticated)
         {
