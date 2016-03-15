@@ -1,18 +1,6 @@
-﻿<input type="text" id="text" />
-<input type="button" onclick="enviar()" title="Enviar" />
-<script>
-    function enviar(){
-        var text = $("#text").val();
-        var dataJSON = { name: text};
-        $.ajax({
-            url: "api/Default",
-            type: "GET",
-            //data: JSON.stringify(dataJSON),
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function (data) { alert(data); },
-            error: function () { alert('error'); }
-        });
-    }
+﻿
 
-</script>
+
+
+<input type="text" id="text" />
+<input type="button" onclick="enviar()" title="Enviar" />

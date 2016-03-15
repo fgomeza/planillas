@@ -188,6 +188,7 @@
     <Compile Include="Models\Responses.cs" />
     <Compile Include="Models\SessionManager.cs" />
     <Compile Include="Models\ViewManager.cs" />
+    <Compile Include="Models\ViewModels\DebitsGetViewModel.cs" />
     <Compile Include="Models\ViewModels\GetUsersViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
@@ -234,7 +235,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
-    <Content Include="Views\Shared\Menubar.cshtml" />
     <Content Include="Views\Shared\Navbar.cshtml" />
     <Content Include="Views\Operations\Debits\Add.cshtml" />
     <Content Include="Views\Operations\Debits\remove.cshtml" />
@@ -242,12 +242,11 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Operations\Debits\get.cshtml" />
     <Content Include="Views\Shared\TopBanner.cshtml" />
-    <Content Include="Views\Operations\Users\Get.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Operations\Employees\" />
     <Folder Include="Views\Testing\" />
   </ItemGroup>
   <ItemGroup>

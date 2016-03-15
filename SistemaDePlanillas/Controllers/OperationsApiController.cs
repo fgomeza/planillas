@@ -85,6 +85,7 @@ namespace SistemaDePlanillas.Controllers
         {
             try
             {
+
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 

@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Controllers
         {
             if (!SessionManager.Instance.isLogged(Session))
             {
-                SessionManager.Instance.login("JonnCh", "123", Session);
+                SessionManager.Instance.login("JonnCh", "123", Session); 
             }
             return SessionManager.Instance.getUser(Session).Name+ ", home/about para ver barra de navegacion";
         }
