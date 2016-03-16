@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using SistemaDePlanillas.Filters;
 
 namespace SistemaDePlanillas
 {
@@ -9,6 +10,7 @@ namespace SistemaDePlanillas
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthorizeAttribute());
+            filters.Add(new SidebarFilter());
         }
     }
 }

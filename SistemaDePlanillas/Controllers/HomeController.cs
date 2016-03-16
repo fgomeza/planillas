@@ -32,7 +32,7 @@ namespace SistemaDePlanillas.Controllers
         {
             if(User.Identity.IsAuthenticated)
             {
-                return View("Test");
+                return View();
             }
             else
             {

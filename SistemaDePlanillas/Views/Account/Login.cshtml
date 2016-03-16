@@ -17,35 +17,38 @@
             </div>
             <div class="panel-body">
 
-                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-vertical", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
 
                     <fieldset class="form-group">
                         @Html.LabelFor(u => u.Username)
                         <div class="input-group">
-                            <!--<input class="form-control" type="text" name="Username" value="JonnCh" />-->
                             @Html.TextBoxFor(u => u.Username, new { @class = "form-control", @Value = "JonnCh" })
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                         </div>
-                        <small class="text-danger">@Html.ValidationMessage("Username")</small>
+                        @Html.ValidationMessageFor(u => u.Username, "", new { @class = "text-danger"})
                     </fieldset>
 
                     <fieldset class="form-group">
-                        <label for="password">Contraseña</label>
                         @Html.LabelFor(u => u.Password)
                         <div class="input-group">
                             @Html.PasswordFor(u => u.Password, new { @class = "form-control", @Value = "123" })
                             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                         </div>
-                        <small class="text-danger">@Html.ValidationMessage("Password")</small>
+                        @Html.ValidationMessageFor(u => u.Password, "", new { @class = "text-danger"})
                     </fieldset>
 
-                    <div class="checkbox">
-                        <label>@Html.CheckBox("RememberMe")Recordar usuario</label>
-                    </div>
+                    <fieldset class="form-group">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(u => u.RememberMe)
+                            @Html.LabelFor(u => u.RememberMe)
+                        </div>
+                    </fieldset>
 
-                    <input class="btn btn-primary" type="submit" value="Ingresar" />
+                    <fieldset class="form-group">
+                        <input class="btn btn-primary" type="submit" value="Ingresar" />
+                    </fieldset>
                 }
 
             </div>

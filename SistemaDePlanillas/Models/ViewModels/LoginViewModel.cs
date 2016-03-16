@@ -6,11 +6,13 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models.ViewModels
 {
-    public class LoginViewModel
+    public class LoginViewModel : BaseViewModel
     {
+        [Display(Name = "Usuario")]
         [Required(ErrorMessage = "Debe entrar un nombre de usuario")]
         public string Username { get; set; }
 
+        [Display(Name = "Contraseña")]
         [Required(ErrorMessage = "Debe entrar una contraseña")]
         public string Password { get; set; }
 
