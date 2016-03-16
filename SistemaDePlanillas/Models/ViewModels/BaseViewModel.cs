@@ -5,8 +5,8 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models.ViewModels
 {
-    public class GetUsersViewModel : BaseViewModel
+    public class BaseViewModel
     {
-        public List<UserViewModel> Users { get; set; }
+        public SidebarViewModel SidebarViewModel { get; set; }
     }
 }

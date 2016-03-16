@@ -21,8 +21,9 @@ namespace PlanillasFrontEnd.Controllers
         //
         // GET: /Account/Login
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
+            ViewBag.returnUrl = returnUrl;
             return View();
         }
 
@@ -30,12 +31,12 @@ namespace PlanillasFrontEnd.Controllers
         // POST: /Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
                 FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);
-                return RedirectToAction("Test", "Home");
+                return RedirectToLocal(returnUrl);
             }
             else
             {
@@ -62,5 +63,16 @@ namespace PlanillasFrontEnd.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel : BaseViewModel
     {
         public string Username { get; set; }
         public string Name { get; set; }

@@ -14,10 +14,13 @@
         <script src="~/Scripts/bootstrap.js"></script>
         <script src="~/Scripts/site.js"></script>
 
+        <!--Microsoft JQuery Unobtrusive Validation-->
+        <script src="~/Scripts/jquery.validate.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
     </head>
-    @{ Html.RenderPartial("TopBanner"); }
-    <div class="alert-danger">@ViewBag.Error</div>
     <body class="body-content">
+        @{ Html.RenderPartial("TopBanner"); }
         @if (Request.IsAuthenticated)
         {
             <div>
@@ -25,6 +28,7 @@
             </div>
         }
         <div>
+            <div class="alert-danger">@ViewBag.Error</div>
             @RenderBody()
         </div>
     </body>
