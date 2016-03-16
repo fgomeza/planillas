@@ -20,6 +20,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>@Html.ActionLink("Super Testing", "Test", "Home")</li>
+                <li>@Html.ActionLink("Dashboard template", "Index", "Home")</li>
                 <li>@Html.ActionLink("Usuarios", "Index", "Users")</li>
 
                 @if (Request.IsAuthenticated)
@@ -35,10 +36,10 @@
             </ul>
         </div>
     </div>
+    <script>
+        $('#topBanner ul.nav a').filter(function () {
+            return this.href == window.location;
+        }).parent().addClass('active');
+    </script>
 </nav>
 
-<script>
-    $('ul.nav a').filter(function () {
-        return this.href == window.location;
-    }).parent().addClass('active');
-</script>

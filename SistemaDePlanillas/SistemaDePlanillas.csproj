@@ -247,6 +247,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Operations\Debits\get.cshtml" />
     <Content Include="Views\Shared\TopBanner.cshtml" />
+    <Content Include="Views\Shared\Sidebar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
