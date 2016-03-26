@@ -1,6 +1,13 @@
 ﻿body {
     padding-top: 70px;
     padding-bottom: 20px;
+    padding-left: 260px;
+}
+
+@media only screen and (max-width: 992px) {
+    body {
+        padding-left: 0;
+    }
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -62,4 +69,24 @@ footer {
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
   border-radius: 10px;
+}
+
+/* top nav */
+.top-nav {
+    padding: 0 15px;
+}
+
+.top-nav>li {
+    display: inline-block;
+    float: left;
+}
+
+@media (min-width: 993px) {
+    .navbar-fixed-top {
+        margin-left: 260px !important;
+    }
+}
+
+.navbar-fixed-top {
+    margin-left: 0px;
 }

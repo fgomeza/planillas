@@ -1,39 +1,39 @@
-﻿@using SistemaDePlanillas.Models.ViewModels
-@model GetUsersViewModel
-@{
-    ViewBag.Title = "Usuarios";
+﻿@model IEnumerable<SistemaDePlanillas.Models.ViewModels.UserViewModel>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
 }
-<div>
-    <h3>@ViewBag.Message</h3>
-</div>
 
-<div class="col-md-3"></div>
-<div class="col-md-6">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Lista de usuarios</h3>
-        </div>
-        
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Usuario</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (UserViewModel item in Model.Users)
-                {
-                    <tr>
-                        <td>@item.Username</td>
-                        <td>@item.Name</td>
-                        <td>@item.Email</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="col-md-3"></div>
-
+</table>

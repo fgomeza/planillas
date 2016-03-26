@@ -1,27 +1,17 @@
 ﻿
-<nav id="topBanner" class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+<div id="topBanner" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("Sistema de planillas", "/", routeValues: null, htmlAttributes: new { @class = "navbar-brand" })
+            
+            <a class="navbar-brand" href="#">@ViewBag.Title</a>
 
-        </div>
-
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">@ViewBag.Title</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>@Html.ActionLink("Super Testing", "Test", "Home")</li>
-                <li>@Html.ActionLink("Dashboard template", "Index", "Home")</li>
-                <li>@Html.ActionLink("Usuarios", "Index", "Users")</li>
+            <ul class="nav navbar-nav navbar-right top-nav">
 
                 @if (Request.IsAuthenticated)
                 {
@@ -35,11 +25,15 @@
                 }
             </ul>
         </div>
+
+
     </div>
     <script>
+        console.log("window.location=" + window.location);
         $('#topBanner ul.nav a').filter(function () {
+            console.log("link=" + this.innerHTML + " | this.href=" + this.href);
             return this.href == window.location;
         }).parent().addClass('active');
     </script>
-</nav>
+</div>
 
