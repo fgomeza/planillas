@@ -1,20 +1,37 @@
-﻿
-<div id="sidebar">
-    <a href="#"><strong><i class="glyphicon glyphicon-wrench"></i> Tools</strong></a>
-    <hr>
-    <ul class="nav nav-stacked">
-        <li class="nav-header">
-            <a href="#" data-toggle="collapse" data-target="#userMenu">Settings <i class="glyphicon glyphicon-chevron-down"></i></a>
-            <ul class="nav nav-stacked collapse" id="userMenu">
-                <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
-            </ul>
-        </li>
-    </ul>
+﻿<div id="sidebar" class="fixed collapse navbar-collapse" style="width: 260px; left: 0px">
+    <div class="brand-logo">
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand">Sistema de planillas</a>
+    </div>
+
+    <nav id="menu-links">
+        <ul class="nav nav-pills nav-stacked">
+            <li>
+                <a data-toggle="collapse" data-target="#home-submenu">Home</a>
+                <ul class="nav" id="home-submenu">
+                    <li><a href="@Url.Action("Test", "Home")">Super Testing</a></li>
+                    <li><a href="@Url.Action("Index", "Home")">Dashboard template</a></li>
+                </ul>
+            </li>
+            <li>
+                <a data-toggle="collapse" data-target="#users-submenu">Users</a>
+                <ul class="nav" id="users-submenu">
+                    <li><a href="@Url.Action("Index", "Users")">Usuarios</a></li>
+                    <li><a href="@Url.Action("Create", "Users")">Crear Usuario</a></li>
+                </ul>
+            </li>
+            <li class="nav-header">
+                <a href="#" data-toggle="collapse" data-target="#userMenu">Settings <i class="glyphicon glyphicon-chevron-down"></i></a>
+                <ul class="nav nav-stacked collapse" id="userMenu">
+                    <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 </div>

@@ -48,3 +48,27 @@ $(document).ready(function () {
         $(this).find("i").toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
     });
 });
+
+/* Bootstrap feedback for client-side unobtrusive validation */
+(function ($) {
+    var defaultOptions = {
+        validClass: 'has-success',
+        errorClass: 'has-error',
+        highlight: function (element, errorClass, validClass) {
+            $(element).closest(".form-group")
+                .removeClass(validClass)
+                .addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest(".form-group")
+                .removeClass(errorClass);
+        }
+    };
+ 
+    $.validator.setDefaults(defaultOptions);
+ 
+    $.validator.unobtrusive.options = {
+        errorClass: defaultOptions.errorClass,
+        validClass: defaultOptions.validClass,
+    };
+})(jQuery);

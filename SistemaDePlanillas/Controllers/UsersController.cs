@@ -43,7 +43,7 @@ namespace SistemaDePlanillas.Controllers
                 {
                     Users = UsersList
                 };
-                return View(ViewModel);
+                return View(ViewModel.Users);
             }
             else
             {

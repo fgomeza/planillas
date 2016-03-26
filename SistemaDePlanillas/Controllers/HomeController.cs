@@ -30,7 +30,7 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Index()
         {
-            if(User.Identity.IsAuthenticated)
+            if(Request.IsAuthenticated)
             {
                 return View();
             }
