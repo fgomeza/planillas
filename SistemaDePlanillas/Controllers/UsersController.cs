@@ -66,27 +66,21 @@ namespace SistemaDePlanillas.Controllers
 
         // POST: Users/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(UserCreateViewModel model)
         {
             try
             {
-                string name = collection["name"];
-                string username = collection["username"];
-                string password = collection["password"];
-                int role = Int32.Parse(collection["role"]);
-                int location = Int32.Parse(collection["location"]);
-                string email = collection["email"];
-
                 DBManager db = DBManager.Instance;
-                Result<string> result = db.addUser(name, username, password, role, location, email);
+                Result<string> result = db.addUser(model.Name, model.Username, model.Password, model.Role, model.Location, model.Email);
                 Console.WriteLine(result.detail);
-                // TODO: Add insert logic here
 
                 return RedirectToAction("Index");
             }
             catch(FormatException)
             {
-                Console.WriteLine("Format exception. UsersController: Create()");
+                string error = "Format exception. UsersController: Create()";
+                Console.WriteLine(error);
+                ViewBag.Error = error;
                 return View();
             }
             catch

@@ -38,19 +38,25 @@ function actionString(group, operation, args, callback) {
     });
 }
 
+var displayAlerts = function () {
+    var alert = $('.field-validation-error').closest('.alert');
+    alert.show();
+}
 
-$(document).ready(function () {
+var fadeOutAlerts = function () {
     $(".alert").addClass("in").fadeOut(4500);
+}
 
-    /* swap open/close side menu icons */
+var swapOpenCloseSideMenuIcons = function () {
+    // swap open/close side menu icons 
     $('[data-toggle=collapse]').click(function () {
         // toggle icon
         $(this).find("i").toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
     });
-});
+}
 
 /* Bootstrap feedback for client-side unobtrusive validation */
-(function ($) {
+var setupUnobtrusiveValidationForBootstrap = function () {
     var defaultOptions = {
         validClass: 'has-success',
         errorClass: 'has-error',
@@ -64,11 +70,28 @@ $(document).ready(function () {
                 .removeClass(errorClass);
         }
     };
- 
+
     $.validator.setDefaults(defaultOptions);
- 
+
     $.validator.unobtrusive.options = {
         errorClass: defaultOptions.errorClass,
         validClass: defaultOptions.validClass,
     };
-})(jQuery);
+}
+
+var addAnimationForDropdowns = function () {
+    $('nav .dropdown').on('show.bs.dropdown', function (e) {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+    })
+    $('nav .dropdown').on('hide.bs.dropdown', function (e) {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+    })
+}
+
+$(document).ready(function () {
+    //fadeOutAlerts();
+    //swapOpenCloseSideMenuIcons();
+    displayAlerts();
+    setupUnobtrusiveValidationForBootstrap();
+    addAnimationForDropdowns();
+});
