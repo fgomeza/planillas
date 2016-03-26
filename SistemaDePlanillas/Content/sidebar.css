@@ -14,8 +14,9 @@
     /*background-color: #E8E8E8;*/
     background-color: #222;
     border-right: 1px rgba(0,0,0,.07) solid;
-    overflow: auto;
+    overflow: auto!important;
 }
+
 /*
 @media only screen and (max-width: 992px) {
     #sidebar {
@@ -23,15 +24,6 @@
     }
 }
 */
-
-
-#sidebar {
-    overflow: auto;
-}
-
-.fixed {
-    position: fixed;
-}
 
 .brand-logo {
     min-height: 64px;
@@ -48,6 +40,47 @@
     color: inherit;
     cursor: inherit;
 }
+
+#sidebar .collapsible-item:after {
+    content: "\e259";
+    font-family: 'Glyphicons Halflings';
+    display: inline-block;
+    speak: none;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    position: absolute;
+    right: 0px;
+    top: 4px;
+    font-size: 20px;
+    /*
+    -webkit-transition: transform .3s ease-in-out;
+    -o-transition: transform .3s ease-in-out;
+    transition: transform .3s ease-in-out;
+    */
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#sidebar .collapsible-item.collapsed:after {
+    content: "\e258";
+}
+
+/* Scrollbar */
+#sidebar::-webkit-scrollbar {
+    background-color: transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+
+
+
 
 
 
