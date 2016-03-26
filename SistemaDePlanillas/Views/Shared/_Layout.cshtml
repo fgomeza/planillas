@@ -6,16 +6,22 @@
 
     <title>@ViewBag.Title</title>
 
-    <!--Twitter Bootstrap-->
-    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <!-- JQuery -->
     <script src="~/Scripts/jquery-2.2.1.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <script src="~/Scripts/bootstrap.js"></script>
 
-    <!--Microsoft JQuery Unobtrusive Validation-->
+    <!-- Jasny Bootstrap -->
+    <link rel="stylesheet" href="~/Content/jasny-bootstrap.css" />
+    <script src="~/Scripts/jasny-bootstrap.js"></script>
+
+    <!-- Microsoft JQuery Unobtrusive Validation -->
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 
-    <!--Site-->
+    <!-- Site -->
     <script src="~/Scripts/site.js"></script>
     <link rel="stylesheet" href="~/Content/site.css" />
     <link rel="stylesheet" href="~/Content/sidebar.css" />
@@ -23,16 +29,18 @@
 
 <body>
 
-    @{ Html.RenderPartial("Sidebar"); }
+    <div id="wrapper">
+        @{ Html.RenderPartial("Sidebar"); }
 
-    <div class="body-content">
-        @{ Html.RenderPartial("TopBanner"); }
+        <div class="body-content">
+            @{ Html.RenderPartial("TopBanner"); }
 
-        <div class="container-fluid">
-            <div class="alert-danger">@ViewBag.Error</div>
-            <main>
-                @RenderBody()
-            </main>
+            <div class="container-fluid">
+                <div class="alert-danger">@ViewBag.Error</div>
+                <main>
+                    @RenderBody()
+                </main>
+            </div>
         </div>
     </div>
 </body>
