@@ -1882,6 +1882,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Role>> selectRoles()
         {
             Result<List<Role>> res = new Result<List<Role>>();
+            res.detail = new List<Role>();
             if (connect())
             {
                 try
@@ -1998,6 +1999,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<OperationsGroup>> selectOperationsGroups()
         {
             Result<List<OperationsGroup>> res = new Result<List<OperationsGroup>>();
+            res.detail = new List<OperationsGroup>();
             if (connect())
             {
                 try
@@ -2333,6 +2335,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Tuple<long, string>>> selectAllErrors()
         {
             Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
+            res.detail = new List<Tuple<long, string>>();
             if (connect())
             {
                 try
