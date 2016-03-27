@@ -8,15 +8,13 @@ namespace SistemaDePlanillas.Repository
 {
     public class UserRepository : IUserRepository
     {
-        /*
-        private MVCEntities context;
+        private UserDBContext DBcontext;
 
-        public UserRepository(MVCEntities context)
+        public UserRepository(UserDBContext context)
         {
-            this.context = context;
+            this.DBcontext = context;
         }
 
-        */
         public IEnumerable<User> GetUsers()
         {
             throw new NotImplementedException();

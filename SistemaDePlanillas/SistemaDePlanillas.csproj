@@ -174,6 +174,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataBase.cs" />
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
@@ -196,7 +197,10 @@
     <Compile Include="Models\ViewModels\SidebarViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\DbContext.cs" />
+    <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\IUserRepository.cs" />
+    <Compile Include="Repository\UserDBContext.cs" />
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
