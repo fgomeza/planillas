@@ -25,10 +25,10 @@ namespace SistemaDePlanillas.Controllers
                 SessionManager sm = SessionManager.Instance;
             
                 //checks if the user is logged
-                if (!sm.isLogged(Session))
-                {
-                    return Responses.Error(10, "No se ha iniciado sesion");
-                }
+                //if (!sm.isLogged(Session))
+                //{
+                //    return Responses.Error(10, "No se ha iniciado sesion");
+                //}
 
                 User user = sm.getUser(Session);
                 //checks if the user have privileges to do the current operation
