@@ -32,6 +32,9 @@ namespace SistemaDePlanillas.Controllers
                         Username = Item.Username,
                         Name = Item.Name,
                         Email = Item.Email,
+                        PrimaryKey = Item.Id,
+                        Role = Convert.ToString(Item.Role),
+                        Location = Convert.ToString(Item.Location)
                         /* Actualmente Role y Location son números.
                          * Se debe crear una lógica que convierta este índice en el string
                          * que será renderizado en la vista.
@@ -39,11 +42,7 @@ namespace SistemaDePlanillas.Controllers
                     };
                     UsersList.Add(UserViewModel);
                 }
-                GetUsersViewModel ViewModel = new GetUsersViewModel()
-                {
-                    Users = UsersList
-                };
-                return View(ViewModel.Users);
+                return View(UsersList);
             }
             else
             {
@@ -53,9 +52,24 @@ namespace SistemaDePlanillas.Controllers
         }
 
         // GET: Users/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(long id)
         {
-            return View();
+            Result<User> result = DBManager.Instance.selectUser(id);
+            User User = result.detail;
+            if (User == null)
+            {
+                return HttpNotFound();
+            }
+            UserViewModel viewModel = new UserViewModel
+            {
+                PrimaryKey = User.Id,
+                Name = User.Name,
+                Username = User.Username,
+                Role = Convert.ToString(User.Role),
+                Location = Convert.ToString(User.Location),
+                Email = User.Email
+            };
+            return View(viewModel);
         }
 
         // GET: Users/Create
@@ -90,14 +104,14 @@ namespace SistemaDePlanillas.Controllers
         }
 
         // GET: Users/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(long id)
         {
             return View();
         }
 
         // POST: Users/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(long id, FormCollection collection)
         {
             try
             {
@@ -112,35 +126,26 @@ namespace SistemaDePlanillas.Controllers
         }
 
         // GET: Users/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(long id)
         {
-            DBManager db = DBManager.Instance;
-            Result<User> result = db.selectUser(id);
-            
-
-            // Aquí poner el user obtenido (result.detail) en la página, posiblemente mediante 'Request'
-            return View();
+            return Details(id);
         }
 
         // POST: Users/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(long id, FormCollection collection)
         {
-            try
+            Result<User> result = DBManager.Instance.selectUser(id);
+            User user = result.detail;
+            if (user == null)
             {
-                // TODO: Add delete logic here
-
-                DBManager db = DBManager.Instance;
-                // validar si collection trae los parámetros corretos
-                Result<string> result = db.deleteUser(id);
-                Console.WriteLine(result.detail);
-
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }
-            catch
-            {
-                return View();
-            }
+            //DBManager.Instance.deleteUser(user);
+            DBManager.Instance.deleteUser(id);
+            //db.SaveChanges(); // --> Commit;
+            return RedirectToAction("Index");
         }
     }
 }
