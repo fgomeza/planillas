@@ -1,48 +1,36 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@ViewBag.Title</title>
 
-    <!-- JQuery -->
-    <script src="~/Scripts/jquery-2.2.1.js"></script>
-
-    <!-- Twitter Bootstrap -->
-    <link rel="stylesheet" href="~/Content/bootstrap.css" />
-    <script src="~/Scripts/bootstrap.js"></script>
-
-    <!-- Jasny Bootstrap -->
-    <link rel="stylesheet" href="~/Content/jasny-bootstrap.css" />
-    <script src="~/Scripts/jasny-bootstrap.js"></script>
-
-    <!-- Microsoft JQuery Unobtrusive Validation -->
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-
-    <!-- Site -->
-    <script src="~/Scripts/site.js"></script>
-    <link rel="stylesheet" href="~/Content/site.css" />
-    <link rel="stylesheet" href="~/Content/sidebar.css" />
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/scripts")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </head>
 
 <body>
 
-    <div id="wrapper">
-        @{ Html.RenderPartial("Sidebar"); }
+    @if (Request.IsAuthenticated)
+    {
+        Html.RenderPartial("Sidebar");
+        Html.RenderPartial("TopBanner");
+    }
 
-        <div class="body-content">
-            @{ Html.RenderPartial("TopBanner"); }
+    <main class="body-content">
 
-            <div class="container-fluid">
-                <div class="alert-danger">@ViewBag.Error</div>
-                <main>
-                    @RenderBody()
-                </main>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade in" style="display:none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="close">&times;</button>
+            <strong>@ViewBag.Error</strong>
         </div>
-    </div>
+
+        @RenderBody()
+    </main>
 </body>
 
 </html>

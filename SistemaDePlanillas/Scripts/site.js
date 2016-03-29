@@ -92,6 +92,7 @@ $(document).ready(function () {
     //fadeOutAlerts();
     //swapOpenCloseSideMenuIcons();
     displayAlerts();
-    setupUnobtrusiveValidationForBootstrap();
     addAnimationForDropdowns();
 });
+
+$(setupUnobtrusiveValidationForBootstrap(jQuery));

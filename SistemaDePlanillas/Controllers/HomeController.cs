@@ -9,15 +9,6 @@ namespace SistemaDePlanillas.Controllers
 {
     public class HomeController : Controller
     {
-        public string Login()
-        {
-            if (!SessionManager.Instance.isLogged(Session))
-            {
-                SessionManager.Instance.login("JonnCh", "123", Session); 
-            }
-            return SessionManager.Instance.getUser(Session).Name+ ", home/about para ver barra de navegacion";
-        }
-
         public ActionResult About()
         {
             ViewData["config"] = new ViewConfig
