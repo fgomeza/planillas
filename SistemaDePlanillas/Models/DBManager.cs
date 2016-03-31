@@ -75,13 +75,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try {res.status = long.Parse(e.MessageText);}
+                    try {res.Status = long.Parse(e.MessageText);}
                     catch (Exception){throw e;}
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -118,13 +118,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -146,7 +146,7 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
 
-                    res.detail = new List<Employee>();
+                    res.Detail = new List<Employee>();
                     while (dr.Read())
                     {
                         Employee emp = new Employee();
@@ -157,7 +157,7 @@ namespace SistemaDePlanillas.Models
                         emp.account = dr.GetString(4);
                         emp.cmsText = dr.GetString(5);
                         emp.calls = dr.GetInt64(6);
-                        res.detail.Add(emp);
+                        res.Detail.Add(emp);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -166,13 +166,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -200,13 +200,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = 18;
+                res.Status = 18;
             }
             return res;
         }
@@ -242,13 +242,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -285,13 +285,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = 18;
+                res.Status = 18;
             }
             return res;
         }
@@ -312,7 +312,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = location;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Employee>();
+                    res.Detail = new List<Employee>();
                     while (dr.Read())
                     {
                         Employee emp = new Employee();
@@ -322,7 +322,7 @@ namespace SistemaDePlanillas.Models
                         emp.location = dr.GetString(3);
                         emp.account = dr.GetString(4);
                         emp.salary = dr.GetDouble(5);
-                        res.detail.Add(emp);
+                        res.Detail.Add(emp);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -331,13 +331,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -362,13 +362,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -398,7 +398,7 @@ namespace SistemaDePlanillas.Models
                         emp.location = dr.GetString(2);
                         emp.account = dr.GetString(3);
                         emp.cms = dr.GetBoolean(4);
-                        res.detail = emp;
+                        res.Detail = emp;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -407,13 +407,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -435,7 +435,7 @@ namespace SistemaDePlanillas.Models
 
                     NpgsqlDataReader dr = command.ExecuteReader();
 
-                    res.detail = new List<Employee>();
+                    res.Detail = new List<Employee>();
                     while (dr.Read())
                     {
                         Employee emp = new Employee();
@@ -445,7 +445,7 @@ namespace SistemaDePlanillas.Models
                         emp.location = dr.GetString(3);
                         emp.account = dr.GetString(4);
                         emp.cms = dr.GetBoolean(5);
-                        res.detail.Add(emp);
+                        res.Detail.Add(emp);
                     }
 
                     dr.Close();
@@ -455,13 +455,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -494,13 +494,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -531,13 +531,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -564,13 +564,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -600,7 +600,7 @@ namespace SistemaDePlanillas.Models
                         deb.detail = dr.GetString(2);
                         deb.amount = dr.GetDouble(3);
                         deb.type = dr.GetInt64(4);
-                        res.detail = deb;
+                        res.Detail = deb;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -609,13 +609,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -636,7 +636,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Debit>();
+                    res.Detail = new List<Debit>();
                     while (dr.Read())
                     {
                         Debit deb = new Debit();
@@ -645,7 +645,7 @@ namespace SistemaDePlanillas.Models
                         deb.detail = dr.GetString(2);
                         deb.amount = dr.GetDouble(3);
                         deb.type = dr.GetInt64(4);
-                        res.detail.Add(deb);
+                        res.Detail.Add(deb);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -654,13 +654,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -697,13 +697,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -741,13 +741,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -774,13 +774,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -814,7 +814,7 @@ namespace SistemaDePlanillas.Models
                         Pdeb.missingPayments = dr.GetInt64(6);
                         Pdeb.remainingDebt = dr.GetDouble(7);
                         Pdeb.type = dr.GetInt64(8);
-                        res.detail = Pdeb;
+                        res.Detail = Pdeb;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -823,13 +823,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -850,7 +850,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<PaymentDebit>();
+                    res.Detail = new List<PaymentDebit>();
                     while (dr.Read())
                     {
                         PaymentDebit Pdeb = new PaymentDebit();
@@ -863,7 +863,7 @@ namespace SistemaDePlanillas.Models
                         Pdeb.missingPayments = dr.GetInt64(6);
                         Pdeb.remainingDebt = dr.GetDouble(7);
                         Pdeb.type = dr.GetInt64(8);
-                        res.detail.Add(Pdeb);
+                        res.Detail.Add(Pdeb);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -872,13 +872,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = 18;
+                res.Status = 18;
             }
             return res;
         }
@@ -907,13 +907,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -944,13 +944,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -982,13 +982,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1015,13 +1015,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1050,7 +1050,7 @@ namespace SistemaDePlanillas.Models
                         ext.employee = dr.GetInt64(1);
                         ext.detail = dr.GetString(2);
                         ext.amount = dr.GetDouble(3);
-                        res.detail = ext;
+                        res.Detail = ext;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1059,13 +1059,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1086,7 +1086,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Extra>();
+                    res.Detail = new List<Extra>();
                     while (dr.Read())
                     {
                         Extra ext = new Extra();
@@ -1094,7 +1094,7 @@ namespace SistemaDePlanillas.Models
                         ext.employee = dr.GetInt64(1);
                         ext.detail = dr.GetString(2);
                         ext.amount = dr.GetDouble(3);
-                        res.detail.Add(ext);
+                        res.Detail.Add(ext);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1103,13 +1103,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1142,13 +1142,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1184,13 +1184,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1216,13 +1216,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1254,7 +1254,7 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        res.detail = recess;
+                        res.Detail = recess;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1263,13 +1263,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1290,7 +1290,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = employee;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Recess>();
+                    res.Detail = new List<Recess>();
                     while (dr.Read())
                     {
                         Recess recess = new Recess();
@@ -1301,7 +1301,7 @@ namespace SistemaDePlanillas.Models
                         recess.paymentsMade = dr.GetInt64(4);
                         recess.missingPayments = dr.GetInt64(5);
                         recess.remainingRecess = dr.GetDouble(6);
-                        res.detail.Add(recess);
+                        res.Detail.Add(recess);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1310,13 +1310,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1345,13 +1345,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
 
@@ -1385,13 +1385,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1424,13 +1424,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1457,13 +1457,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1492,7 +1492,7 @@ namespace SistemaDePlanillas.Models
                         pay.date = dr.GetDate(1);
                         pay.user = dr.GetInt64(2);
                         pay.file = dr.GetString(3);
-                        res.detail = pay;
+                        res.Detail = pay;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1501,13 +1501,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1528,14 +1528,14 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = idPay;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Payroll>();
+                    res.Detail = new List<Payroll>();
                     while (dr.Read())
                     {
                         Payroll pay = new Payroll();
                         pay.id = dr.GetInt64(0);
                         pay.date = dr.GetDate(1);
                         pay.user = dr.GetInt64(2);
-                        res.detail.Add(pay);
+                        res.Detail.Add(pay);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1544,13 +1544,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1573,7 +1573,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[1].Value = end;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Payroll>();
+                    res.Detail = new List<Payroll>();
                     while (dr.Read())
                     {
                         Payroll pay = new Payroll();
@@ -1581,7 +1581,7 @@ namespace SistemaDePlanillas.Models
                         pay.date = dr.GetDate(1);
                         pay.user = dr.GetInt64(2);
                         pay.file = dr.GetString(3);
-                        res.detail.Add(pay);
+                        res.Detail.Add(pay);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1590,13 +1590,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1623,13 +1623,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1658,13 +1658,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1691,13 +1691,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1714,13 +1714,13 @@ namespace SistemaDePlanillas.Models
                     command.Transaction = cnx.BeginTransaction();
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Location>();
+                    res.Detail = new List<Location>();
                     while (dr.Read())
                     {
                         Location loc = new Location();
                         loc.id = dr.GetInt64(0);
                         loc.name = dr.GetString(1);
-                        res.detail.Add(loc);
+                        res.Detail.Add(loc);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1729,13 +1729,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1744,22 +1744,22 @@ namespace SistemaDePlanillas.Models
         {
             Result<string> res = new Result<string>();
             var result = addRole(name, location);
-            if (result.status != OK)
+            if (result.Status != OK)
             {
-                res.status = result.status;
+                res.Status = result.Status;
                 return res;
             }
             foreach (var x in privileges)
             {
-                var res2 = Privilege(result.detail, x.Item1, x.Item2);
-                if (res2.status != OK)
+                var res2 = Privilege(result.Detail, x.Item1, x.Item2);
+                if (res2.Status != OK)
                 {
-                    deleteRole(result.detail);
-                    res.status = res2.status;
+                    deleteRole(result.Detail);
+                    res.Status = res2.Status;
                     return res;
                 }
             }
-            res.status = OK;
+            res.Status = OK;
             return res;
         }
 
@@ -1787,13 +1787,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1801,7 +1801,7 @@ namespace SistemaDePlanillas.Models
         public Result<string> updateRole(long id, string name, List<Tuple<string, string>> privileges)
         {
             Result<string> res = updateRole(id,name);
-            if (res.status == OK)
+            if (res.Status == OK)
             {
                 foreach (var x in privileges)
                 {
@@ -1835,13 +1835,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1868,13 +1868,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1882,7 +1882,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Role>> selectRoles()
         {
             Result<List<Role>> res = new Result<List<Role>>();
-            res.detail = new List<Role>();
+            res.Detail = new List<Role>();
             if (connect())
             {
                 try
@@ -1892,13 +1892,13 @@ namespace SistemaDePlanillas.Models
                     command.Transaction = cnx.BeginTransaction();
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Role>();
+                    res.Detail = new List<Role>();
                     while (dr.Read())
                     {
                         long id = dr.GetInt64(0);
                         string name = dr.GetString(1);
                         long location = dr.GetInt64(2);
-                        res.detail.Add(new Role(id, name, location, selectRolePrivileges(id).detail));
+                        res.Detail.Add(new Role(id, name, location, selectRolePrivileges(id).Detail));
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1907,13 +1907,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1944,13 +1944,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1971,12 +1971,12 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = role;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Tuple<string, string>>();
+                    res.Detail = new List<Tuple<string, string>>();
                     while (dr.Read())
                     {
                         string group = dr.GetString(0);
                         string op = dr.GetString(1);
-                        res.detail.Add(new Tuple<string, string>(group, op));
+                        res.Detail.Add(new Tuple<string, string>(group, op));
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -1985,13 +1985,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -1999,7 +1999,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<OperationsGroup>> selectOperationsGroups()
         {
             Result<List<OperationsGroup>> res = new Result<List<OperationsGroup>>();
-            res.detail = new List<OperationsGroup>();
+            res.Detail = new List<OperationsGroup>();
             if (connect())
             {
                 try
@@ -2009,14 +2009,14 @@ namespace SistemaDePlanillas.Models
                     command.Transaction = cnx.BeginTransaction();
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<OperationsGroup>();
+                    res.Detail = new List<OperationsGroup>();
                     while (dr.Read())
                     {
                         string name = dr.GetString(0);
                         string desc = dr.GetString(1);
                         string icon = dr.GetString(2);
                         bool align = dr.GetBoolean(3);
-                        res.detail.Add(new OperationsGroup(desc, name, icon, align, selectAllOperations(name).detail));
+                        res.Detail.Add(new OperationsGroup(desc, name, icon, align, selectAllOperations(name).Detail));
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2025,13 +2025,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2052,12 +2052,12 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].Value = groupName;
 
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Operation>();
+                    res.Detail = new List<Operation>();
                     while (dr.Read())
                     {
                         string name = dr.GetString(0);
                         string desc = dr.GetString(1);
-                        res.detail.Add(new Operation(desc, name, groupName));
+                        res.Detail.Add(new Operation(desc, name, groupName));
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2066,13 +2066,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2109,13 +2109,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2154,13 +2154,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2187,13 +2187,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2225,7 +2225,7 @@ namespace SistemaDePlanillas.Models
                         us.Role = dr.GetInt64(4);
                         us.Location = dr.GetInt64(5);
                         us.Email = dr.GetString(6);
-                        res.detail = us;
+                        res.Detail = us;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2234,13 +2234,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2260,7 +2260,7 @@ namespace SistemaDePlanillas.Models
                     command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
                     command.Parameters[0].Value = location;
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<User>();
+                    res.Detail = new List<User>();
                     while (dr.Read())
                     {
                         User us = new User();
@@ -2271,7 +2271,7 @@ namespace SistemaDePlanillas.Models
                         us.Role = dr.GetInt64(4);
                         us.Location = dr.GetInt64(5);
                         us.Email = dr.GetString(6);
-                        res.detail.Add(us);
+                        res.Detail.Add(us);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2280,13 +2280,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2312,7 +2312,7 @@ namespace SistemaDePlanillas.Models
 
                     while (dr.Read())
                     {
-                        res.detail = selectUser(dr.GetInt64(0)).detail;
+                        res.Detail = selectUser(dr.GetInt64(0)).Detail;
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2321,13 +2321,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2335,7 +2335,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Tuple<long, string>>> selectAllErrors()
         {
             Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
-            res.detail = new List<Tuple<long, string>>();
+            res.Detail = new List<Tuple<long, string>>();
             if (connect())
             {
                 try
@@ -2344,11 +2344,11 @@ namespace SistemaDePlanillas.Models
                     command.CommandType = CommandType.StoredProcedure;
                     command.Transaction = cnx.BeginTransaction();
                     NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Tuple<long, string>>();
+                    res.Detail = new List<Tuple<long, string>>();
                     while (dr.Read())
                     {
                         Tuple<long, string> t = new Tuple<long, string>(dr.GetInt64(0), dr.GetString(1));
-                        res.detail.Add(t);
+                        res.Detail.Add(t);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2357,13 +2357,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2392,13 +2392,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2425,13 +2425,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2439,7 +2439,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<DebitType>> selectFixedDebitTypes(long location)
         {
             Result<List<DebitType>> res = new Result<List<DebitType>>();
-            res.detail = new List<DebitType>();
+            res.Detail = new List<DebitType>();
             if (connect())
             {
                 try
@@ -2458,7 +2458,7 @@ namespace SistemaDePlanillas.Models
                         DebitType dt = new DebitType();
                         dt.id = dr.GetInt64(0);
                         dt.name = dr.GetString(1);
-                        res.detail.Add(dt);
+                        res.Detail.Add(dt);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2467,13 +2467,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2506,13 +2506,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2545,13 +2545,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2578,13 +2578,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }
@@ -2592,7 +2592,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<DebitType>> selectPaymentDebitTypes(long location)
         {
             Result<List<DebitType>> res = new Result<List<DebitType>>();
-            res.detail = new List<DebitType>();
+            res.Detail = new List<DebitType>();
             if (connect())
             {
                 try
@@ -2613,7 +2613,7 @@ namespace SistemaDePlanillas.Models
                         dt.name = dr.GetString(1);
                         dt.interestRate = dr.GetFloat(2);
                         dt.months = dr.GetInt64(3);
-                        res.detail.Add(dt);
+                        res.Detail.Add(dt);
                     }
                     dr.Close();
                     command.Transaction.Commit();
@@ -2622,13 +2622,13 @@ namespace SistemaDePlanillas.Models
                 catch (NpgsqlException e)
                 {
                     cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
+                    try { res.Status = long.Parse(e.MessageText); }
                     catch (Exception) { throw e; }
                 }
             }
             else
             {
-                res.status = DBERR;
+                res.Status = DBERR;
             }
             return res;
         }

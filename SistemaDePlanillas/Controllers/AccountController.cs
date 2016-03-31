@@ -33,12 +33,7 @@ namespace PlanillasFrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            if(model.Username.ToLower() == "admin")
-            {
-                FormsAuthentication.SetAuthCookie("Admin", false);
-                return RedirectToLocal(returnUrl);
-            }
-
+            model.Username = model.Username.ToLower();
             if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
                 FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);

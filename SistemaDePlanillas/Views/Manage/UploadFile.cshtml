@@ -1,0 +1,31 @@
+﻿
+@{ 
+    ViewBag.Title = "Cargar Archivos";
+}
+
+<div>
+    @using (Html.BeginForm("uploadFile", "Manage", FormMethod.Post, new
+    {
+        enctype = "multipart/form-data",
+        id = "uploadDemo",
+        @class = "dropzone"
+    }))
+    {
+        <div class="fallback">
+            <!--<input name="file" type="file" multiple />-->
+            <!--<input type="submit" value="Upload" />-->
+        </div>
+    }
+
+</div>
+
+@Scripts.Render("~/bundles/dropzone")
+<script type="text/javascript">
+        Dropzone.options.uploadDemo = {
+            paramName: "file"
+        };
+</script>
+
+@section scripts {
+    <link href="~/Scripts/dropzone/dropzone.css" rel="stylesheet" />
+}

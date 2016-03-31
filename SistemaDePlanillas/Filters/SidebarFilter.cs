@@ -9,6 +9,8 @@ namespace SistemaDePlanillas.Filters
 {
     public class SidebarFilter : ActionFilterAttribute
     {
+        HttpContext ctx = HttpContext.Current;
+
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             filterContext.Controller.ViewBag.AppTitle = "Sistema de planillas";
@@ -19,7 +21,9 @@ namespace SistemaDePlanillas.Filters
                 BaseViewModel model = v.Model as BaseViewModel;
                 if(model != null)
                 {
+                    //filterContext.HttpContext.User.Identity.Name
                     model.SidebarViewModel = new SidebarViewModel();
+                    //ctx.Session
                 }
             }
         }

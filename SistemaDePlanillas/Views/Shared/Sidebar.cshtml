@@ -7,30 +7,36 @@
     <ul id="navmenu-links" class="nav navmenu-nav">
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-home"></span>
-                &nbsp;Home
+                Home
                 <span class="glyphicon glyphicon-menu-right"></span>
             </a>
             <ul class="dropdown-menu nav navmenu-nav">
                 <li><a href="@Url.Action("Test", "Home")">Super Testing</a></li>
-                <li><a href="@Url.Action("Index", "Home")">Dashboard template</a></li>
+                <li><a href="@Url.Action("Dashboard", "Home")">Dashboard template</a></li>
             </ul>
         </li>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-user"></span>
-                &nbsp;Users
+                Users
                 <span class="glyphicon glyphicon-menu-right"></span>
             </a>
             <ul class="dropdown-menu nav navmenu-nav">
-                <li><a href="@Url.Action("Index", "Users")">Usuarios</a></li>
+                <li><a href="@Url.Action("Index", "Users")">Lista de Usuarios</a></li>
                 <li><a href="@Url.Action("Create", "Users")">Crear Usuario</a></li>
             </ul>
         </li>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-wrench"></span>
-                &nbsp;Settings
+                Manage
+                <span class="glyphicon glyphicon-menu-right"></span>
+            </a>
+            <ul class="dropdown-menu nav navmenu-nav">
+                <li><a href="@Url.Action("uploadfile", "manage")">Subir un archivo</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown">
+                Settings
                 <span class="glyphicon glyphicon-menu-right"></span>
             </a>
             <ul class="dropdown-menu nav navmenu-nav">

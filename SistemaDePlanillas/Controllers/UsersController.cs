@@ -22,10 +22,10 @@ namespace SistemaDePlanillas.Controllers
                 return RedirectToAction("Login", "Account");
             }
             var result = DBManager.Instance.selectAllUsers(user.Location);
-            if(result.status == 0)
+            if(result.Status == 0)
             {
                 List<UserViewModel> UsersList = new List<UserViewModel>();
-                foreach (User Item in result.detail)
+                foreach (User Item in result.Detail)
                 {
                     UserViewModel UserViewModel = new UserViewModel()
                     {
@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Controllers
             }
             else
             {
-                ViewBag.Message = "Error code: " + result.status;
+                ViewBag.Message = "Error code: " + result.Status;
                 return View();
             }
         }
@@ -55,7 +55,7 @@ namespace SistemaDePlanillas.Controllers
         public ActionResult Details(long id)
         {
             Result<User> result = DBManager.Instance.selectUser(id);
-            User User = result.detail;
+            User User = result.Detail;
             if (User == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 DBManager db = DBManager.Instance;
                 Result<string> result = db.addUser(model.Name, model.Username, model.Password, model.Role, model.Location, model.Email);
-                Console.WriteLine(result.detail);
+                Console.WriteLine(result.Detail);
 
                 return RedirectToAction("Index");
             }
@@ -137,7 +137,7 @@ namespace SistemaDePlanillas.Controllers
         public ActionResult Delete(long id, FormCollection collection)
         {
             Result<User> result = DBManager.Instance.selectUser(id);
-            User user = result.detail;
+            User user = result.Detail;
             if (user == null)
             {
                 return HttpNotFound();

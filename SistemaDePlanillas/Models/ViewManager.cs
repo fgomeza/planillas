@@ -14,7 +14,7 @@ namespace SistemaDePlanillas.Models
         private ViewManager()
         {
             groups = new Dictionary<string, OperationsGroup>();
-            var groupsList = DBManager.Instance.selectOperationsGroups().detail;
+            var groupsList = DBManager.Instance.selectOperationsGroups().Detail;
             foreach(var group in groupsList)
             {
                 groups[group.name] = group;

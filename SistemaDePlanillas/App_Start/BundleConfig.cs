@@ -26,6 +26,9 @@ namespace SistemaDePlanillas
                       "~/Content/jasny-bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/sidebar.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/dropzone").Include(
+                      "~/scripts/dropzone/dropzone.js"));
         }
     }
 }

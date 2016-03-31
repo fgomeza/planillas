@@ -9,27 +9,23 @@ namespace SistemaDePlanillas.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult About()
-        {
-            ViewData["config"] = new ViewConfig
-            {
-                title = "Operaciones disponibles para el rol",
-                showNavbar = true,
-            };
-            return View("index"); 
-        }
 
         public ActionResult Index()
         {
             if(Request.IsAuthenticated)
             {
-                return View();
+                return RedirectToAction("Dashboard");
             }
             else
             {
                 return RedirectToAction("Login", "Account");
             }
             
+        }
+
+        public ActionResult Dashboard()
+        {
+            return View();
         }
 
         public ActionResult Test()

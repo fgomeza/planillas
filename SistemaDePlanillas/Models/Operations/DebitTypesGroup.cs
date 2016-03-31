@@ -12,7 +12,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.addFixedDebitType(name,user.Location);
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }catch(Exception e)
             {
                 return Responses.ExceptionError(e);
@@ -24,7 +24,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.addPaymentDebitType(name,interestRate,months,user.Location);
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch (Exception e)
             {
@@ -37,7 +37,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.updatePaymentDebitType(id,name,interestRate,months);
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.deleteFixedDebitType(id);
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch (Exception e)
             {
@@ -63,7 +63,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.deletePaymentDebitType(id);
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch (Exception e)
             {
@@ -76,7 +76,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.selectFixedDebitTypes(user.Location);
-                return Responses.SimpleWithData(result.status,result.detail);
+                return Responses.SimpleWithData(result.Status,result.Detail);
             }
             catch (Exception e)
             {
@@ -89,7 +89,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var result = DBManager.Instance.selectPaymentDebitTypes(user.Location);
-                return Responses.SimpleWithData(result.status, result.detail);
+                return Responses.SimpleWithData(result.Status, result.Detail);
             }
             catch (Exception e)
             {
