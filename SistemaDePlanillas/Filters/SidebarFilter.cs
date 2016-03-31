@@ -11,6 +11,8 @@ namespace SistemaDePlanillas.Filters
     {
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
+            filterContext.Controller.ViewBag.AppTitle = "Sistema de planillas";
+
             ViewResult v = filterContext.Result as ViewResult;
             if(v != null)
             {

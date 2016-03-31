@@ -88,11 +88,22 @@ var addAnimationForDropdowns = function () {
     })
 }
 
-$(document).ready(function () {
+var highlightCurrentLink = function () {
+    console.log("window.location=" + window.location);
+
+    $('#navmenu-links a').filter(function () {
+        console.log("link=" + this.innerHTML + " | this.href=" + this.href);
+        return this.href == window.location;
+    }).closest('li').addClass('active').parent().closest('li').addClass('active');
+}
+
+var initPage = function () {
     //fadeOutAlerts();
     //swapOpenCloseSideMenuIcons();
     displayAlerts();
     addAnimationForDropdowns();
-});
+    highlightCurrentLink();
+}
 
+$(document).ready(initPage);
 $(setupUnobtrusiveValidationForBootstrap(jQuery));
