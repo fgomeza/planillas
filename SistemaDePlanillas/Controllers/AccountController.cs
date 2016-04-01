@@ -33,7 +33,7 @@ namespace PlanillasFrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            model.Username = model.Username.ToLower();
+            //model.Username = model.Username.ToLower();
             if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
                 FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);
