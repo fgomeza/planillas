@@ -155,6 +155,13 @@ var ajaxNavigationFailure = function (result) {
     }
 }
 
+var allowBackNavigationSPA = function () {
+    window.onpopstate = function(event) {
+        event.preventDefault();
+        window.location.assign(document.location.pathname);
+    };
+}
+
 var updateUrl = function (html, requestedUrl) {
     if (window.location.href == requestedUrl)
     {
@@ -179,6 +186,7 @@ var initPage = function () {
     //highlightCurrentLink(); // Not suitable for ajax navigation
     //setupSPANavigation();
     animatePage();
+    allowBackNavigationSPA();
 }
 
 $(document).ready(initPage);
