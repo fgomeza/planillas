@@ -135,7 +135,7 @@ var setupSPANavigation = function() {
     }
 }
 
-var ajaxNavigationBegin = function () {
+var ajaxNavigationBegin = function (aaa) {
     //$('#page').hide();
     $('#page').css('top', topOffset).css('opacity', '0');
 }
@@ -144,7 +144,8 @@ var ajaxNavigationComplete = function (result) {
     console.log(result);
 }
 
-var ajaxNavigationSuccess = function () {
+var ajaxNavigationSuccess = function (html, status, xhr) {
+    updateUrl(html, this.href);
     animatePage();
 }
 
@@ -153,6 +154,16 @@ var ajaxNavigationFailure = function (result) {
         location.reload(true);
     }
 }
+
+var updateUrl = function (html, requestedUrl) {
+    if (window.location.href == requestedUrl)
+    {
+        history.replaceState({html:html}, document.title, requestedUrl);
+    }
+    else
+    {
+        history.pushState({html:html}, document.title, requestedUrl);
+    }}
 
 var animatePage = function () {
     $('#page').animate(
