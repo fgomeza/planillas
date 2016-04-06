@@ -151,7 +151,7 @@ var ajaxNavigationSuccess = function (html, status, xhr) {
 
 var ajaxNavigationFailure = function (result) {
     if (result.status === 401) {
-        location.reload(true);
+        window.location.assign(this.href);
     }
 }
 
