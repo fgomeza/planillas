@@ -23,8 +23,16 @@ namespace PlanillasFrontEnd.Controllers
         [HttpGet]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.returnUrl = returnUrl;
-            return View();
+            if(Request.IsAjaxRequest())
+            {
+                return RedirectToLocal(returnUrl);
+            }
+            else
+            {
+                ViewBag.returnUrl = returnUrl;
+                return View();
+            }
+
         }
 
         //

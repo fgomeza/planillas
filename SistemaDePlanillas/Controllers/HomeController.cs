@@ -25,11 +25,13 @@ namespace SistemaDePlanillas.Controllers
 
         public ActionResult Dashboard()
         {
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View();
         }
 
         public ActionResult Test()
         {
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View();
         }
 

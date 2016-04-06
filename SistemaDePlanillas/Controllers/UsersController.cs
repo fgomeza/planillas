@@ -21,6 +21,9 @@ namespace SistemaDePlanillas.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
+            // TODO: Hay que dehacerse del código de aquí arriba
+
             var result = DBManager.Instance.selectAllUsers(user.Location);
             if(result.Status == 0)
             {
@@ -42,7 +45,10 @@ namespace SistemaDePlanillas.Controllers
                     };
                     UsersList.Add(UserViewModel);
                 }
+
+                ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
                 return View(UsersList);
+
             }
             else
             {
@@ -69,12 +75,15 @@ namespace SistemaDePlanillas.Controllers
                 Location = Convert.ToString(User.Location),
                 Email = User.Email
             };
+
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View(viewModel);
         }
 
         // GET: Users/Create
         public ActionResult Create()
         {
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View();
         }
 

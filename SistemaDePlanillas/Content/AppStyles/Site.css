@@ -70,6 +70,13 @@ footer {
   border-radius: 10px;
 }
 
+/* page transitions */
+#page {
+    position: relative;
+    top: 50px;
+    opacity: 0;
+}
+
 /* top nav */
 .top-nav {
     padding: 0 15px;

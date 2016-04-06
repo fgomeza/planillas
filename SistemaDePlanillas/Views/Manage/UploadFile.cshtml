@@ -1,6 +1,10 @@
 ﻿
-@{ 
+@{
     ViewBag.Title = "Cargar Archivos";
+
+    var bundle = System.Web.Optimization.BundleTable.Bundles.GetBundleFor("~/styles/partials");
+    //bundle.Include("~/Content/dropzone/dropzone.css");
+
 }
 
 <div>
@@ -12,20 +16,18 @@
     }))
     {
         <div class="fallback">
-            <!--<input name="file" type="file" multiple />-->
-            <!--<input type="submit" value="Upload" />-->
+            <input name="file" type="file" multiple />
+            <input type="submit" value="Upload" />
         </div>
     }
 
 </div>
 
-@Scripts.Render("~/bundles/dropzone")
-<script type="text/javascript">
-        Dropzone.options.uploadDemo = {
-            paramName: "file"
-        };
-</script>
-
 @section scripts {
-    <link href="~/Scripts/dropzone/dropzone.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/js/dropzone")
+    <script type="text/javascript">
+            Dropzone.options.uploadDemo = {
+                paramName: "file"
+            };
+    </script>
 }

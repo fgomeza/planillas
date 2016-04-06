@@ -9,13 +9,9 @@ namespace SistemaDePlanillas.Controllers
     public class ManageController : Controller
     {
         // GET: Manage
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         public ActionResult UploadFile()
         {
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View();
         }
     }

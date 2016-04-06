@@ -50,8 +50,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Confirmar" class="btn btn-default" /> |
+            @Helpers.AjaxLink("Regresar a la lista", "Index", "Users")
         </div>
     }
 </div>

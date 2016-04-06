@@ -1,55 +1,30 @@
-﻿<nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-md">
+﻿@model SistemaDePlanillas.Models.ViewModels.SidebarViewModel
+
+<nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-md">
 
     <a href="@Url.Action("Index", "Home")" class="navmenu-brand">
         @ViewBag.AppTitle
     </a>
 
     <ul id="navmenu-links" class="nav navmenu-nav">
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown">
-                Home
-                <span class="glyphicon glyphicon-menu-right"></span>
-            </a>
-            <ul class="dropdown-menu nav navmenu-nav">
-                <li><a href="@Url.Action("Test", "Home")">Super Testing</a></li>
-                <li><a href="@Url.Action("Dashboard", "Home")">Dashboard template</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown">
-                Users
-                <span class="glyphicon glyphicon-menu-right"></span>
-            </a>
-            <ul class="dropdown-menu nav navmenu-nav">
-                <li><a href="@Url.Action("Index", "Users")">Lista de Usuarios</a></li>
-                <li><a href="@Url.Action("Create", "Users")">Crear Usuario</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown">
-                Manage
-                <span class="glyphicon glyphicon-menu-right"></span>
-            </a>
-            <ul class="dropdown-menu nav navmenu-nav">
-                <li><a href="@Url.Action("uploadfile", "manage")">Subir un archivo</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown">
-                Settings
-                <span class="glyphicon glyphicon-menu-right"></span>
-            </a>
-            <ul class="dropdown-menu nav navmenu-nav">
-                <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
-                <li><a><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
-                <li><a><i class="glyphicon glyphicon-cog"></i> Options</a></li>
-                <li><a><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
-                <li><a><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
-                <li><a><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
-                <li><a><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
-                <li><a><i class="glyphicon glyphicon-off"></i> Logout</a></li>
-            </ul>
-        </li>
+        @foreach(var subMenu in Model.ApplicationMenus)
+        {
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon @subMenu.Glyphicon"></span>
+                    @subMenu.DisplayName
+                    <span class="glyphicon glyphicon-menu-right"></span>
+                </a>
+                <ul class="dropdown-menu nav navmenu-nav">
+                    @foreach (var link in subMenu.Links)
+                    {
+                        <li>@Helpers.AjaxLink(@link.DisplayName, @link.Action, @link.Controller)</li>
+                        <!--<li>@Ajax.ActionLink(@link.DisplayName, @link.Action, @link.Controller, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "page", OnBegin = "hidePage", OnComplete = "", OnSuccess = "ajaxNavigationComplete", OnFailure = "ajaxNavigationFailed" })</li>-->
+                        <!--<li><a href="@Url.Action(@link.Action, @link.Controller)" class="ajax-link">@link.DisplayName</a></li>-->
+                    }
+                </ul>
+            </li>
+        }
     </ul>
     
 </nav>
