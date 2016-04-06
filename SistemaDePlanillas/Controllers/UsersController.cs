@@ -21,17 +21,23 @@ namespace SistemaDePlanillas.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
+            // TODO: Hay que dehacerse del código de aquí arriba
+
             var result = DBManager.Instance.selectAllUsers(user.Location);
-            if(result.status == 0)
+            if(result.Status == 0)
             {
                 List<UserViewModel> UsersList = new List<UserViewModel>();
-                foreach (User Item in result.detail)
+                foreach (User Item in result.Detail)
                 {
                     UserViewModel UserViewModel = new UserViewModel()
                     {
                         Username = Item.Username,
                         Name = Item.Name,
                         Email = Item.Email,
+                        PrimaryKey = Item.Id,
+                        Role = Convert.ToString(Item.Role),
+                        Location = Convert.ToString(Item.Location)
                         /* Actualmente Role y Location son números.
                          * Se debe crear una lógica que convierta este índice en el string
                          * que será renderizado en la vista.
@@ -39,28 +45,45 @@ namespace SistemaDePlanillas.Controllers
                     };
                     UsersList.Add(UserViewModel);
                 }
-                GetUsersViewModel ViewModel = new GetUsersViewModel()
-                {
-                    Users = UsersList
-                };
-                return View(ViewModel.Users);
+
+                ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
+                return View(UsersList);
+
             }
             else
             {
-                ViewBag.Message = "Error code: " + result.status;
+                ViewBag.Message = "Error code: " + result.Status;
                 return View();
             }
         }
 
         // GET: Users/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(long id)
         {
-            return View();
+            Result<User> result = DBManager.Instance.selectUser(id);
+            User User = result.Detail;
+            if (User == null)
+            {
+                return HttpNotFound();
+            }
+            UserViewModel viewModel = new UserViewModel
+            {
+                PrimaryKey = User.Id,
+                Name = User.Name,
+                Username = User.Username,
+                Role = Convert.ToString(User.Role),
+                Location = Convert.ToString(User.Location),
+                Email = User.Email
+            };
+
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
+            return View(viewModel);
         }
 
         // GET: Users/Create
         public ActionResult Create()
         {
+            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
             return View();
         }
 
@@ -72,7 +95,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 DBManager db = DBManager.Instance;
                 Result<string> result = db.addUser(model.Name, model.Username, model.Password, model.Role, model.Location, model.Email);
-                Console.WriteLine(result.detail);
+                Console.WriteLine(result.Detail);
 
                 return RedirectToAction("Index");
             }
@@ -90,14 +113,14 @@ namespace SistemaDePlanillas.Controllers
         }
 
         // GET: Users/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(long id)
         {
             return View();
         }
 
         // POST: Users/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(long id, FormCollection collection)
         {
             try
             {
@@ -112,35 +135,26 @@ namespace SistemaDePlanillas.Controllers
         }
 
         // GET: Users/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(long id)
         {
-            DBManager db = DBManager.Instance;
-            Result<User> result = db.selectUser(id);
-            
-
-            // Aquí poner el user obtenido (result.detail) en la página, posiblemente mediante 'Request'
-            return View();
+            return Details(id);
         }
 
         // POST: Users/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(long id, FormCollection collection)
         {
-            try
+            Result<User> result = DBManager.Instance.selectUser(id);
+            User user = result.Detail;
+            if (user == null)
             {
-                // TODO: Add delete logic here
-
-                DBManager db = DBManager.Instance;
-                // validar si collection trae los parámetros corretos
-                Result<string> result = db.deleteUser(id);
-                Console.WriteLine(result.detail);
-
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }
-            catch
-            {
-                return View();
-            }
+            //DBManager.Instance.deleteUser(user);
+            DBManager.Instance.deleteUser(id);
+            //db.SaveChanges(); // --> Commit;
+            return RedirectToAction("Index");
         }
     }
 }

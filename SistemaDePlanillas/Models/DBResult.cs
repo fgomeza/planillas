@@ -6,8 +6,8 @@ namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public long status = 0;
-        public T detail;
+        public long Status = 0;
+        public T Detail;
     }
 
     public class Employee
@@ -92,7 +92,7 @@ namespace SistemaDePlanillas.Models
         public long Role { get; set; }
         public long Location { get; set; }
         public string Email { get; set; }
-        public HttpSessionStateBase session { get; set; }
+        public HttpSessionStateBase Session { get; set; }
     }
 
     public class Location
@@ -128,7 +128,7 @@ namespace SistemaDePlanillas.Models
 
         public void update()
         {
-            var privs = DBManager.Instance.selectRolePrivileges(id).detail;
+            var privs = DBManager.Instance.selectRolePrivileges(id).Detail;
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {

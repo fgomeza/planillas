@@ -1,8 +1,8 @@
 ﻿@model SistemaDePlanillas.Models.ViewModels.UserViewModel
 
+<h3>¿Está seguro que desea borrar al usuario?</h3>
+<hr />
 <div>
-    <h4>UserViewModel</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -45,8 +45,13 @@
         </dd>
 
     </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Confirmar" class="btn btn-default" /> |
+            @Helpers.AjaxLink("Regresar a la lista", "Index", "Users")
+        </div>
+    }
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PrimaryKey }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -27,7 +27,7 @@ namespace SistemaDePlanillas.Models
             loggedUsers = new Dictionary<long, User>();
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectRoles().detail;
+            var rolesList = DBManager.Instance.selectRoles().Detail;
             foreach(Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models
         {
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectRoles().detail;
+            var rolesList = DBManager.Instance.selectRoles().Detail;
             foreach (Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -103,12 +103,13 @@ namespace SistemaDePlanillas.Models
 
         public bool login(string username, string password, HttpSessionStateBase session)
         {
-            var result = DBManager.Instance.login(username, password);
-            if (result.status == 0)
+            var Result = DBManager.Instance.login(username, password);
+            if (Result.Status == 0)
             {
-                User user = result.detail;
-                user.session = session;
-                session["user"] = user;
+                User User = Result.Detail;
+                User.Session = session;
+                session["user"] = User;
+                session["UserName"] = User.Name;
                 return true;
             }
             return false;

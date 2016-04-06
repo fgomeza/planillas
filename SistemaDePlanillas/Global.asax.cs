@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Security;
 
 namespace SistemaDePlanillas
 {
@@ -33,6 +34,15 @@ namespace SistemaDePlanillas
         private static bool IsWebApiRequest()
         {
             return HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith(_WebApiExecutionPath);
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var context = new HttpContextWrapper(Context);
+            if (FormsAuthentication.IsEnabled && context.Request.IsAjaxRequest())
+            {
+                context.Response.SuppressFormsAuthenticationRedirect = true;
+            }
         }
     }
 }

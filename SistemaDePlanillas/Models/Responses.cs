@@ -53,7 +53,7 @@ namespace SistemaDePlanillas.Models
         private Errors()
         {
             details = new Dictionary<long, string>();
-            var err = DBManager.Instance.selectAllErrors().detail;
+            var err = DBManager.Instance.selectAllErrors().Detail;
             foreach (var x in err)
                 details.Add(x.Item1,x.Item2);
         }
