@@ -135,7 +135,7 @@ var setupSPANavigation = function() {
     }
 }
 
-var ajaxNavigationBegin = function () {
+var ajaxNavigationBegin = function (aaa) {
     //$('#page').hide();
     $('#page').css('top', topOffset).css('opacity', '0');
 }
@@ -144,15 +144,33 @@ var ajaxNavigationComplete = function (result) {
     console.log(result);
 }
 
-var ajaxNavigationSuccess = function () {
+var ajaxNavigationSuccess = function (html, status, xhr) {
+    updateUrl(html, this.href);
     animatePage();
 }
 
 var ajaxNavigationFailure = function (result) {
     if (result.status === 401) {
-        location.reload(true);
+        window.location.assign(this.href);
     }
 }
+
+var allowBackNavigationSPA = function () {
+    window.onpopstate = function(event) {
+        event.preventDefault();
+        window.location.assign(document.location.pathname);
+    };
+}
+
+var updateUrl = function (html, requestedUrl) {
+    if (window.location.href == requestedUrl)
+    {
+        history.replaceState({html:html}, document.title, requestedUrl);
+    }
+    else
+    {
+        history.pushState({html:html}, document.title, requestedUrl);
+    }}
 
 var animatePage = function () {
     $('#page').animate(
@@ -168,6 +186,7 @@ var initPage = function () {
     //highlightCurrentLink(); // Not suitable for ajax navigation
     //setupSPANavigation();
     animatePage();
+    allowBackNavigationSPA();
 }
 
 $(document).ready(initPage);
