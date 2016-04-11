@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Data;
 using Npgsql;
 using NpgsqlTypes;
+using Repository.Repositories.Classes;
+using Repository.Context;
+using Repository.Entities;
+using System.Collections;
 
 namespace SistemaDePlanillas.Models
 
 {
-    public class DBManager
+    public class DBManager : IErrors
     {
-        private static long OK = 0;
-        private static long DBERR = 18;
-        private static DBManager instance;
-        private NpgsqlConnection cnx;
-        // private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=admin;";
-        private string stringConnect = "Server=localhost;Port=5432;Database=COOPESUPERACION;User Id=postgres;Password=root;";
+        private Dictionary<string, long> errors;
 
-        private DBManager() { }
+        private static DBManager instance;
+
 
         public static DBManager Instance
         {
@@ -26,1372 +26,907 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        private bool connect()
+        private long validate(Exception e)
         {
-            try
+            if (e.InnerException != null)
             {
-                cnx = new NpgsqlConnection(stringConnect);
-                cnx.Open();
-                return true;
+                e = e.InnerException;
+                if (e.InnerException != null && e.InnerException is NpgsqlException)
+                {
+                    return 1;
+                    //return errors[(e.InnerException as NpgsqlException).ConstraintName];
+                }
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw e;
         }
 
-        private void addParameters(NpgsqlCommand cmd,int p)
-        {
-            for(int i=0;i<p;i++)
-                cmd.Parameters.Add(new NpgsqlParameter());
-        }
 
         public Result<string> addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command, 5);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = idCard;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = CMS;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = name;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = location;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[4].Value = account;
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try {res.status = long.Parse(e.MessageText);}
-                    catch (Exception){throw e;}
+                    EmployeeEntity employee = new EmployeeEntity()
+                    { idCard = idCard, cms = CMS, name = name, locationId = location, active = true, account = account };
+                    repository.Employees.Add(employee);
+                    repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction= cnx.BeginTransaction();
-                    addParameters(command,6);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = idCard;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = CMS;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[3].Value = name;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[4].Value = location;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[5].Value = account;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    EmployeeEntity employee = repository.Employees.Get(id);
+                    if (employee != null)
+                    {
+                        employee.idCard = idCard;
+                        employee.cms = CMS;
+                        employee.name = name;
+                        employee.locationId = location;
+                        employee.account = account;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<Employee>> selectAllCmsEmployees(long location)
         {
-            Result<List<Employee>> res = new Result<List<Employee>>();
-            if (connect())
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            result.detail = new List<Employee>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_08", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    res.detail = new List<Employee>();
-                    while (dr.Read())
+                    var employees = repository.Employees.selectCMSEmployees(location);
+                    foreach (var x in employees)
                     {
-                        Employee emp = new Employee();
-                        emp.id = dr.GetInt64(0);
-                        emp.idCard = dr.GetString(1);
-                        emp.name = dr.GetString(2);
-                        emp.location = dr.GetString(3);
-                        emp.account = dr.GetString(4);
-                        emp.cmsText = dr.GetString(5);
-                        emp.calls = dr.GetInt64(6);
-                        res.detail.Add(emp);
+                        var calls = repository.Calls.callsbyEmployee(x.id);
+
+                        Employee employee = new Employee()
+                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls };
+                        result.detail.Add(employee);
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
-        }
-
-        public Result<string> updateCalls(long id, long calls)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_10", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction= cnx.BeginTransaction();
-                    addParameters(command,2);
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[1].Value = calls;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = 18;
-            }
-            return res;
+            return result;
         }
 
         public Result<string> addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,5);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = idCard;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = name;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[2].Value = location;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[3].Value = account;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[4].Value = salary;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    EmployeeEntity employee = new EmployeeEntity()
+                    { idCard = idCard, name = name, locationId = location, active = true, account = account, salary = salary };
+                    repository.Employees.Add(employee);
+                    repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<string> updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, float salary)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,6);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = idCard;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = name;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = location;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[4].Value = account;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[5].Value = salary;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    EmployeeEntity employee = repository.Employees.Get(id);
+                    if (employee != null)
+                    {
+                        employee.idCard = idCard;
+                        employee.name = name;
+                        employee.locationId = location;
+                        employee.account = account;
+                        employee.salary = salary;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = 18;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<Employee>> selectAllNonCmsEmployees(long location)
         {
-            Result<List<Employee>> res = new Result<List<Employee>>();
-            if (connect())
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            result.detail = new List<Employee>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_09", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Employee>();
-                    while (dr.Read())
+                    var employees = repository.Employees.selectNonCMSEmployees(location);
+                    foreach (var x in employees)
                     {
-                        Employee emp = new Employee();
-                        emp.id = dr.GetInt64(0);
-                        emp.idCard = dr.GetString(1);
-                        emp.name = dr.GetString(2);
-                        emp.location = dr.GetString(3);
-                        emp.account = dr.GetString(4);
-                        emp.salary = dr.GetDouble(5);
-                        res.detail.Add(emp);
+                        Employee employee = new Employee()
+                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary };
+                        result.detail.Add(employee);
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> deleteEmployee(long id)
+        public Result<string> deleteEmployee(long employeeId)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    EmployeeEntity employee = repository.Employees.Get(employeeId);
+                    if (employee != null)
+                    {
+                        employee.active = false;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<Employee> selectEmployee(long id)
         {
-            Result<Employee> res = new Result<Employee>();
-            if (connect())
+            Result<Employee> result = new Result<Employee>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_06", cnx);
+                    EmployeeEntity employee = repository.Employees.Get(id);
 
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
+                    if (employee != null && employee.active)
                     {
-                        Employee emp = new Employee();
-                        emp.id = id;
-                        emp.idCard = dr.GetString(0);
-                        emp.name = dr.GetString(1);
-                        emp.location = dr.GetString(2);
-                        emp.account = dr.GetString(3);
-                        emp.cms = dr.GetBoolean(4);
-                        res.detail = emp;
+                        Employee res = new Employee();
+                        res.id = employee.id;
+                        res.idCard = employee.idCard;
+                        res.location = employee.locationId;
+                        res.name = employee.name;
+                        res.cms = employee.cms == null ? false : true;
+                        res.cmsText = employee.cms;
+                        res.account = employee.account;
+                        res.salary = employee.salary;
+                        result.detail = res;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
+
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<Employee>> selectAllEmployees(long location)
         {
-            Result<List<Employee>> res = new Result<List<Employee>>();
-            if (connect())
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTR_07", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    res.detail = new List<Employee>();
-                    while (dr.Read())
+                    var employees = repository.Employees.GetAll();
+                    result.detail = new List<Employee>();
+                    foreach (var employee in employees)
                     {
-                        Employee emp = new Employee();
-                        emp.id = dr.GetInt64(0);
-                        emp.idCard = dr.GetString(1);
-                        emp.name = dr.GetString(2);
-                        emp.location = dr.GetString(3);
-                        emp.account = dr.GetString(4);
-                        emp.cms = dr.GetBoolean(5);
-                        res.detail.Add(emp);
+                        if (employee.active)
+                        {
+                            Employee res = new Employee();
+                            res.id = employee.id;
+                            res.idCard = employee.idCard;
+                            res.location = employee.locationId;
+                            res.name = employee.name;
+                            res.cms = employee.cms == null ? false : true;
+                            res.cmsText = employee.cms;
+                            res.account = employee.account;
+                            res.salary = employee.salary;
+                            result.detail.Add(res);
+                        }
                     }
-
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> addDebit(long employee, string detail, double amount, long type)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = type;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    repository.Debits.Add(new DebitEntity()
+                    {
+                        employeeId = employee,
+                        description = detail,
+                        totalAmount = amount,
+                        debitTypeId = type,
+                        interestRate = 0,
+                        active = true,
+                        payment = false
+                    });
+                    repository.Complete();
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<string> updateDebit(long idDebit, string detail, double amount)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,3);
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null && debit.active)
+                    {
+                        debit.description = detail;
+                        debit.totalAmount = amount;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentDebit;
+                    }
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> deleteDebit(long idDebit)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null)
+                    {
+                        debit.active = false;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentDebit;
+                    }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<Debit> selectDebit(long idDebit)
         {
-            Result<Debit> res = new Result<Debit>();
-            if (connect())
+            Result<Debit> result = new Result<Debit>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null && debit.active)
                     {
-                        Debit deb = new Debit();
-                        deb.id = dr.GetInt64(0);
-                        deb.employee = dr.GetInt64(1);
-                        deb.detail = dr.GetString(2);
-                        deb.amount = dr.GetDouble(3);
-                        deb.type = dr.GetInt64(4);
-                        res.detail = deb;
+                        Debit res = new Debit();
+                        res.id = debit.id;
+                        res.employee = debit.employeeId;
+                        res.amount = debit.totalAmount;
+                        res.detail = debit.description;
+                        res.type = debit.debitTypeId;
+                        result.detail = res;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentDebit;
+                    }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<Debit>> selectDebits(long employee)
         {
-            Result<List<Debit>> res = new Result<List<Debit>>();
-            if (connect())
+            Result<List<Debit>> result = new Result<List<Debit>>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDF_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Debit>();
-                    while (dr.Read())
+                    var debits = repository.Debits.selectFixDebitsByEmployee(employee);
+                    result.detail = new List<Debit>();
+                    foreach (var debit in debits)
                     {
-                        Debit deb = new Debit();
-                        deb.id = dr.GetInt64(0);
-                        deb.employee = dr.GetInt64(1);
-                        deb.detail = dr.GetString(2);
-                        deb.amount = dr.GetDouble(3);
-                        deb.type = dr.GetInt64(4);
-                        res.detail.Add(deb);
+                        if (debit.active)
+                        {
+                            Debit deb = new Debit();
+                            deb.id = debit.id;
+                            deb.amount = debit.totalAmount;
+                            deb.employee = debit.employeeId;
+                            deb.detail = debit.description;
+                            deb.type = debit.debitTypeId;
+                            result.detail.Add(deb);
+                        }
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addPaymentDebit(long employee, string detail, double total, double interestRate, long months, long type)
+        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,6);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = total;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[3].Value = interestRate;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[4].Value = months;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[5].Value = type;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    repository.Debits.Add(new DebitEntity()
+                    {
+                        initialDate = initialDate,
+                        description = detail,
+                        employeeId = employee,
+                        totalAmount = total,
+                        remainingAmount = total,
+                        paidMonths = 0,
+                        remainingMonths = months,
+                        interestRate = interestRate,
+                        debitTypeId = type,
+                        active = true,
+                        payment = true
+                    });
+                    repository.Complete();
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
-        public Result<string> updatePaymentDebit(long idDebit, string detail, float total, double interestRate, long months, double remainingDebt)
+        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string detail, float total, double interestRate, long months, double remainingAmount)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,6);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = total;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[3].Value = interestRate;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[4].Value = months;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[5].Value = remainingDebt;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null && debit.active)
+                    {
+                        debit.initialDate = initialDate;
+                        debit.description = detail;
+                        debit.totalAmount = total;
+                        debit.remainingAmount = remainingAmount;
+                        debit.remainingMonths = months - debit.paidMonths;
+                        debit.interestRate = interestRate;
+                        repository.Complete();
+                    }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
-        }
 
-        public Result<string> deletePaymentDebit(long idDebit)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
+            return result;
         }
 
         public Result<PaymentDebit> selectPaymentDebit(long idDebit)
         {
-            Result<PaymentDebit> res = new Result<PaymentDebit>();
-            if (connect())
+            Result<PaymentDebit> result = new Result<PaymentDebit>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null && debit.active)
                     {
-                        PaymentDebit Pdeb = new PaymentDebit();
-                        Pdeb.id = dr.GetInt64(0);
-                        Pdeb.employee = dr.GetInt64(1);
-                        Pdeb.detail = dr.GetString(2);
-                        Pdeb.total = dr.GetDouble(3);
-                        Pdeb.interestRate = dr.GetDouble(4);
-                        Pdeb.paymentsMade = dr.GetInt64(5);
-                        Pdeb.missingPayments = dr.GetInt64(6);
-                        Pdeb.remainingDebt = dr.GetDouble(7);
-                        Pdeb.type = dr.GetInt64(8);
-                        res.detail = Pdeb;
+                        PaymentDebit deb = new PaymentDebit();
+                        deb.id = debit.id;
+                        deb.initialDate = debit.initialDate;
+                        deb.detail = debit.description;
+                        deb.employee = debit.employeeId;
+                        deb.total = debit.totalAmount;
+                        deb.remainingAmount = debit.remainingAmount;
+                        deb.paymentsMade = debit.paidMonths;
+                        deb.missingPayments = debit.remainingMonths;
+                        deb.interestRate = debit.interestRate;
+                        deb.type = debit.debitTypeId;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentDebit;
+                    }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<PaymentDebit>> selectPaymentDebits(long employee)
         {
-            Result<List<PaymentDebit>> res = new Result<List<PaymentDebit>>();
-            if (connect())
+            Result<List<PaymentDebit>> result = new Result<List<PaymentDebit>>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<PaymentDebit>();
-                    while (dr.Read())
+                    var debits = repository.Debits.selectDebitsNonFixByEmployee(employee);
+                    result.detail = new List<PaymentDebit>();
+                    foreach (var debit in debits)
                     {
-                        PaymentDebit Pdeb = new PaymentDebit();
-                        Pdeb.id = dr.GetInt64(0);
-                        Pdeb.employee = dr.GetInt64(1);
-                        Pdeb.detail = dr.GetString(2);
-                        Pdeb.total = dr.GetDouble(3);
-                        Pdeb.interestRate = dr.GetDouble(4);
-                        Pdeb.paymentsMade = dr.GetInt64(5);
-                        Pdeb.missingPayments = dr.GetInt64(6);
-                        Pdeb.remainingDebt = dr.GetDouble(7);
-                        Pdeb.type = dr.GetInt64(8);
-                        res.detail.Add(Pdeb);
+                        if (debit.active)
+                        {
+                            PaymentDebit deb = new PaymentDebit();
+                            deb.id = debit.id;
+                            deb.initialDate = debit.initialDate;
+                            deb.detail = debit.description;
+                            deb.employee = debit.employeeId;
+                            deb.total = debit.totalAmount;
+                            deb.remainingAmount = debit.remainingAmount;
+                            deb.paymentsMade = debit.paidMonths;
+                            deb.missingPayments = debit.remainingMonths;
+                            deb.interestRate = debit.interestRate;
+                            deb.type = debit.debitTypeId;
+                        }
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = 18;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<String> payDebit(long idDebit, float amount)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FDC_07", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    repository.DebitPayments.Add(new DebitPaymentEntity()
+                    {
+                        debitId = idDebit,
+                        Date = DateTime.Now,
+                        Amount = amount,
+                        RemainingAmount = debit.remainingAmount - amount
+                    });
+                    debit.remainingAmount = debit.remainingAmount - amount;
+                    debit.remainingMonths = debit.remainingMonths - 1;
+                    debit.paidMonths = debit.paidMonths + 1;
+                    if (debit.remainingAmount == 0)
+                        debit.active = false;
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idDebit;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[1].Value = amount;
+                    repository.Complete();
+                }
 
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> addExtra(long employee, string detail, float amount)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,3);
+                    var extra = new ExtraEntity()
+                    {
+                        employeeId = employee,
+                        description = detail,
+                        amount = amount
+                    };
+                    repository.Extras.Add(extra);
+                    var rows = repository.Complete();
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<string> updateExtra(long idExtra, string detail, float amount)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlTransaction tran = cnx.BeginTransaction();
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,3);
+                    var extra = repository.Extras.Get(idExtra);
+                    if (extra != null)
+                    {
+                        extra.amount = (double)amount;
+                        extra.description = detail;
+                    }
+                    else
+                    {
+                        result.status = inexistentExtra;
+                    }
+                    var rows = repository.Complete();
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idExtra;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<string> deleteExtra(long idExtra)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idExtra;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    var extra = repository.Extras.Get(idExtra);
+                    if (extra != null)
+                    {
+                        repository.Extras.Remove(extra);
+                    }
+                    else
+                    {
+                        result.status = inexistentExtra;
+                    }
+                    var rows = repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
+
 
         public Result<Extra> selectExtra(long idExtra)
         {
-            Result<Extra> res = new Result<Extra>();
-            if (connect())
+            Result<Extra> result = new Result<Extra>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idExtra;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
+                    var extra = repository.Extras.Get(idExtra);
+                    if (extra != null)
                     {
-                        Extra ext = new Extra();
-                        ext.id = dr.GetInt64(0);
-                        ext.employee = dr.GetInt64(1);
-                        ext.detail = dr.GetString(2);
-                        ext.amount = dr.GetDouble(3);
-                        res.detail = ext;
+                        result.detail.amount = extra.amount;
+                        result.detail.detail = extra.description;
+                        result.detail.employee = extra.employeeId;
+                        result.detail.id = extra.id;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentExtra;
+                    }
+
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<List<Extra>> selectExtras(long employee)
         {
-            Result<List<Extra>> res = new Result<List<Extra>>();
-            if (connect())
+            Result<List<Extra>> result = new Result<List<Extra>>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FEX_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Extra>();
-                    while (dr.Read())
+                    var extras = repository.Extras.selectExtrasByEmployee(employee);
+                    foreach (var ex in extras)
                     {
-                        Extra ext = new Extra();
-                        ext.id = dr.GetInt64(0);
-                        ext.employee = dr.GetInt64(1);
-                        ext.detail = dr.GetString(2);
-                        ext.amount = dr.GetDouble(3);
-                        res.detail.Add(ext);
+                        result.detail.Add(new Extra()
+                        {
+                            id = ex.id,
+                            detail = ex.description,
+                            amount = ex.amount,
+                            employee = ex.employeeId
+                        });
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
-        public Result<string> addRecess(long employee, string detail, float amount, long months)
+        public Result<string> addPenalty(long employee, string detail, float amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = months;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<string> updateRecess(long idRecess, string detail, double amount, long months, double remainingDebt)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_02", cnx);
-
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,5);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idRecess;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = detail;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = amount;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = months;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[4].Value = remainingDebt;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<string> deleteRecess(long idRecess)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idRecess;
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<Recess> selectRecess(long idRecess)
-        {
-            Result<Recess> res = new Result<Recess>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idRecess;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
+                    var penalty = new PenaltyEntity()
                     {
-                        Recess recess = new Recess();
-                        recess.id = dr.GetInt64(0);
-                        recess.employee = dr.GetInt64(1);
-                        recess.detail = dr.GetString(2);
-                        recess.amount = dr.GetDouble(3);
-                        recess.paymentsMade = dr.GetInt64(4);
-                        recess.missingPayments = dr.GetInt64(5);
-                        recess.remainingRecess = dr.GetDouble(6);
-                        res.detail = recess;
-                    }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                        Amount = amount,
+                        Date = date,
+                        Description = detail,
+                        EmployeeId = employee,
+                        PenaltyTypeId = penaltyTypeId,
+                        PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId)
+                    };
+                    repository.Penalties.Add(penalty);
+                    repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
-        public Result<List<Recess>> selectAllRecess(long employee)
+        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string detail, double amount, float penaltyPrice, DateTime date)
         {
-            Result<List<Recess>> res = new Result<List<Recess>>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = employee;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Recess>();
-                    while (dr.Read())
+                    var penalty = repository.Penalties.Get(idRecess);
+                    if (penalty != null)
                     {
-                        Recess recess = new Recess();
-                        recess.id = dr.GetInt64(0);
-                        recess.employee = dr.GetInt64(1);
-                        recess.detail = dr.GetString(2);
-                        recess.amount = dr.GetDouble(3);
-                        recess.paymentsMade = dr.GetInt64(4);
-                        recess.missingPayments = dr.GetInt64(5);
-                        recess.remainingRecess = dr.GetDouble(6);
-                        res.detail.Add(recess);
+                        penalty.Description = detail;
+                        penalty.PenaltyTypeId = penaltyTypeId;
+                        penalty.Amount = amount;
+                        penalty.PenaltyPrice = penaltyPrice;
+                        penalty.Date = date;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentExtra;
+                    }
+                    var rows = repository.Complete();
+
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
-        public Result<String> payRecess(long idRecess, float amount)
+        public Result<string> deletePenalty(long idRecess)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FMU_07", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idRecess;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[1].Value = amount;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    PenaltyEntity penalty = repository.Penalties.Get(idRecess);
+                    if (penalty != null)
+                    {
+                        repository.Penalties.Remove(penalty);
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
+        }
+
+        public Result<Penalty> selectPenalties(long idRecess)
+        {
+            Result<Penalty> result = new Result<Penalty>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    PenaltyEntity penalty = repository.Penalties.Get(idRecess);
+
+                    if (penalty != null)
+                    {
+                        result.detail = new Penalty()
+                        {
+                            id = penalty.Id,
+                            amount = penalty.Amount,
+                            detail = penalty.Description,
+                            employee = penalty.EmployeeId
+
+                        };
+                    }
+                    else
+                    {
+                        result.status = inexistentEmployee;
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Penalty>> selectAllPenalty(long employee)
+        {
+            Result<List<Penalty>> result = new Result<List<Penalty>>();
+            result.detail = new List<Penalty>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employee);
+                    foreach (PenaltyEntity p in penalties)
+                    {
+                        result.detail.Add(new Penalty()
+                        {
+                            amount = (double)p.Amount,
+                            detail = p.Description,
+                            employee = p.EmployeeId,
+                            id = p.Id
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                result.status = validate(e);
+            }
+
+            return result;
+        }
+
+
+        public Result<String> payPenalty(long payrollId, long employeeId)
+        {
+            Result<String> result = new Result<String>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId);
+                    foreach (PenaltyEntity p in penalties)
+                    {
+                        p.PayRollId = payrollId;
+                    }
+                    repository.Complete();
+
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
 
         }
 
         public Result<string> addPayroll(DateTime date, long user, string file, long location)
         {
             Result<string> res = new Result<string>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Date;
-                    command.Parameters[0].Value = date;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[1].Value = user;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = file;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = location;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -1399,38 +934,13 @@ namespace SistemaDePlanillas.Models
         public Result<string> updatePayroll(long idPay, DateTime date, long user, string file)
         {
             Result<string> res = new Result<string>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idPay;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Date;
-                    command.Parameters[1].Value = date;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[2].Value = user;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[3].Value = file;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -1438,32 +948,13 @@ namespace SistemaDePlanillas.Models
         public Result<string> deletePayroll(long idPay)
         {
             Result<string> res = new Result<string>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idPay;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -1471,43 +962,13 @@ namespace SistemaDePlanillas.Models
         public Result<Payroll> selectPayroll(long idPay)
         {
             Result<Payroll> res = new Result<Payroll>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idPay;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
-                    {
-                        Payroll pay = new Payroll();
-                        pay.id = dr.GetInt64(0);
-                        pay.date = dr.GetDate(1);
-                        pay.user = dr.GetInt64(2);
-                        pay.file = dr.GetString(3);
-                        res.detail = pay;
-                    }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -1515,42 +976,13 @@ namespace SistemaDePlanillas.Models
         public Result<List<Payroll>> selectAllPayroll(long idPay)
         {
             Result<List<Payroll>> res = new Result<List<Payroll>>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = idPay;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Payroll>();
-                    while (dr.Read())
-                    {
-                        Payroll pay = new Payroll();
-                        pay.id = dr.GetInt64(0);
-                        pay.date = dr.GetDate(1);
-                        pay.user = dr.GetInt64(2);
-                        res.detail.Add(pay);
-                    }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -1558,776 +990,738 @@ namespace SistemaDePlanillas.Models
         public Result<List<Payroll>> selectPayroll(DateTime ini, DateTime end)
         {
             Result<List<Payroll>> res = new Result<List<Payroll>>();
-            if (connect())
+            try
             {
-                try
+
+            }
+            catch (NpgsqlException e)
+            {
+                res.status = validate(e);
+            }
+            return res;
+        }
+
+        public Result<string> addLocation(string name, double call_price)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FPL_06", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
+                    LocationEntity location = new LocationEntity()
+                    { name = name, callPrice = call_price };
+                    repository.Locations.Add(location);
+                    repository.Complete();
+                }
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Date;
-                    command.Parameters[0].Value = ini;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Date;
-                    command.Parameters[1].Value = end;
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
 
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Payroll>();
-                    while (dr.Read())
+        public Result<Location> getLocation(long id)
+        {
+            Result<Location> result = new Result<Location>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    LocationEntity location = repository.Locations.Get(id);
+
+                    if (location != null)
                     {
-                        Payroll pay = new Payroll();
-                        pay.id = dr.GetInt64(0);
-                        pay.date = dr.GetDate(1);
-                        pay.user = dr.GetInt64(2);
-                        pay.file = dr.GetString(3);
-                        res.detail.Add(pay);
+                        Location location_result = new Location()
+                        {
+                            Name = location.name,
+                            CallPrice = (double)location.callPrice,
+                            LastPayroll = (long)location.lastPayrollId,
+                            CurrentPayroll = (long)location.currentPayrollId
+                        };
+                        result.detail = location_result;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentLocation;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addLocation(string name)
+        public Result<string> updateLocation(long id, string name, double call_price, long last_payroll, long current_payroll)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
+                    LocationEntity location = repository.Locations.Get(id);
+                    if (location != null)
+                    {
+                        location.name = name;
+                        location.callPrice = call_price;
+                        location.lastPayrollId = last_payroll;
+                        location.currentPayrollId = current_payroll;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentLocation;
+                    }
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
-        }
+            return result;
 
-        public Result<string> updateLocation(long id, string name)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = name;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
         }
 
         public Result<string> deleteLocation(long id)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<List<Location>> selectLocations()
-        {
-            Result<List<Location>> res = new Result<List<Location>>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FSE_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Location>();
-                    while (dr.Read())
+                    LocationEntity location = repository.Locations.Get(id);
+                    if (location != null)
                     {
-                        Location loc = new Location();
-                        loc.id = dr.GetInt64(0);
-                        loc.name = dr.GetString(1);
-                        res.detail.Add(loc);
+                        repository.Locations.Remove(location);
+                        repository.Complete();
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
+                    else
+                    {
+                        result.status = inexistentLocation;
+                    }
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addRole(string name, long location, List<Tuple<string, string>> privileges) // group-operation
+        public Result<List<Location>> selectAllLocations()
         {
-            Result<string> res = new Result<string>();
-            var result = addRole(name, location);
-            if (result.status != OK)
+            Result<List<Location>> result = new Result<List<Location>>();
+            result.detail = new List<Location>();
+            try
             {
-                res.status = result.status;
-                return res;
-            }
-            foreach (var x in privileges)
-            {
-                var res2 = Privilege(result.detail, x.Item1, x.Item2);
-                if (res2.status != OK)
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    deleteRole(result.detail);
-                    res.status = res2.status;
-                    return res;
+                    var locations = repository.Locations.GetAll();
+                    foreach (var x in locations)
+                    {
+                        Location location = new Location()
+                        { Id = x.id, Name = x.name, CallPrice = (double)x.callPrice }; //*
+                        result.detail.Add(location);
+                    }
                 }
             }
-            res.status = OK;
-            return res;
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
         }
 
-        private Result<long> addRole(string name, long location)
+        public Result<string> addRole(string name, long location)//**
         {
-            Result<long> res = new Result<long>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[1].Value = location;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
+                    RoleEntity role = new RoleEntity()
+                    { name = name, locationId = location };
+                    repository.Roles.Add(role);
+                    repository.Complete();
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> updateRole(long id, string name, List<Tuple<string, string>> privileges)
+        public Result<Role> getRole(long id)
         {
-            Result<string> res = updateRole(id,name);
-            if (res.status == OK)
+            Result<Role> result = new Result<Role>();
+            try
             {
-                foreach (var x in privileges)
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                   Privilege(id, x.Item1, x.Item2);
+                    RoleEntity role = repository.Roles.Get(id);
+
+                    if (role != null)
+                    {
+                        List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                        foreach (var op in role.operations)
+                        {
+                            Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name);
+                            list.Add(tuple);
+                        }
+                        Role role_result = new Role(role.id, role.name, role.locationId, list);
+                        result.detail = role_result;
+                    }
+                    else
+                    {
+                        result.status = inexistentRole;
+                    }
                 }
             }
-            return res;
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
         }
 
-        private Result<string> updateRole(long id, string name)
+        public Result<string> updateRole(long id, string name, long location)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = name;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
+                    RoleEntity role = repository.Roles.Get(id);
+                    if (role != null)
+                    {
+                        role.name = name;
+                        role.locationId = location;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentRole;
+                    }
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> deleteRole(long id)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<List<Role>> selectRoles()
-        {
-            Result<List<Role>> res = new Result<List<Role>>();
-            res.detail = new List<Role>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FRO_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Role>();
-                    while (dr.Read())
+                    RoleEntity role = repository.Roles.Get(id);
+                    if (role != null)
                     {
-                        long id = dr.GetInt64(0);
-                        string name = dr.GetString(1);
-                        long location = dr.GetInt64(2);
-                        res.detail.Add(new Role(id, name, location, selectRolePrivileges(id).detail));
+                        repository.Roles.Remove(role);
+                        repository.Complete();
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        private Result<string> Privilege(long role, string group, string privilege)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FOP_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,3);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = role;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = privilege;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = group;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<List<Tuple<string, string>>> selectRolePrivileges(long role) //group-operation
-        {
-            Result<List<Tuple<string, string>>> res = new Result<List<Tuple<string, string>>>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FOP_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = role;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Tuple<string, string>>();
-                    while (dr.Read())
+                    else
                     {
-                        string group = dr.GetString(0);
-                        string op = dr.GetString(1);
-                        res.detail.Add(new Tuple<string, string>(group, op));
+                        result.status = inexistentRole;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<List<OperationsGroup>> selectOperationsGroups()
+        public Result<List<Role>> selectAllRoles()
         {
-            Result<List<OperationsGroup>> res = new Result<List<OperationsGroup>>();
-            res.detail = new List<OperationsGroup>();
-            if (connect())
+            Result<List<Role>> result = new Result<List<Role>>();
+            result.detail = new List<Role>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FGO_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<OperationsGroup>();
-                    while (dr.Read())
+                    var roles = repository.Roles.GetAll();
+                    foreach (var x in roles)
                     {
-                        string name = dr.GetString(0);
-                        string desc = dr.GetString(1);
-                        string icon = dr.GetString(2);
-                        bool align = dr.GetBoolean(3);
-                        res.detail.Add(new OperationsGroup(desc, name, icon, align, selectAllOperations(name).detail));
+                        List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                        foreach (var op in x.operations)
+                        {
+                            String[] v = op.Name.Split('/');
+                            Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, v[1]);
+                            list.Add(tuple);
+                        }
+                        result.detail.Add(new Role(x.id, x.name, x.locationId, list));
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<List<Operation>> selectAllOperations(string groupName)
+        public Result<string> addOperation(string name, string description, string url, string group)
         {
-            Result<List<Operation>> res = new Result<List<Operation>>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FOP_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = groupName;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Operation>();
-                    while (dr.Read())
-                    {
-                        string name = dr.GetString(0);
-                        string desc = dr.GetString(1);
-                        res.detail.Add(new Operation(desc, name, groupName));
-                    }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    OperationEntity operation = new OperationEntity()
+                    { Name = name, Description = description, URL = url, GroupId = group };
+                    repository.Operations.Add(operation);
+                    repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
+
+        public Result<string> addOperationToRole(string operation_id, long role_id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    OperationEntity operation = repository.Operations.Get(operation_id);
+                    RoleEntity role = repository.Roles.Get(role_id);
+                    if (operation != null && role != null)
+                    {
+                        if (!role.operations.Contains(operation))
+                        {
+                            role.operations.Add(operation);
+                            repository.Complete();
+                        }
+                    }
+                    else
+                    {
+                        result.status = operation != null ? inexistentRole : inexistentGroup;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<string> deleteOperationToRole(string operation_id, long role_id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    OperationEntity operation = repository.Operations.Get(operation_id);
+                    RoleEntity role = repository.Roles.Get(role_id);
+                    if (operation != null && role != null)
+                    {
+                        if (role.operations.Contains(operation))
+                        {
+                            role.operations.Remove(operation);
+                            repository.Complete();
+                        }
+                    }
+                    else
+                    {
+                        result.status = operation != null ? inexistentRole : inexistentGroup;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        private Result<Operation> getOperation(string id)
+        {
+            Result<Operation> result = new Result<Operation>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    OperationEntity operation = repository.Operations.Get(id);
+                    if (operation != null)
+                    {
+                        Operation operation_result = new Operation(operation.Description, operation.Name, operation.GroupId);
+                        result.detail = operation_result;
+                    }
+                    else
+                    {
+                        result.status = inexistentGroup;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        private Result<string> deleteOperation(string id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    OperationEntity operation = repository.Operations.Get(id);
+                    if (operation != null)
+                    {
+                        repository.Operations.Remove(operation);
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentGroup;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Operation>> selectAllOperation()
+        {
+            Result<List<Operation>> result = new Result<List<Operation>>();
+            result.detail = new List<Operation>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var os = repository.Operations.GetAll();
+                    foreach (var x in os)
+                        result.detail.Add(new Operation(x.Description, x.URL, x.Name));
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Operation>> selectAllOperationByGroup(String id_group)
+        {
+            Result<List<Operation>> result = new Result<List<Operation>>();
+            result.detail = new List<Operation>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var os = repository.Operations.selectOperationsByGroup(id_group);
+                    foreach (var x in os)
+                        result.detail.Add(new Operation(x.Description, x.URL, x.Name));
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<string> addOperationGroup(string name, string description, string icon)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    GroupEntity group = new GroupEntity()
+                    { Name = name, Description = description, Icon = icon };
+                    repository.Groups.Add(group);
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        private Result<OperationsGroup> getOperationGroup(string id)
+        {
+            Result<OperationsGroup> result = new Result<OperationsGroup>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    GroupEntity group = repository.Groups.Get(id);
+                    if (group != null)
+                    {
+                        var operations = repository.Operations.selectOperationsByGroup(group.Name);
+                        List<Operation> list = new List<Operation>();
+                        foreach (var op in operations)
+                            list.Add(new Operation(op.Description, op.Name, op.GroupId));
+                        OperationsGroup group_result = new OperationsGroup(group.Description, group.Name, group.Icon, list);//**
+                        result.detail = group_result;
+                    }
+                    else
+                    {
+                        result.status = inexistentGroup;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        private Result<string> deleteOperationGroup(string id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    GroupEntity group = repository.Groups.Get(id);
+                    if (group != null)
+                    {
+                        repository.Groups.Remove(group);
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.status = inexistentGroup;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<OperationsGroup>> selectAllOperationsGroup()
+        {
+            Result<List<OperationsGroup>> result = new Result<List<OperationsGroup>>();
+            result.detail = new List<OperationsGroup>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var os = repository.Groups.GetAll();
+                    foreach (var x in os)
+                    {
+                        var operations = repository.Operations.selectOperationsByGroup(x.Name);
+                        List<Operation> list = new List<Operation>();
+                        foreach (var op in operations)
+                            list.Add(new Operation(op.Description, op.Name, op.GroupId));
+                        result.detail.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.status = validate(e);
+            }
+            return result;
+        }
+
 
         public Result<string> addUser(string name, string username, string password, long role, long location, string email)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,6);
+                    repository.Users.Add(new UserEntity()
+                    {
+                        name = name,
+                        email = email,
+                        locationId = location,
+                        password = password,
+                        roleId = role,
+                        userName = username
+                    });
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = username;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = password;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = role;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[4].Value = location;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[5].Value = email;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<string> updateUser(long id, string name, string username, string password, long role, long location, string email)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,7);
+                    var user = repository.Users.Get(id);
+                    if (user != null)
+                    {
+                        user.name = name;
+                        user.userName = username;
+                        user.password = password;
+                        user.roleId = role;
+                        user.locationId = location;
+                        user.email = email;
+                    }
+                    else
+                    {
+                        result.status = inexistentUser;
+                    }
+                    var rows = repository.Complete();
 
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = name;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[2].Value = username;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[3].Value = password;
-                    command.Parameters[4].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[4].Value = role;
-                    command.Parameters[5].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[5].Value = location;
-                    command.Parameters[6].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[6].Value = email;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<string> deleteUser(long id)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    var user = repository.Users.Get(id);
+                    if (user != null)
+                    {
+                        repository.Users.Remove(user);
+                    }
+                    else
+                    {
+                        result.status = inexistentUser;
+                    }
+                    var rows = repository.Complete();
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<User> selectUser(long id)
         {
-            Result<User> res = new Result<User>();
-            if (connect())
+            Result<User> result = new Result<User>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
+                    var user = repository.Users.Get(id);
+                    if (user != null)
                     {
-                        User us = new User();
-                        us.Id = dr.GetInt64(0);
-                        us.Name = dr.GetString(1);
-                        us.Username = dr.GetString(2);
-                        us.Password = dr.GetString(3);
-                        us.Role = dr.GetInt64(4);
-                        us.Location = dr.GetInt64(5);
-                        us.Email = dr.GetString(6);
-                        res.detail = us;
+                        var newUser = new User()
+                        {
+                            Id = user.id,
+                            Email = user.email,
+                            Location = user.locationId,
+                            Name = user.name,
+                            Password = user.password,
+                            Role = user.roleId,
+                            Username = user.userName
+                        };
+                        result.detail = newUser;
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    else
+                    {
+                        result.status = inexistentUser;
+                    }
+
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<List<User>> selectAllUsers(long location)
         {
-            Result<List<User>> res = new Result<List<User>>();
-            if (connect())
+            Result<List<User>> result = new Result<List<User>>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_05", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<User>();
-                    while (dr.Read())
+                    var users = repository.Users.GetAll();
+                    foreach (UserEntity ue in users)
                     {
-                        User us = new User();
-                        us.Id = dr.GetInt64(0);
-                        us.Name = dr.GetString(1);
-                        us.Username = dr.GetString(2);
-                        us.Password = dr.GetString(3);
-                        us.Role = dr.GetInt64(4);
-                        us.Location = dr.GetInt64(5);
-                        us.Email = dr.GetString(6);
-                        res.detail.Add(us);
+                        result.detail.Add(new User()
+                        {
+                            Id = ue.id,
+                            Email = ue.email,
+                            Location = ue.locationId,
+                            Name = ue.name,
+                            Password = ue.password,
+                            Role = ue.roleId,
+                            Username = ue.userName
+                        });
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (Exception e)
             {
-                res.status = DBERR;
+
+                result.status = validate(e);
             }
-            return res;
+
+            return result;
         }
 
         public Result<User> login(string username, string password)
         {
             Result<User> res = new Result<User>();
-            if (connect())
+            try
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FUS_06", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = username;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = password;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-
-                    while (dr.Read())
-                    {
-                        res.detail = selectUser(dr.GetInt64(0)).detail;
-                    }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
@@ -2336,302 +1730,147 @@ namespace SistemaDePlanillas.Models
         {
             Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
             res.detail = new List<Tuple<long, string>>();
-            if (connect())
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FERR_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    res.detail = new List<Tuple<long, string>>();
-                    while (dr.Read())
+                    var errors = repository.Errors.GetAll();
+                    foreach (var error in errors)
                     {
-                        Tuple<long, string> t = new Tuple<long, string>(dr.GetInt64(0), dr.GetString(1));
-                        res.detail.Add(t);
+                        res.detail.Add(new Tuple<long, string>(error.id, error.message));
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                res.status = validate(e);
             }
             return res;
         }
 
-        public Result<string> addFixedDebitType(string name, long location)
+        public Result<string> addDebitType(string name, long location, long months = 0, double interestRate = 0)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,2);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[1].Value = location;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
+                    if (months == 0)
+                    {
+                        repository.DebitTypes.Add(new DebitTypeEntity()
+                        {
+                            name = name,
+                            locationId = location,
+                            interestRate = interestRate,
+                            payment = false
+                        });
+                    }
+                    else
+                    {
+                        repository.DebitTypes.Add(new DebitTypeEntity()
+                        {
+                            name = name,
+                            locationId = location,
+                            months = months,
+                            interestRate = interestRate,
+                            payment = true
+                        });
+                    }
+                    repository.Complete();
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> deleteFixedDebitType(long id)
+        public Result<string> deleteDebitType(long id)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<string> result = new Result<string>();
+            try
             {
-                try
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDF_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    repository.DebitTypes.Remove(type);
+                    repository.Complete();
                 }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
+
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
         public Result<List<DebitType>> selectFixedDebitTypes(long location)
         {
-            Result<List<DebitType>> res = new Result<List<DebitType>>();
-            res.detail = new List<DebitType>();
-            if (connect())
+            Result<List<DebitType>> result = new Result<List<DebitType>>();
+            try
             {
-                try
+                result.detail = new List<DebitType>();
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDF_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
+                    var types = repository.DebitTypes.SelectByLocation(location);
+                    foreach (var type in types)
                     {
-                        DebitType dt = new DebitType();
-                        dt.id = dr.GetInt64(0);
-                        dt.name = dr.GetString(1);
-                        res.detail.Add(dt);
+                        if (!type.payment)
+                        {
+                            result.detail.Add(new DebitType()
+                            {
+                                id = type.id,
+                                name = type.name,
+                                location = type.locationId,
+                                interestRate = type.interestRate,
+                                payment = false
+                            });
+                        }
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addPaymentDebitType(string name, float interestRate, long months, long location)
+        public Result<List<DebitType>> selectNonFixedDebitTypes(long location)
         {
-            Result<string> res = new Result<string>();
-            if (connect())
+            Result<List<DebitType>> result = new Result<List<DebitType>>();
+            try
             {
-                try
+                result.detail = new List<DebitType>();
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDF_01", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[0].Value = name;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[1].Value = interestRate;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[2].Value = months;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = location;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<string> updatePaymentDebitType(long id, string name, float interestRate, long months)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDC_02", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,4);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-                    command.Parameters[1].NpgsqlDbType = NpgsqlDbType.Text;
-                    command.Parameters[1].Value = name;
-                    command.Parameters[2].NpgsqlDbType = NpgsqlDbType.Numeric;
-                    command.Parameters[2].Value = interestRate;
-                    command.Parameters[3].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[3].Value = months;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<string> deletePaymentDebitType(long id)
-        {
-            Result<string> res = new Result<string>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDC_03", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = id;
-
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
-                }
-            }
-            else
-            {
-                res.status = DBERR;
-            }
-            return res;
-        }
-
-        public Result<List<DebitType>> selectPaymentDebitTypes(long location)
-        {
-            Result<List<DebitType>> res = new Result<List<DebitType>>();
-            res.detail = new List<DebitType>();
-            if (connect())
-            {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand("FTDC_04", cnx);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Transaction = cnx.BeginTransaction();
-                    addParameters(command,1);
-
-                    command.Parameters[0].NpgsqlDbType = NpgsqlDbType.Bigint;
-                    command.Parameters[0].Value = location;
-
-                    NpgsqlDataReader dr = command.ExecuteReader();
-                    while (dr.Read())
+                    var types = repository.DebitTypes.SelectByLocation(location);
+                    foreach (var type in types)
                     {
-                        DebitType dt = new DebitType();
-                        dt.id = dr.GetInt64(0);
-                        dt.name = dr.GetString(1);
-                        dt.interestRate = dr.GetFloat(2);
-                        dt.months = dr.GetInt64(3);
-                        res.detail.Add(dt);
+                        if (type.payment)
+                        {
+                            result.detail.Add(new DebitType()
+                            {
+                                id = type.id,
+                                name = type.name,
+                                location = type.locationId,
+                                months = type.months,
+                                interestRate = type.interestRate,
+                                payment = true
+                            });
+                        }
                     }
-                    dr.Close();
-                    command.Transaction.Commit();
-                    cnx.Close();
-                }
-                catch (NpgsqlException e)
-                {
-                    cnx.Close();
-                    try { res.status = long.Parse(e.MessageText); }
-                    catch (Exception) { throw e; }
                 }
             }
-            else
+            catch (NpgsqlException e)
             {
-                res.status = DBERR;
+                result.status = validate(e);
             }
-            return res;
+            return result;
         }
+
     }
 
 }

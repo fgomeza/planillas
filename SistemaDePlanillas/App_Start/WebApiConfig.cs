@@ -16,7 +16,7 @@ namespace SistemaDePlanillas
                 routeTemplate: "api/Action/{group}/{operation}/{call}",
                 defaults: new { controller = "OperationsApi", call = RouteParameter.Optional }
             );
-
+            
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
