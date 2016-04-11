@@ -4,17 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SistemaDePlanillas.Models;
+using SistemaDePlanillas.Filters;
 
 namespace SistemaDePlanillas.Controllers
 {
     public class HomeController : Controller
     {
 
+        [SidebarFilter]
         public ActionResult Index()
         {
-            if(Request.IsAuthenticated)
+            if (Request.IsAuthenticated)
             {
-                return RedirectToAction("Dashboard");
+                return View();
             }
             else
             {
@@ -23,16 +25,16 @@ namespace SistemaDePlanillas.Controllers
             
         }
 
+        [AjaxOnly]
         public ActionResult Dashboard()
         {
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View();
+            return PartialView();
         }
 
+        [AjaxOnly]
         public ActionResult Test()
         {
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View();
+            return PartialView();
         }
 
     }

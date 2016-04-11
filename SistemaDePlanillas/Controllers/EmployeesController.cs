@@ -8,10 +8,10 @@ using System.Web.Mvc;
 namespace SistemaDePlanillas.Controllers
 {
     [AjaxOnly]
-    public class ManageController : Controller
+    public class EmployeesController : Controller
     {
-        // GET: Manage
-        public ActionResult UploadFile()
+        // GET: Employees
+        public ActionResult Index()
         {
             return PartialView();
         }

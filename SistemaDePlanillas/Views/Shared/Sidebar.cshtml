@@ -1,6 +1,6 @@
 ﻿@model SistemaDePlanillas.Models.ViewModels.SidebarViewModel
 
-<nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-md">
+<nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm">
 
     <a href="@Url.Action("Index", "Home")" class="navmenu-brand">
         @ViewBag.AppTitle
@@ -18,9 +18,9 @@
                 <ul class="dropdown-menu nav navmenu-nav">
                     @foreach (var link in subMenu.Links)
                     {
-                        <li>@Helpers.AjaxLink(@link.DisplayName, @link.Action, @link.Controller)</li>
+                        <!--<li>@Helpers.AjaxLink(@link.DisplayName, @link.Action, @link.Controller)</li>-->
                         <!--<li>@Ajax.ActionLink(@link.DisplayName, @link.Action, @link.Controller, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "page", OnBegin = "hidePage", OnComplete = "", OnSuccess = "ajaxNavigationComplete", OnFailure = "ajaxNavigationFailed" })</li>-->
-                        <!--<li><a href="@Url.Action(@link.Action, @link.Controller)" class="ajax-link">@link.DisplayName</a></li>-->
+                        <li><a href="/#@Url.Action(@link.Action, @link.Controller)">@link.DisplayName</a></li>
                     }
                 </ul>
             </li>

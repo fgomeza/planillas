@@ -7,12 +7,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewBag.Title</title>
+    <title data-bind="text: ApplicationTitle">@ViewBag.Title</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-    @Styles.Render("~/bundles/styles/common")
-    @Styles.Render("~/bundles/styles/partials")
-    @Scripts.Render("~/bundles/js/jquery")
+    @Styles.Render("~/bundles/styles")
+
+    @Scripts.Render("~/Scripts/require-config.js")
+    @Scripts.Render("~/Scripts/lib/require.js")
 </head>
 
 <body>
@@ -32,14 +33,9 @@
 
         <main id="page">
             @RenderBody()
-
-            @RenderSection("scripts", required: false)
         </main>
 
-        @Scripts.Render("~/bundles/js/scripts")
-        @Scripts.Render("~/bundles/js/bootstrap")
-        @Scripts.Render("~/bundles/js/partials")
+        @RenderSection("scripts", required: false)
     </div>
 </body>
-
 </html>
