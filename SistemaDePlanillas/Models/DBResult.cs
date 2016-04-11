@@ -6,8 +6,8 @@ namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public long status = 0;
-        public T detail;
+        public long Status = 0;
+        public T Detail;
     }
 
     public class Employee

@@ -28,12 +28,12 @@ namespace SistemaDePlanillas.Models.Operations
                     privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
                 }
                 var result = DBManager.Instance.addRole(name, user.Location, privsList);
-                if (result.status == 0)
+                if (result.Status == 0)
                 {
                     //cargar nuevo rol en el session manager
 					SessionManager.Instance.updateRoles();
                 }
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch(Exception e)
             {
@@ -57,7 +57,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var result = DBManager.Instance.deleteRole(id);
             SessionManager.Instance.updateRoles();
-            return Responses.Simple(result.status);
+            return Responses.Simple(result.Status);
         }
 
         public static string modify(User user, long id,string name, IEnumerable<object> privs)
@@ -72,7 +72,7 @@ namespace SistemaDePlanillas.Models.Operations
                 }
                 var result = DBManager.Instance.updateRole(id, name, privsList);
                 SessionManager.Instance.updateRoles();
-                return Responses.Simple(result.status);
+                return Responses.Simple(result.Status);
             }
             catch (Exception e)
             {

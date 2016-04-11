@@ -56,7 +56,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -80,13 +80,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -94,7 +94,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Employee>> selectAllCmsEmployees(long location)
         {
             Result<List<Employee>> result = new Result<List<Employee>>();
-            result.detail = new List<Employee>();
+            result.Detail = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -106,13 +106,13 @@ namespace SistemaDePlanillas.Models
 
                         Employee employee = new Employee()
                         { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls };
-                        result.detail.Add(employee);
+                        result.Detail.Add(employee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -132,7 +132,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -157,13 +157,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -171,7 +171,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Employee>> selectAllNonCmsEmployees(long location)
         {
             Result<List<Employee>> result = new Result<List<Employee>>();
-            result.detail = new List<Employee>();
+            result.Detail = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -181,13 +181,13 @@ namespace SistemaDePlanillas.Models
                     {
                         Employee employee = new Employee()
                         { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary };
-                        result.detail.Add(employee);
+                        result.Detail.Add(employee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -207,13 +207,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -238,18 +238,18 @@ namespace SistemaDePlanillas.Models
                         res.cmsText = employee.cms;
                         res.account = employee.account;
                         res.salary = employee.salary;
-                        result.detail = res;
+                        result.Detail = res;
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
 
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -262,7 +262,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var employees = repository.Employees.GetAll();
-                    result.detail = new List<Employee>();
+                    result.Detail = new List<Employee>();
                     foreach (var employee in employees)
                     {
                         if (employee.active)
@@ -276,19 +276,19 @@ namespace SistemaDePlanillas.Models
                             res.cmsText = employee.cms;
                             res.account = employee.account;
                             res.salary = employee.salary;
-                            result.detail.Add(res);
+                            result.Detail.Add(res);
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
 
-        public Result<string> addDebit(long employee, string detail, double amount, long type)
+        public Result<string> addDebit(long employee, string Detail, double amount, long type)
         {
             Result<string> result = new Result<string>();
             try
@@ -298,7 +298,7 @@ namespace SistemaDePlanillas.Models
                     repository.Debits.Add(new DebitEntity()
                     {
                         employeeId = employee,
-                        description = detail,
+                        description = Detail,
                         totalAmount = amount,
                         debitTypeId = type,
                         interestRate = 0,
@@ -310,13 +310,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
         }
 
-        public Result<string> updateDebit(long idDebit, string detail, double amount)
+        public Result<string> updateDebit(long idDebit, string Detail, double amount)
         {
             Result<string> result = new Result<string>();
             try
@@ -326,20 +326,20 @@ namespace SistemaDePlanillas.Models
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        debit.description = detail;
+                        debit.description = Detail;
                         debit.totalAmount = amount;
                         repository.Complete();
                     }
                     else
                     {
-                        result.status = inexistentDebit;
+                        result.Status = inexistentDebit;
                     }
 
                 }
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -359,13 +359,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentDebit;
+                        result.Status = inexistentDebit;
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -386,17 +386,17 @@ namespace SistemaDePlanillas.Models
                         res.amount = debit.totalAmount;
                         res.detail = debit.description;
                         res.type = debit.debitTypeId;
-                        result.detail = res;
+                        result.Detail = res;
                     }
                     else
                     {
-                        result.status = inexistentDebit;
+                        result.Status = inexistentDebit;
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -409,7 +409,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debits = repository.Debits.selectFixDebitsByEmployee(employee);
-                    result.detail = new List<Debit>();
+                    result.Detail = new List<Debit>();
                     foreach (var debit in debits)
                     {
                         if (debit.active)
@@ -420,19 +420,19 @@ namespace SistemaDePlanillas.Models
                             deb.employee = debit.employeeId;
                             deb.detail = debit.description;
                             deb.type = debit.debitTypeId;
-                            result.detail.Add(deb);
+                            result.Detail.Add(deb);
                         }
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
 
-        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
+        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, double interestRate, long months, long type)
         {
             Result<string> result = new Result<string>();
             try
@@ -442,7 +442,7 @@ namespace SistemaDePlanillas.Models
                     repository.Debits.Add(new DebitEntity()
                     {
                         initialDate = initialDate,
-                        description = detail,
+                        description = Detail,
                         employeeId = employee,
                         totalAmount = total,
                         remainingAmount = total,
@@ -458,13 +458,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
         }
 
-        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string detail, float total, double interestRate, long months, double remainingAmount)
+        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, float total, double interestRate, long months, double remainingAmount)
         {
             Result<string> result = new Result<string>();
             try
@@ -475,7 +475,7 @@ namespace SistemaDePlanillas.Models
                     if (debit != null && debit.active)
                     {
                         debit.initialDate = initialDate;
-                        debit.description = detail;
+                        debit.description = Detail;
                         debit.totalAmount = total;
                         debit.remainingAmount = remainingAmount;
                         debit.remainingMonths = months - debit.paidMonths;
@@ -486,7 +486,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -516,13 +516,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentDebit;
+                        result.Status = inexistentDebit;
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -535,7 +535,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debits = repository.Debits.selectDebitsNonFixByEmployee(employee);
-                    result.detail = new List<PaymentDebit>();
+                    result.Detail = new List<PaymentDebit>();
                     foreach (var debit in debits)
                     {
                         if (debit.active)
@@ -557,7 +557,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -589,12 +589,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
 
-        public Result<string> addExtra(long employee, string detail, float amount)
+        public Result<string> addExtra(long employee, string Detail, float amount)
         {
             Result<string> result = new Result<string>();
             try
@@ -604,7 +604,7 @@ namespace SistemaDePlanillas.Models
                     var extra = new ExtraEntity()
                     {
                         employeeId = employee,
-                        description = detail,
+                        description = Detail,
                         amount = amount
                     };
                     repository.Extras.Add(extra);
@@ -615,13 +615,13 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
         }
 
-        public Result<string> updateExtra(long idExtra, string detail, float amount)
+        public Result<string> updateExtra(long idExtra, string Detail, float amount)
         {
             Result<string> result = new Result<string>();
             try
@@ -632,11 +632,11 @@ namespace SistemaDePlanillas.Models
                     if (extra != null)
                     {
                         extra.amount = (double)amount;
-                        extra.description = detail;
+                        extra.description = Detail;
                     }
                     else
                     {
-                        result.status = inexistentExtra;
+                        result.Status = inexistentExtra;
                     }
                     var rows = repository.Complete();
 
@@ -645,7 +645,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -665,7 +665,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentExtra;
+                        result.Status = inexistentExtra;
                     }
                     var rows = repository.Complete();
                 }
@@ -673,7 +673,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -690,14 +690,14 @@ namespace SistemaDePlanillas.Models
                     var extra = repository.Extras.Get(idExtra);
                     if (extra != null)
                     {
-                        result.detail.amount = extra.amount;
-                        result.detail.detail = extra.description;
-                        result.detail.employee = extra.employeeId;
-                        result.detail.id = extra.id;
+                        result.Detail.amount = extra.amount;
+                        result.Detail.detail = extra.description;
+                        result.Detail.employee = extra.employeeId;
+                        result.Detail.id = extra.id;
                     }
                     else
                     {
-                        result.status = inexistentExtra;
+                        result.Status = inexistentExtra;
                     }
 
                 }
@@ -705,7 +705,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -721,7 +721,7 @@ namespace SistemaDePlanillas.Models
                     var extras = repository.Extras.selectExtrasByEmployee(employee);
                     foreach (var ex in extras)
                     {
-                        result.detail.Add(new Extra()
+                        result.Detail.Add(new Extra()
                         {
                             id = ex.id,
                             detail = ex.description,
@@ -734,13 +734,13 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
         }
 
-        public Result<string> addPenalty(long employee, string detail, float amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
+        public Result<string> addPenalty(long employee, string Detail, float amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -751,7 +751,7 @@ namespace SistemaDePlanillas.Models
                     {
                         Amount = amount,
                         Date = date,
-                        Description = detail,
+                        Description = Detail,
                         EmployeeId = employee,
                         PenaltyTypeId = penaltyTypeId,
                         PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId)
@@ -763,13 +763,13 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
         }
 
-        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string detail, double amount, float penaltyPrice, DateTime date)
+        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string Detail, double amount, float penaltyPrice, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -779,7 +779,7 @@ namespace SistemaDePlanillas.Models
                     var penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        penalty.Description = detail;
+                        penalty.Description = Detail;
                         penalty.PenaltyTypeId = penaltyTypeId;
                         penalty.Amount = amount;
                         penalty.PenaltyPrice = penaltyPrice;
@@ -787,7 +787,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentExtra;
+                        result.Status = inexistentExtra;
                     }
                     var rows = repository.Complete();
 
@@ -796,7 +796,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -817,13 +817,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -839,7 +839,7 @@ namespace SistemaDePlanillas.Models
 
                     if (penalty != null)
                     {
-                        result.detail = new Penalty()
+                        result.Detail = new Penalty()
                         {
                             id = penalty.Id,
                             amount = penalty.Amount,
@@ -850,14 +850,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentEmployee;
+                        result.Status = inexistentEmployee;
                     }
 
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -865,7 +865,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Penalty>> selectAllPenalty(long employee)
         {
             Result<List<Penalty>> result = new Result<List<Penalty>>();
-            result.detail = new List<Penalty>();
+            result.Detail = new List<Penalty>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -873,7 +873,7 @@ namespace SistemaDePlanillas.Models
                     var penalties = repository.Penalties.selectPenaltiesByEmployee(employee);
                     foreach (PenaltyEntity p in penalties)
                     {
-                        result.detail.Add(new Penalty()
+                        result.Detail.Add(new Penalty()
                         {
                             amount = (double)p.Amount,
                             detail = p.Description,
@@ -886,7 +886,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -911,7 +911,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
 
@@ -926,7 +926,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -940,7 +940,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -954,7 +954,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -968,7 +968,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -982,7 +982,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -996,7 +996,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -1017,7 +1017,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1040,17 +1040,17 @@ namespace SistemaDePlanillas.Models
                             LastPayroll = (long)location.lastPayrollId,
                             CurrentPayroll = (long)location.currentPayrollId
                         };
-                        result.detail = location_result;
+                        result.Detail = location_result;
                     }
                     else
                     {
-                        result.status = inexistentLocation;
+                        result.Status = inexistentLocation;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1073,14 +1073,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentLocation;
+                        result.Status = inexistentLocation;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
 
@@ -1101,14 +1101,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentLocation;
+                        result.Status = inexistentLocation;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1116,7 +1116,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Location>> selectAllLocations()
         {
             Result<List<Location>> result = new Result<List<Location>>();
-            result.detail = new List<Location>();
+            result.Detail = new List<Location>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1126,13 +1126,13 @@ namespace SistemaDePlanillas.Models
                     {
                         Location location = new Location()
                         { Id = x.id, Name = x.name, CallPrice = (double)x.callPrice }; //*
-                        result.detail.Add(location);
+                        result.Detail.Add(location);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1153,7 +1153,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1176,17 +1176,17 @@ namespace SistemaDePlanillas.Models
                             list.Add(tuple);
                         }
                         Role role_result = new Role(role.id, role.name, role.locationId, list);
-                        result.detail = role_result;
+                        result.Detail = role_result;
                     }
                     else
                     {
-                        result.status = inexistentRole;
+                        result.Status = inexistentRole;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1207,14 +1207,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentRole;
+                        result.Status = inexistentRole;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1234,14 +1234,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentRole;
+                        result.Status = inexistentRole;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1249,7 +1249,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Role>> selectAllRoles()
         {
             Result<List<Role>> result = new Result<List<Role>>();
-            result.detail = new List<Role>();
+            result.Detail = new List<Role>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1264,13 +1264,13 @@ namespace SistemaDePlanillas.Models
                             Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, v[1]);
                             list.Add(tuple);
                         }
-                        result.detail.Add(new Role(x.id, x.name, x.locationId, list));
+                        result.Detail.Add(new Role(x.id, x.name, x.locationId, list));
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1290,7 +1290,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1314,13 +1314,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = operation != null ? inexistentRole : inexistentGroup;
+                        result.Status = operation != null ? inexistentRole : inexistentGroup;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1344,13 +1344,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = operation != null ? inexistentRole : inexistentGroup;
+                        result.Status = operation != null ? inexistentRole : inexistentGroup;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1366,18 +1366,18 @@ namespace SistemaDePlanillas.Models
                     if (operation != null)
                     {
                         Operation operation_result = new Operation(operation.Description, operation.Name, operation.GroupId);
-                        result.detail = operation_result;
+                        result.Detail = operation_result;
                     }
                     else
                     {
-                        result.status = inexistentGroup;
+                        result.Status = inexistentGroup;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1397,13 +1397,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentGroup;
+                        result.Status = inexistentGroup;
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1411,19 +1411,19 @@ namespace SistemaDePlanillas.Models
         public Result<List<Operation>> selectAllOperation()
         {
             Result<List<Operation>> result = new Result<List<Operation>>();
-            result.detail = new List<Operation>();
+            result.Detail = new List<Operation>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.detail.Add(new Operation(x.Description, x.URL, x.Name));
+                        result.Detail.Add(new Operation(x.Description, x.URL, x.Name));
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1431,19 +1431,19 @@ namespace SistemaDePlanillas.Models
         public Result<List<Operation>> selectAllOperationByGroup(String id_group)
         {
             Result<List<Operation>> result = new Result<List<Operation>>();
-            result.detail = new List<Operation>();
+            result.Detail = new List<Operation>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.detail.Add(new Operation(x.Description, x.URL, x.Name));
+                        result.Detail.Add(new Operation(x.Description, x.URL, x.Name));
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1463,7 +1463,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1483,18 +1483,18 @@ namespace SistemaDePlanillas.Models
                         foreach (var op in operations)
                             list.Add(new Operation(op.Description, op.Name, op.GroupId));
                         OperationsGroup group_result = new OperationsGroup(group.Description, group.Name, group.Icon, list);//**
-                        result.detail = group_result;
+                        result.Detail = group_result;
                     }
                     else
                     {
-                        result.status = inexistentGroup;
+                        result.Status = inexistentGroup;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1514,14 +1514,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentGroup;
+                        result.Status = inexistentGroup;
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1529,7 +1529,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<OperationsGroup>> selectAllOperationsGroup()
         {
             Result<List<OperationsGroup>> result = new Result<List<OperationsGroup>>();
-            result.detail = new List<OperationsGroup>();
+            result.Detail = new List<OperationsGroup>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1541,13 +1541,13 @@ namespace SistemaDePlanillas.Models
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
                             list.Add(new Operation(op.Description, op.Name, op.GroupId));
-                        result.detail.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
+                        result.Detail.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
                     }
                 }
             }
             catch (Exception e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1576,7 +1576,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1600,7 +1600,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentUser;
+                        result.Status = inexistentUser;
                     }
                     var rows = repository.Complete();
 
@@ -1609,7 +1609,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -1629,7 +1629,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.status = inexistentUser;
+                        result.Status = inexistentUser;
                     }
                     var rows = repository.Complete();
                 }
@@ -1637,7 +1637,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -1663,11 +1663,11 @@ namespace SistemaDePlanillas.Models
                             Role = user.roleId,
                             Username = user.userName
                         };
-                        result.detail = newUser;
+                        result.Detail = newUser;
                     }
                     else
                     {
-                        result.status = inexistentUser;
+                        result.Status = inexistentUser;
                     }
 
                 }
@@ -1675,7 +1675,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -1691,7 +1691,7 @@ namespace SistemaDePlanillas.Models
                     var users = repository.Users.GetAll();
                     foreach (UserEntity ue in users)
                     {
-                        result.detail.Add(new User()
+                        result.Detail.Add(new User()
                         {
                             Id = ue.id,
                             Email = ue.email,
@@ -1707,7 +1707,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.status = validate(e);
+                result.Status = validate(e);
             }
 
             return result;
@@ -1721,7 +1721,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -1729,7 +1729,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Tuple<long, string>>> selectAllErrors()
         {
             Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
-            res.detail = new List<Tuple<long, string>>();
+            res.Detail = new List<Tuple<long, string>>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1737,13 +1737,13 @@ namespace SistemaDePlanillas.Models
                     var errors = repository.Errors.GetAll();
                     foreach (var error in errors)
                     {
-                        res.detail.Add(new Tuple<long, string>(error.id, error.message));
+                        res.Detail.Add(new Tuple<long, string>(error.id, error.message));
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                res.status = validate(e);
+                res.Status = validate(e);
             }
             return res;
         }
@@ -1781,7 +1781,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1801,7 +1801,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1811,7 +1811,7 @@ namespace SistemaDePlanillas.Models
             Result<List<DebitType>> result = new Result<List<DebitType>>();
             try
             {
-                result.detail = new List<DebitType>();
+                result.Detail = new List<DebitType>();
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var types = repository.DebitTypes.SelectByLocation(location);
@@ -1819,7 +1819,7 @@ namespace SistemaDePlanillas.Models
                     {
                         if (!type.payment)
                         {
-                            result.detail.Add(new DebitType()
+                            result.Detail.Add(new DebitType()
                             {
                                 id = type.id,
                                 name = type.name,
@@ -1833,7 +1833,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }
@@ -1843,7 +1843,7 @@ namespace SistemaDePlanillas.Models
             Result<List<DebitType>> result = new Result<List<DebitType>>();
             try
             {
-                result.detail = new List<DebitType>();
+                result.Detail = new List<DebitType>();
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var types = repository.DebitTypes.SelectByLocation(location);
@@ -1851,7 +1851,7 @@ namespace SistemaDePlanillas.Models
                     {
                         if (type.payment)
                         {
-                            result.detail.Add(new DebitType()
+                            result.Detail.Add(new DebitType()
                             {
                                 id = type.id,
                                 name = type.name,
@@ -1866,7 +1866,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.status = validate(e);
+                result.Status = validate(e);
             }
             return result;
         }

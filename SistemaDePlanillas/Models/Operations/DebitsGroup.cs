@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {
@@ -25,7 +25,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, detail, total, interestRate, months, type);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models.Operations
             try
             {
                 var dataBaseResponse = DBManager.Instance.selectDebits(employee);
-                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
+                return Responses.SimpleWithData(dataBaseResponse.Status, dataBaseResponse.Detail);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebits(employee);
-                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
+                return Responses.SimpleWithData(dataBaseResponse.Status, dataBaseResponse.Detail);
             }
             catch (Exception e)
             {
@@ -62,7 +62,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectDebit(idDebit);
-                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
+                return Responses.SimpleWithData(dataBaseResponse.Status, dataBaseResponse.Detail);
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebit(idDebit);
-                return Responses.SimpleWithData(dataBaseResponse.status, dataBaseResponse.detail);
+                return Responses.SimpleWithData(dataBaseResponse.Status, dataBaseResponse.Detail);
             }
             catch (Exception e)
             {
@@ -86,7 +86,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updateDebit(idDebit, detail, amount);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {
@@ -98,7 +98,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, detail, total, interestRate, months, remainingDebt);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {
@@ -110,7 +110,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.deleteDebit(idDebit);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {
@@ -122,7 +122,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             try {
                 var dataBaseResponse = DBManager.Instance.deletePaymentDebit(idDebit);
-                return Responses.Simple(dataBaseResponse.status);
+                return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
             {

@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Controllers
         public string Index()
         {
             var x = DBManager.Instance.deleteEmployee(30);
-           return Responses.SimpleWithData(x.status,x.detail);
+           return Responses.SimpleWithData(x.Status,x.Detail);
         }
     }
 }

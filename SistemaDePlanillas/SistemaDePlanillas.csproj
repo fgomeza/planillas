@@ -190,7 +190,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DataBase.cs" />
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\IErrors.cs" />
