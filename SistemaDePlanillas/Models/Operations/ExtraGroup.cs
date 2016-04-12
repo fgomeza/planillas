@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(ex);
             }
         }
-        /// <summary>
+        /// <summary> 
         /// Actualiza la informacio de un pago extra
         /// </summary>
         /// <param name="extraId">Identificador del pago extra</param>
