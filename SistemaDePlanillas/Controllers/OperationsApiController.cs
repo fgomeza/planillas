@@ -8,14 +8,14 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
-using System.Web.Script.Serialization;
+using System.Web.Http.Results;
 
 namespace SistemaDePlanillas.Controllers
 {
     public class OperationsApiController : ApiController
     {
         
-        public string Post(string group, string operation, [FromBody]object[] args)
+        public JsonResult<Response> Post(string group, string operation, [FromBody]object[] args)
         {
             try
             {
@@ -56,32 +56,32 @@ namespace SistemaDePlanillas.Controllers
                 Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
-                    return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
+                    return Json(Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion"));
                 }
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
-                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
                 }
                 
                 //call the method
-                return (string)method.Invoke(null, parameters);
+                return Json((Response)method.Invoke(null, parameters));
             }
             catch (TargetParameterCountException)
             {
-                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation);
+                return Json(Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation));
             }
             catch (ArgumentException)
             {
-                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation);
+                return Json(Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation));
             }
             catch (Exception e)
             {
-                return Responses.ExceptionError(e);
+                return Json(Responses.ExceptionError(e));
             }
         }
 
-        public string Post(string group, string operation, string call, [FromBody]object[] args)
+        public JsonResult<Response> Post(string group, string operation, string call, [FromBody]object[] args)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace SistemaDePlanillas.Controllers
                 //checks if the user is logged
                 if (!sm.isLogged(Session))
                 {
-                    return Responses.Error(10, "No se ha iniciado sesion");
+                    return Json(Responses.Error(10, "No se ha iniciado sesion"));
                 }
 
                 User user = sm.getUser(Session);
@@ -124,28 +124,28 @@ namespace SistemaDePlanillas.Controllers
                 Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
-                    return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
+                    return Json(Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion"));
                 }
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);             
                 if (method == null)
                 {
-                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation);
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
                 }
 
                 //call the method
-                return (string)method.Invoke(null, parameters);
+                return Json((Response)method.Invoke(null, parameters));
             }
             catch (TargetParameterCountException)
             {
-                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation + "/" + call);
+                return Json(Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation + "/" + call));
             }
             catch (ArgumentException)
             {
-                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation + "/" + call);
+                return Json(Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation + "/" + call));
             }
             catch (Exception e)
             {
-                return Responses.ExceptionError(e);
+                return Json(Responses.ExceptionError(e));
             }
         }
 

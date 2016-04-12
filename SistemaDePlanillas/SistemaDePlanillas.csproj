@@ -202,7 +202,7 @@
     <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
-    <Compile Include="Models\Operations\FileConvertions.cs" />
+    <Compile Include="Models\FileConvertions.cs" />
     <Compile Include="Models\Operations\LocationsGroup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
     <Compile Include="Models\Operations\RolesGroup.cs" />
