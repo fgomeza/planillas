@@ -11,43 +11,29 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var roles = SessionManager.Instance.getRoles();
             var result = new List<object>();
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
-                result.Add(new {id = role.id, name = role.name, privileges = role.privileges});
+                result.Add(new { id = role.id, name = role.name, privileges = role.privileges });
             }
             return Responses.WithData(result);
         }
 
+
         public static string add(User user, string name, IEnumerable<object> privileges)
         {
-            try {
-                var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privileges)
-                {
-                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
-                    privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
-                }
-                var result = DBManager.Instance.addRole(name, user.Location, privsList);
-                if (result.Status == 0)
-                {
-                    //cargar nuevo rol en el session manager
-					SessionManager.Instance.updateRoles();
-                }
-                return Responses.Simple(result.Status);
-            }
-            catch(Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+            var result = DBManager.Instance.addRole(name, user.Location, privileges.Cast<string>().ToList());
+            return Responses.Simple(result.Status);
         }
+
 
         public static string get(User user, long id)
         {
-            try {
+            try
+            {
                 var role = SessionManager.Instance.getRole(id);
                 return Responses.WithData(new { id = role.id, name = role.name, privileges = role.privileges });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Responses.ExceptionError(e);
             }
@@ -62,23 +48,8 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static string modify(User user, long id,string name, IEnumerable<object> privs)
         {
-            try
-            {
-                var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privs)
-                {
-                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
-                    privsList.Add(new Tuple<string, string>(pair[0], pair[1]));
-                }
-                var result = DBManager.Instance.updateRole(id, name, privsList);
-                SessionManager.Instance.updateRoles();
-                return Responses.Simple(result.Status);
-            }
-            catch (Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+            var result = DBManager.Instance.updateRole(id, name, user.Location, privs.Cast<string>().ToList());
+            return Responses.Simple(result.Status);
         }
-
     }
 }

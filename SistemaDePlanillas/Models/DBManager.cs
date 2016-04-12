@@ -1137,7 +1137,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addRole(string name, long location)//**
+        public Result<string> addRole(string name, long location, List<string> operations)//**
         {
             Result<string> result = new Result<string>();
             try
@@ -1147,6 +1147,14 @@ namespace SistemaDePlanillas.Models
                     RoleEntity role = new RoleEntity()
                     { name = name, locationId = location };
                     repository.Roles.Add(role);
+                    foreach (var op in operations)
+                    {
+                        OperationEntity operation = repository.Operations.Get(op);
+                        if (operation != null)
+                        {
+                            role.operations.Add(operation);
+                        }
+                    }
                     repository.Complete();
                 }
 
@@ -1191,7 +1199,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updateRole(long id, string name, long location)
+        public Result<string> updateRole(long id, string name, long location, List<string> operations)
         {
             Result<string> result = new Result<string>();
             try
@@ -1203,6 +1211,15 @@ namespace SistemaDePlanillas.Models
                     {
                         role.name = name;
                         role.locationId = location;
+                        role.operations.Clear();
+                        foreach (var op in operations)
+                        {
+                            OperationEntity operation = repository.Operations.Get(op);
+                            if (operation != null && role != null)
+                            {
+                                role.operations.Add(operation);
+                            }
+                        }
                         repository.Complete();
                     }
                     else
@@ -1294,28 +1311,25 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
-
-        public Result<string> addOperationToRole(string operation_id, long role_id)
+        /*
+        public Result<string> updateOperationsToRole(long role_id, List<string> operations)
         {
             Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    OperationEntity operation = repository.Operations.Get(operation_id);
                     RoleEntity role = repository.Roles.Get(role_id);
-                    if (operation != null && role != null)
+                    role.operations.Clear();
+                    foreach (var op in operations)
                     {
-                        if (!role.operations.Contains(operation))
+                        OperationEntity operation = repository.Operations.Get(op);                        
+                        if (operation != null && role != null)
                         {
-                            role.operations.Add(operation);
-                            repository.Complete();
-                        }
+                                role.operations.Add(operation);
+                        }                      
                     }
-                    else
-                    {
-                        result.Status = operation != null ? inexistentRole : inexistentGroup;
-                    }
+                    repository.Complete();
                 }
             }
             catch (Exception e)
@@ -1324,36 +1338,7 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
-
-        public Result<string> deleteOperationToRole(string operation_id, long role_id)
-        {
-            Result<string> result = new Result<string>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    OperationEntity operation = repository.Operations.Get(operation_id);
-                    RoleEntity role = repository.Roles.Get(role_id);
-                    if (operation != null && role != null)
-                    {
-                        if (role.operations.Contains(operation))
-                        {
-                            role.operations.Remove(operation);
-                            repository.Complete();
-                        }
-                    }
-                    else
-                    {
-                        result.Status = operation != null ? inexistentRole : inexistentGroup;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                result.Status = validate(e);
-            }
-            return result;
-        }
+        */
 
         private Result<Operation> getOperation(string id)
         {
@@ -1718,6 +1703,18 @@ namespace SistemaDePlanillas.Models
             Result<User> res = new Result<User>();
             try
             {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var user = repository.Users.login(username, password);
+                    if (user != null) 
+                    {
+                        res.Detail = new User() {Name=user.name, Id=user.id, Email=user.email, Location=user.locationId, Password=user.password, Role=user.roleId, Username=user.userName };
+                    }
+                    else
+                    {
+                        res.Status = inexistentUser;
+                    }
+                }
             }
             catch (NpgsqlException e)
             {

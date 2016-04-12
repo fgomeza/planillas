@@ -108,7 +108,7 @@ namespace SistemaDePlanillas.Models
 
     public class Role
     {
-        //public NavbarConfig navbar;
+        public NavbarConfig navbar;
         public long id;
         public string name;
         public long location;
@@ -128,23 +128,10 @@ namespace SistemaDePlanillas.Models
                 }
                 privileges[priv.Item1].Add(priv.Item2);
             }
-            //navbar = new NavbarConfig(privileges);
+            navbar = new NavbarConfig(privileges);
         }
 
-        public void update()
-        {
-          /*  var privs = DBManager.Instance.selectRolePrivileges(id).detail;
-            privileges = new Dictionary<string, HashSet<string>>();
-            foreach (var priv in privs)
-            {
-                if (!privileges.ContainsKey(priv.Item1))
-                {
-                    privileges.Add(priv.Item1, new HashSet<string>());
-                }
-                privileges[priv.Item1].Add(priv.Item2);
-            }
-            //navbar = new NavbarConfig(privileges);*/
-        }
+
     }
 
     public class OperationsGroup

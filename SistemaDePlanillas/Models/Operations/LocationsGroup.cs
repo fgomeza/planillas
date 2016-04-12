@@ -7,23 +7,25 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class LocationsGroup
     {
-        public static string add(User user, string name)
+        public static string add(User user, string name, double callPrice)
         {
-            var result = DBManager.Instance.addLocation(name);
+            var result = DBManager.Instance.addLocation(name, callPrice);
             return Responses.Simple(result.Status);
         }
 
         public static string get(User user) 
         {
-            var result = DBManager.Instance.selectLocations();
+            var result = DBManager.Instance.selectAllLocations();
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
+        /*
         public static string modify(User user, string name)
         {
             var result = DBManager.Instance.updateLocation(user.Location, name);
             return Responses.Simple(result.Status);
         }
+        */
 
         public static string remove(User user, long id)
         {

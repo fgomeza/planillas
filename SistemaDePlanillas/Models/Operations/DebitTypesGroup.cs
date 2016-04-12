@@ -7,6 +7,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitTypesGroup
     {
+        /*
         public static string add_Type1(User user, string name)
         {
             try
@@ -96,5 +97,6 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
+        */
     }
 }

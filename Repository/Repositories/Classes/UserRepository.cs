@@ -19,5 +19,17 @@ namespace Repository.Repositories.Classes
             return users.ToList();
         }
 
+        public UserEntity login(string username, string password)
+        {
+            var res = _context.Users.Where(u => u.userName == username && u.password == password).ToList();
+            try { 
+                return res.First();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
     }
 }

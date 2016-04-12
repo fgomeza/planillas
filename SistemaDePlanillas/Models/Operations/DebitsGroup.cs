@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-
+        /*
         public static string add_Fixed(User user, long employee, string detail, long amount, long type)
         {
             try {
@@ -129,6 +129,7 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
+        */
 
     }
 }

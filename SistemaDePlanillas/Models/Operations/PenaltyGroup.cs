@@ -10,6 +10,7 @@ namespace SistemaDePlanillas.Models.Operations
     /// </summary>
     public class RecessGroup
     {
+        /*
         /// <summary>
         /// Genera una penalizacion y la asocia a un empleado
         /// </summary>
@@ -110,5 +111,6 @@ namespace SistemaDePlanillas.Models.Operations
 
             }
         }
+        */
     }
 }
