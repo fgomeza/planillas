@@ -1055,7 +1055,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updateLocation(long id, string name, double call_price, long last_payroll, long current_payroll)
+        public Result<string> updateLocation(long id, string name, double call_price)
         {
             Result<string> result = new Result<string>();
             try
@@ -1067,8 +1067,6 @@ namespace SistemaDePlanillas.Models
                     {
                         location.name = name;
                         location.callPrice = call_price;
-                        location.lastPayrollId = last_payroll;
-                        location.currentPayrollId = current_payroll;
                         repository.Complete();
                     }
                     else
