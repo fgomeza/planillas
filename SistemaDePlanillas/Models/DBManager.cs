@@ -1137,7 +1137,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addRole(string name, long location)//**
+        public Result<string> addRole(string name, long location, List<string> operations)//**
         {
             Result<string> result = new Result<string>();
             try
@@ -1147,9 +1147,16 @@ namespace SistemaDePlanillas.Models
                     RoleEntity role = new RoleEntity()
                     { name = name, locationId = location };
                     repository.Roles.Add(role);
+                    foreach (string operation_id in operations)
+                    {
+                        OperationEntity operation = repository.Operations.Get(operation_id);
+                        if (operation != null)
+                            role.operations.Add(operation);
+                        else
+                            result.Status = inexistentOperation;
+                    }
                     repository.Complete();
                 }
-
             }
             catch (Exception e)
             {
