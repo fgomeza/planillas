@@ -34,7 +34,7 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.Simple(result);
 
         }
-        /// <summary>
+        /// <summary> 
         /// Actualiza la informacio de un pago extra
         /// </summary>
         /// <param name="extraId">Identificador del pago extra</param>
