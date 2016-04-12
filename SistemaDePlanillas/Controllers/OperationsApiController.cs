@@ -12,7 +12,7 @@ using System.Web.Script.Serialization;
 
 namespace SistemaDePlanillas.Controllers
 {
-    public class OperationsApiController : ApiController
+    public class OperationsApiController : ApiController 
     {
         
         public string Post(string group, string operation, [FromBody]object[] args)
