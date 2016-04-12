@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Controllers
     public class JonnController : Controller
     {
         // GET: Jonn
-        public string Index()
+        public Response Index()
         {
             var x = DBManager.Instance.addUser("Jonn", "JonnCh", "123", 1, 1, "jonn@gmail.com");
            return Responses.SimpleWithData(x.Status,x.Detail);

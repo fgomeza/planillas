@@ -7,7 +7,7 @@ function action(group, operation, args, callback) {
         data: JSON.stringify(args),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (data) { callback(JSON.parse(data));},
+        success: function (data) { callback(data);},
         error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' });}
     });
 }
@@ -33,8 +33,8 @@ function actionString(group, operation, args, callback) {
         data: args,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (data) { callback(JSON.stringify(JSON.parse(data),null,2)); },
-        error: function () { callback(JSON.stringify({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' },null,2)); }
+        success: function (data) { callback(data); },
+        error: function () { callback(JSON.stringify({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }, null, 2)); }
     });
 }
 
