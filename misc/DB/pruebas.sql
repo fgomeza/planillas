@@ -25,6 +25,6 @@ INSERT INTO roles(
 
 INSERT INTO users(
             id, name, email, username, password, role, location)
-    VALUES (1,'Jonn','xxx','JonnCh','123',1,1);
+    VALUES (1,'Jonn','xxx','JonnCh','$2a$10$R1Lt.GEYQx.NlAJjVBQt6ezG0K3PLCCrwJjMqr2.Wpb8iNUeIHG4u',1,1);
 
-select * from users where username = 'JonnCh' and password = '123';
+select * from users where username = 'JonnCh' and password = '$2a$10$R1Lt.GEYQx.NlAJjVBQt6ezG0K3PLCCrwJjMqr2.Wpb8iNUeIHG4u';
