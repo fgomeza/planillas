@@ -54,7 +54,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
             catch (Exception e)
             {
-                return Responses.ExceptionError(e);
+                return Responses.ExceptionError(e); 
             }
         }
 
