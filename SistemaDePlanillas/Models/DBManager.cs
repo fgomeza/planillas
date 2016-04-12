@@ -1700,7 +1700,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<User> login(string username, string password)
+        public Result<User> login(string username, string password) 
         {
             Result<User> res = new Result<User>();
             try
