@@ -7,6 +7,7 @@ using Repository.Repositories.Classes;
 using Repository.Context;
 using Repository.Entities;
 using System.Collections;
+using DevOne.Security.Cryptography.BCrypt;
 
 namespace SistemaDePlanillas.Models
 
@@ -1543,6 +1544,7 @@ namespace SistemaDePlanillas.Models
             Result<string> result = new Result<string>();
             try
             {
+                
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     repository.Users.Add(new UserEntity()
@@ -1550,9 +1552,9 @@ namespace SistemaDePlanillas.Models
                         name = name,
                         email = email,
                         locationId = location,
-                        password = password,
+                        password = BCryptHelper.HashPassword(password,"Coopesuperacion"),
                         roleId = role,
-                        userName = username
+                        userName = username.ToLower()
                     });
 
                     repository.Complete();
@@ -1705,7 +1707,7 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var user = repository.Users.login(username, password);
+                    var user = repository.Users.login(username, BCryptHelper.HashPassword(password, "Coopesuperacion"));
                     if (user != null) 
                     {
                         res.Detail = new User() {Name=user.name, Id=user.id, Email=user.email, Location=user.locationId, Password=user.password, Role=user.roleId, Username=user.userName };
