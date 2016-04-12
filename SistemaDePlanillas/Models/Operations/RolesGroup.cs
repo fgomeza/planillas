@@ -19,9 +19,9 @@ namespace SistemaDePlanillas.Models.Operations
         }
 
 
-        public static string add(User user, string name, IEnumerable<object> privileges)
+        public static string add(User user, string name, List<string> operations)
         {
-            var result = DBManager.Instance.addRole(name, user.Location, privileges.Cast<string>().ToList());
+            var result = DBManager.Instance.addRole(name, user.Location, operations);
             return Responses.Simple(result.Status);
         }
 
@@ -46,9 +46,10 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
-        public static string modify(User user, long id,string name, IEnumerable<object> privs)
+        public static string modify(User user, long id,string name, List<string> operations)
         {
-            var result = DBManager.Instance.updateRole(id, name, user.Location, privs.Cast<string>().ToList());
+            DBManager dbm = DBManager.Instance;
+            var result = dbm.updateRole(id, name, user.Location, operations);
             return Responses.Simple(result.Status);
         }
     }
