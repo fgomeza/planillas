@@ -1544,7 +1544,7 @@ namespace SistemaDePlanillas.Models
             Result<string> result = new Result<string>();
             try
             {
-                
+
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     repository.Users.Add(new UserEntity()
@@ -1552,7 +1552,7 @@ namespace SistemaDePlanillas.Models
                         name = name,
                         email = email,
                         locationId = location,
-                        password = BCryptHelper.HashPassword(password,"Coopesuperacion"),
+                        password = BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()),
                         roleId = role,
                         userName = username.ToLower()
                     });
@@ -1700,22 +1700,23 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<User> login(string username, string password) 
+        public Result<User> login(string username, string password)
         {
             Result<User> res = new Result<User>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var user = repository.Users.login(username, BCryptHelper.HashPassword(password, "Coopesuperacion"));
-                    if (user != null) 
+                    var user = repository.Users.login(username.ToLower(),password);
+                    if (user != null)
                     {
-                        res.Detail = new User() {Name=user.name, Id=user.id, Email=user.email, Location=user.locationId, Password=user.password, Role=user.roleId, Username=user.userName };
+                        res.Detail = new User() { Name = user.name, Id = user.id, Email = user.email, Location = user.locationId, Password = user.password, Role = user.roleId, Username = user.userName };
                     }
                     else
                     {
                         res.Status = inexistentUser;
                     }
+
                 }
             }
             catch (NpgsqlException e)

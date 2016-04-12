@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Repository.Entities;
 using Repository.Context;
+using DevOne.Security.Cryptography.BCrypt;
 
 namespace Repository.Repositories.Classes
 {
@@ -19,11 +20,15 @@ namespace Repository.Repositories.Classes
             return users.ToList();
         }
 
-        public UserEntity login(string username, string password)
+        public UserEntity login(string username,string password)
         {
-            var res = _context.Users.Where(u => u.userName == username && u.password == password).ToList();
-            try { 
-                return res.First();
+            var res = _context.Users.Where(u => u.userName == username).ToList();
+            try {
+                var user= res.First();
+                if (BCryptHelper.CheckPassword(password, user.password))
+                    return user;
+                else
+                    return null;
             }
             catch (Exception)
             {
