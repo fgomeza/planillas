@@ -19,7 +19,7 @@ function actionMethod(group, operation, method, args, callback) {
         data: JSON.stringify(args),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (data) { callback(JSON.parse(data)); },
+        success: function (data) { callback(data); },
         error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
     });
 }
