@@ -24,6 +24,14 @@ namespace SistemaDePlanillas.Models
 
     }
 
+    public class Call
+    {
+        public long employee;
+        public long calls;
+        public Nullable<DateTime> date;
+        public Nullable<TimeSpan> hours;
+    }
+
     public class Payroll
     {
         public long id;
@@ -77,13 +85,21 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public long employee;
+        public DateTime date;
         public string detail;
         public Nullable<double> amount;
-        /* public long paymentsMade;
-         public long missingPayments;
-         public double remainingRecess;
-         public double payment;*/
+        public long type;
+        public string typeName;
+        public Nullable<double> penaltyPrice;
     }
+
+    public class PenaltyType
+    {
+        public long id;
+        public string name;
+        public Nullable<double> price;
+    }
+
 
     public class User
     {

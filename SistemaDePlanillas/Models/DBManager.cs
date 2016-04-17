@@ -103,7 +103,7 @@ namespace SistemaDePlanillas.Models
                     var employees = repository.Employees.selectCMSEmployees(location);
                     foreach (var x in employees)
                     {
-                        var calls = repository.Calls.callsbyEmployee(x.id);
+                        var calls = repository.Calls.callsbyEmployee(x.id,DateTime.Now);
 
                         Employee employee = new Employee()
                         { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls };
@@ -117,6 +117,29 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
+
+        public Result<List<Call>> callListByEmployee(long employee, DateTime endDate)
+        {
+            Result<List<Call>> result = new Result<List<Call>>();
+            result.Detail = new List<Call>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var calls = repository.Calls.callListbyEmployee(employee, endDate);
+                    foreach(var call in calls)
+                    {
+                        result.Detail.Add(new Call() { employee=call.employeeId,calls=call.calls,date=call.date,hours=call.time });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
 
         public Result<string> addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
@@ -274,6 +297,7 @@ namespace SistemaDePlanillas.Models
                             res.location = employee.locationId;
                             res.name = employee.name;
                             res.cms = employee.cms == null ? false : true;
+                            res.calls= employee.cms==null? 0: repository.Calls.callsbyEmployee(employee.id,DateTime.Now);
                             res.cmsText = employee.cms;
                             res.account = employee.account;
                             res.salary = employee.salary;
@@ -288,6 +312,34 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
+
+        public Result<string> addCalls(List<FileConvertions.CMSRegister> calls)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    foreach(var call in calls)
+                    {
+                        repository.Calls.Add(new CallEntity()
+                        {
+                            employeeId = repository.Employees.selectEmployeeByCmsText(call.cmsid).id,
+                            calls=call.calls,
+                            time=call.hours,
+                            date= call.date
+                        });
+                    }
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
 
         public Result<string> addDebit(long employee, string Detail, double amount, long type)
         {
@@ -831,7 +883,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<Penalty> selectPenalties(long idRecess)
+        public Result<Penalty> selectPenalty(long idRecess)
         {
             Result<Penalty> result = new Result<Penalty>();
             try
@@ -846,9 +898,12 @@ namespace SistemaDePlanillas.Models
                         {
                             id = penalty.Id,
                             amount = penalty.Amount,
+                            date = penalty.Date,
                             detail = penalty.Description,
-                            employee = penalty.EmployeeId
-
+                            employee = penalty.EmployeeId,
+                            type = penalty.PenaltyTypeId,
+                            typeName = repository.PenaltyTypes.getTypeName(penalty.PenaltyTypeId),
+                            penaltyPrice = penalty.PenaltyPrice
                         };
                     }
                     else
@@ -865,7 +920,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<List<Penalty>> selectAllPenalty(long employee)
+        public Result<List<Penalty>> selectAllPenalty(long employee,DateTime endDate)
         {
             Result<List<Penalty>> result = new Result<List<Penalty>>();
             result.Detail = new List<Penalty>();
@@ -873,15 +928,19 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employee);
-                    foreach (PenaltyEntity p in penalties)
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employee,endDate);
+                    foreach (var p in penalties)
                     {
                         result.Detail.Add(new Penalty()
                         {
+                            id= p.Id,
                             amount = (double)p.Amount,
+                            date= p.Date,
                             detail = p.Description,
                             employee = p.EmployeeId,
-                            id = p.Id
+                            type=p.PenaltyTypeId,
+                            typeName=repository.PenaltyTypes.getTypeName(p.PenaltyTypeId),
+                            penaltyPrice = p.PenaltyPrice
                         });
                     }
                 }
@@ -896,17 +955,42 @@ namespace SistemaDePlanillas.Models
         }
 
 
-        public Result<String> payPenalty(long payrollId, long employeeId)
+        public Result<String> payPenalty(long payrollId, long employeeId, DateTime endDate)
         {
             Result<String> result = new Result<String>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId);
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId,endDate);
                     foreach (PenaltyEntity p in penalties)
                     {
                         p.PayRollId = payrollId;
+                    }
+                    repository.Complete();
+
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+
+        }
+
+        public Result<Dictionary<long,PenaltyType>> selectAllPenaltyTypes(long location)
+        {
+            Result<Dictionary<long, PenaltyType>> result = new Result<Dictionary<long, PenaltyType>>();
+            result.Detail = new Dictionary<long, PenaltyType>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var types = repository.PenaltyTypes.getAllbyLocation(location);
+                    foreach (var p in types)
+                    {
+                        result.Detail.Add(p.Id,new PenaltyType() {id=p.Id,name=p.Name,price=p.Price});
                     }
                     repository.Complete();
 

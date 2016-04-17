@@ -29,9 +29,13 @@ namespace Repository.Repositories.Classes
 
         public IEnumerable<EmployeeEntity> selectEmployeeByLocation(long locationId)
         {
-            var employees = _context.Employees.Where((e)=>e.locationId==locationId && e.active);
-
+            var employees = _context.Employees.Where((e) => e.locationId == locationId && e.active);
             return employees.ToList();
+        }
+        public EmployeeEntity selectEmployeeByCmsText(string cmsText)
+        {
+            var employee = _context.Employees.First((e) => e.cms==cmsText && e.active);
+            return employee;
         }
 
 

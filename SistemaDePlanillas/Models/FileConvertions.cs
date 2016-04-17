@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace SistemaDePlanillas.Models.Operations
+namespace SistemaDePlanillas.Models
 {
     public class FileConvertions
     {
@@ -13,12 +13,14 @@ namespace SistemaDePlanillas.Models.Operations
         {
             public string cmsid { get; set; }
             public int calls { get; set; }
-            public double hours { get; set; }
-            public CMSRegister(string cmsid, int calls, double hours)
+            public TimeSpan hours { get; set; }
+            public DateTime date { get; set; }
+            public CMSRegister(string cmsid, int calls, TimeSpan hours, DateTime date)
             {
                 this.cmsid = cmsid;
                 this.calls = calls;
                 this.hours = hours;
+                this.date = date;
             }
         }
 
@@ -48,13 +50,13 @@ namespace SistemaDePlanillas.Models.Operations
                     int hours = 0;
                     if (!employees.ContainsKey(cmsid))
                     {
-                        employees[cmsid] = new CMSRegister(cmsid, calls, hours);
+                        //employees[cmsid] = new CMSRegister(cmsid, calls, hours);
                     }
                     else
                     {
                         var register = employees[cmsid];
                         register.calls += calls;
-                        register.hours += hours;
+                       // register.hours += hours;
                     }
                 }
                 var list = new List<CMSRegister>();

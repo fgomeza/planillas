@@ -20,5 +20,15 @@ namespace Repository.Repositories.Classes
             var penalty = _context.PenaltyTypes.Find(id);
             return penalty.Price;
         }
+
+        public IEnumerable<PenaltyTypeEntity> getAllbyLocation(long location)
+        {
+            return _context.PenaltyTypes.Where(p => p.location == location).ToList();
+        }
+
+        public string getTypeName(long id)
+        {
+            return _context.PenaltyTypes.First(t => t.Id == id).Name;
+        }
     }
 }
