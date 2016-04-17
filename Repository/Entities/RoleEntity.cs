@@ -17,6 +17,9 @@ namespace Repository.Entities
         [Column("name")]
         public string name { set; get; }
 
+        [Column("active")]
+        public bool active { set; get; }
+
         [ForeignKey("fkrole_location")]
         [Column("location")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

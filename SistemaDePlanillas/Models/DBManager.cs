@@ -1836,6 +1836,36 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
+        public Result<string> updateDebitType(long id,string name, long months = 0, double interestRate = 0)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    if (months == 0)
+                    {
+                        type.name = name;
+                        type.payment = false;
+                    }
+                    else
+                    {
+                        type.name = name;
+                        type.months = months;
+                        type.interestRate = interestRate;
+                        type.payment = true;
+                    }
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
         public Result<string> deleteDebitType(long id)
         {
             Result<string> result = new Result<string>();
