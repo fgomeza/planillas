@@ -20,11 +20,11 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
-        /*
-        public static string add_Payment(User user, long employee, string detail, double total, double interestRate, long months, long type)
+        
+        public static Response add_Payment(User user, long employee, string detail, double total, long type)
         {
             try {
-                var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, detail, total, interestRate, months, type);
+                var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, total, type);
                 return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
@@ -33,7 +33,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
         
-        public static string get_AllFixed(User user, long employee)
+        public static Response get_AllFixed(User user, long employee)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string get_AllPayment(User user, long employee)
+        public static Response get_AllPayment(User user, long employee)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebits(employee);
@@ -58,7 +58,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string get_Fixed(User user, long idDebit)
+        public static Response get_Fixed(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectDebit(idDebit);
@@ -70,7 +70,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string get_Payment(User user, long idDebit)
+        public static Response get_Payment(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.selectPaymentDebit(idDebit);
@@ -82,7 +82,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string modify_Fixed(User user, long idDebit, string detail, long amount)
+        public static Response modify_Fixed(User user, long idDebit, string detail, long amount)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updateDebit(idDebit, detail, amount);
@@ -94,10 +94,10 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string modify_Payment(User user, long idDebit, string detail, float total, double interestRate, long months, double remainingDebt)
+        public static Response modify_Payment(User user, long idDebit,DateTime initialDate, string detail, float total, double interestRate, long months, double remainingAmount)
         {
             try {
-                var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, detail, total, interestRate, months, remainingDebt);
+                var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, initialDate, detail, total, interestRate, months, remainingAmount);
                 return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
@@ -106,7 +106,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string remove_Fixed(User user, long idDebit)
+        public static Response remove_Fixed(User user, long idDebit)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.deleteDebit(idDebit);
@@ -118,10 +118,10 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string remove_Payment(User user, long idDebit)
+        public static Response remove_Payment(User user, long idDebit)
         {
             try {
-                var dataBaseResponse = DBManager.Instance.deletePaymentDebit(idDebit);
+                var dataBaseResponse = DBManager.Instance.deleteDebit(idDebit);
                 return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
@@ -129,7 +129,7 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
-        */
+        
 
     }
 }
