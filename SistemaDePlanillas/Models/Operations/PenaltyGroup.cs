@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Models.Operations
     /// </summary>
     public class PenaltyGroup
     {
-        /*
+        
         /// <summary>
         /// Genera una penalizacion y la asocia a un empleado
         /// </summary>
@@ -18,7 +18,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        */
+        
         public static Response add(User user, long employee, string detail, long amount, long months, 
             long pay_roll, long penalty_type, DateTime date)
         {
@@ -26,7 +26,7 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
-        /*
+        
         /// <summary>
         /// Actualiza la informacion de una penalizacion
         /// </summary>
@@ -34,27 +34,27 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        */
+        
         public static Response modify(User user, long id_recess, long penalty_type, string detail, long amount, DateTime date)
         {
             var result = DBManager.Instance.updatePenalty(id_recess, penalty_type, detail, amount, date);
             return Responses.Simple(result.Status);
         }
                 
-        /*
+        
         /// <summary>
         /// Elimina una penalizacion asociada a un empleado
         /// </summary>
         /// <param name="recessId">Identificador de la penalizacion</param>
         /// <returns>>Estado de la transaccion en formato JSON</returns>
-        */
+        
         public static Response remove(User user, long id_recess)
         {
             var result = DBManager.Instance.deletePenalty(id_recess);
             return Responses.Simple(result.Status);
         }
 
-        /*
+        
         /// <summary>
         /// Accesa a una penalizacion por su identificador
         /// </summary>
@@ -63,14 +63,14 @@ namespace SistemaDePlanillas.Models.Operations
         /// Penalizacion asociada al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        */
+        
         public static Response get(User user, long recces_id)
         {
             var result = DBManager.Instance.selectAllPenalty(recces_id);
             return Responses.WithData(result.Detail);
         }
 
-        /*
+        
         /// <summary>
         /// Accesa a las penalizaciones vinculadas a un empleado
         /// </summary>
@@ -79,7 +79,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con las penalizaciones asociadas al usuario
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        */
+        
         public static Response get_all(User user, long employee)
         {
             var result = DBManager.Instance.selectAllPenalty(employee);

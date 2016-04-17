@@ -28,7 +28,7 @@ namespace SistemaDePlanillas.Models
                     var x = repository.Administrators.GetAll();
                     var t = 0;
                 }
-                    return instance == null ? (instance = new DBManager()) : instance;
+                return instance == null ? (instance = new DBManager()) : instance;
             }
         }
 
@@ -1061,7 +1061,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<Location> location_Activate(long id)
+        public Result<Location> activateLocation(long id)
         {
             Result<Location> result = new Result<Location>();
             try
@@ -1080,6 +1080,37 @@ namespace SistemaDePlanillas.Models
                         result.Status = location != null ? locationActive : inexistentLocation;
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<string> updateAdministrator(long location, long administrator)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    AdministratorEntity admin = repository.Administrators.Get(location);
+                    if (admin != null )
+                    {
+                        admin.user_id = administrator;
+                    }
+                    else
+                    {
+                        repository.Administrators.Add(new AdministratorEntity()
+                        {
+                            location=location,
+                            user_id=administrator
+                        });
+                    }
+                    repository.Complete();
+                }
+
             }
             catch (Exception e)
             {
@@ -1814,7 +1845,7 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var user = repository.Users.login(username.ToLower(),password);
+                    var user = repository.Users.login(username.ToLower(), password);
                     if (user != null)
                     {
                         res.Detail = new User() { Name = user.name, Id = user.id, Email = user.email, Location = user.locationId, Password = user.password, Role = user.roleId, Username = user.userName };
@@ -1893,7 +1924,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updateDebitType(long id,string name, long months = 0, double interestRate = 0)
+        public Result<string> updateDebitType(long id, string name, long months = 0, double interestRate = 0)
         {
             Result<string> result = new Result<string>();
             try
