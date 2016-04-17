@@ -34,7 +34,7 @@
     var enviar = function () {
         actionString($("#group").val(), $("#operation").val(), $("#args").val(),
             function (res) {
-                $("#result").html(res)
+                $("#result").html(JSON.stringify(res, null, 2))
             });
     }
 
