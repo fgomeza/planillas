@@ -1004,7 +1004,7 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<string> addLocation(string name, double call_price)
+        public Result<string> addLocation(string name, double call_price,long administrator)
         {
             Result<string> result = new Result<string>();
             try
@@ -1015,6 +1015,8 @@ namespace SistemaDePlanillas.Models
                     { name = name, callPrice = call_price };
                     repository.Locations.Add(location);
                     repository.Complete();
+                    var lo=repository.Locations.lastLocation(name);
+                    updateAdministrator(lo.id,administrator);
                 }
 
             }
