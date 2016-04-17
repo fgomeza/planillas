@@ -57,6 +57,12 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
+        public static Response activate(User user, long id)
+        {
+            var result = DBManager.Instance.activateEmployee((int)id);
+            return Responses.Simple(result.Status);
+        }
+
         //employees/get
         public static Response get(User user)
         {
@@ -64,6 +70,11 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
+        public static Response get_active(User user)
+        {
+            var result = DBManager.Instance.selectAllActiveEmployees((int)user.Location);
+            return Responses.SimpleWithData(result.Status, result.Detail);
+        }
         //employees/get/cms
         public static Response get_CMS(User user)
         {
