@@ -23,7 +23,12 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                return instance == null ? (instance = new DBManager()) : instance;
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var x = repository.Administrators.GetAll();
+                    var t = 0;
+                }
+                    return instance == null ? (instance = new DBManager()) : instance;
             }
         }
 

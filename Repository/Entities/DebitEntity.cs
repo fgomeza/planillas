@@ -11,8 +11,7 @@ namespace Repository.Entities
     [Table("debits")]
     public class DebitEntity
     {
-        [Key]
-        [Column("id")]
+        [Column("id"),Key]
         public long id { set; get; }
 
         [Column("initial_date")]
@@ -21,8 +20,7 @@ namespace Repository.Entities
         [Column("description")]
         public string description { set; get; }
 
-        [ForeignKey("fkdebit_employee")]
-        [Column("employee")]
+        [Column("employee"), ForeignKey("fkdebit_employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long employeeId { set; get; }
 
@@ -43,8 +41,7 @@ namespace Repository.Entities
         [Column("paid_months")]
         public Nullable<long> paidMonths { set; get; }
 
-        [ForeignKey("fkdebit_type")]
-        [Column("type")]
+        [Column("type"), ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long debitTypeId { set; get; }
 

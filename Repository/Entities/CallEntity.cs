@@ -12,16 +12,13 @@ namespace Repository.Repositories.Classes
     [Table("calls")]
     public class CallEntity
     {
-        [Key]
-        [ForeignKey("fkcall_employee")]
-        [Column("employee", Order =1)]
+        [Column("employee", Order =0),Key, ForeignKey("fkcall_employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long employeeId { get; set; }
 
         public virtual EmployeeEntity fkcall_employee { set; get; }
 
-        [Key]
-        [Column("date", Order =2)]
+        [Column("date", Order =1),Key]
         public System.DateTime date { get; set; }
 
         [Column("calls")]
@@ -30,8 +27,7 @@ namespace Repository.Repositories.Classes
         [Column("time")]
         public Nullable<System.TimeSpan> time { get; set; }
 
-        [ForeignKey("fkcall_payroll")]
-        [Column("payroll")]
+        [Column("payroll"),ForeignKey("fkcall_payroll")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Nullable<long> payrollId { get; set; }
 

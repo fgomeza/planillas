@@ -38,6 +38,7 @@ namespace Repository.Entities
 
         public virtual PayrollEntity fklocation_currentpayroll { set; get; }
 
+
     }
 }
 
