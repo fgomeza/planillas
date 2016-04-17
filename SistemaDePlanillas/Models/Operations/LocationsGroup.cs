@@ -19,13 +19,13 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
-        public static Response getall(User user) 
+        public static Response get_all(User user) 
         {
             var result = DBManager.Instance.selectAllLocations();
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
-        public static Response getall_active(User user)
+        public static Response get_all_active(User user)
         {
             var result = DBManager.Instance.selectAllActiveLocations();
             return Responses.SimpleWithData(result.Status, result.Detail);
@@ -49,9 +49,9 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         } 
 
-        public static Response set_Current(User user, string name, long current_payroll)
+        public static Response set_Current(User user, string name, long current_payroll,long administrator)
         {
-            var result = DBManager.Instance.addLocation(name, current_payroll);
+            var result = DBManager.Instance.addLocation(name, current_payroll,administrator);
             return Responses.Simple(result.Status);
         }
 
