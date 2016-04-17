@@ -60,7 +60,7 @@ namespace SistemaDePlanillas.Models.Operations
         }
         
 
-        public static Response select_FixedTypes(User user)
+        public static Response get_FixedTypes(User user)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static Response select_PaymentTypes(User user)
+        public static Response get_PaymentTypes(User user)
         {
             try
             {

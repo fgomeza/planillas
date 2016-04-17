@@ -22,7 +22,7 @@ namespace Repository.Entities
         public Nullable<double> callPrice { set; get; }
 
         [Column("active")]
-        public bool active { set; get; }
+        public Nullable<bool> active { set; get; }
 
         [ForeignKey("fklocation_lastpayroll")]
         [Column("last_payroll")]

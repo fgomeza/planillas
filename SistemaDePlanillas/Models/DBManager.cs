@@ -741,7 +741,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addPenalty(long employee, string Detail, float amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
+        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
         {
             Result<string> result = new Result<string>();
             try

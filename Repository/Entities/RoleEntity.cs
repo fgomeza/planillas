@@ -18,7 +18,7 @@ namespace Repository.Entities
         public string name { set; get; }
 
         [Column("active")]
-        public bool active { set; get; }
+        public Nullable<bool> active { set; get; }
 
         [ForeignKey("fkrole_location")]
         [Column("location")]
@@ -27,7 +27,6 @@ namespace Repository.Entities
 
         public virtual LocationEntity fkrole_location { set; get; }
 
-        //public virtual ICollection<Group> groups { set; get; }
 
         public virtual ICollection<OperationEntity> operations { set; get; }
     }

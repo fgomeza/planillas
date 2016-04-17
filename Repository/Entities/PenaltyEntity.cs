@@ -34,7 +34,7 @@ namespace Repository.Entities
         public virtual PenaltyTypeEntity fkpenalty_type { get; set; }
 
         [Column("amount")]
-        public Nullable<double> Amount { get; set; }
+        public Nullable<long> Amount { get; set; }
 
         [Column("penalty_price")]
         public Nullable<double> PenaltyPrice { get; set; }
