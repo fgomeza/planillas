@@ -12,5 +12,11 @@ namespace Repository.Repositories.Classes
     public class LocationRepository: Repository<LocationEntity>
     {
         public LocationRepository(AppContext context) : base(context){}
+
+        public IEnumerable<LocationEntity> getAllActiveLocations()
+        {
+            var locations = _context.Locations.Where((e) => e.active == true);
+            return locations.ToList();
+        }
     }
 }

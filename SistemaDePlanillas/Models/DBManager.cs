@@ -1056,6 +1056,33 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
+        public Result<Location> location_Activate(long id)
+        {
+            Result<Location> result = new Result<Location>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    LocationEntity location = repository.Locations.Get(id);
+
+                    if (location != null && !location.active)
+                    {
+                        location.active = true;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.Status = location != null ? locationActive : inexistentLocation;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
         public Result<string> updateLocation(long id, string name, double call_price)
         {
             Result<string> result = new Result<string>();
@@ -1146,9 +1173,10 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = repository.Locations.Get(id);
-                    if (location != null)
+                    if (location != null && location.active)
                     {
-                        repository.Locations.Remove(location);
+                        location.active = false;
+                        //repository.Locations.Remove(location);
                         repository.Complete();
                     }
                     else
@@ -1174,6 +1202,30 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var locations = repository.Locations.GetAll();
+                    foreach (var x in locations)
+                    {
+                        Location location = new Location()
+                        { Id = x.id, Name = x.name, CallPrice = (double)x.callPrice }; //*
+                        result.Detail.Add(location);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Location>> selectAllActiveLocations()
+        {
+            Result<List<Location>> result = new Result<List<Location>>();
+            result.Detail = new List<Location>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var locations = repository.Locations.getAllActiveLocations();
                     foreach (var x in locations)
                     {
                         Location location = new Location()
