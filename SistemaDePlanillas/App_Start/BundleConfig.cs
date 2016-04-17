@@ -48,7 +48,7 @@ namespace SistemaDePlanillas
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
                       "~/Content/dropzone/dropzone.css",
-                      "~/Content/AppStyles/site.css"));
+                      "~/Content/site.css"));
 
             BundleTable.EnableOptimizations = true;
         }

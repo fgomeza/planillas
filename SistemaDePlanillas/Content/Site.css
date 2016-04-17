@@ -72,9 +72,9 @@ footer {
 
 /* page transitions */
 #page {
-    position: relative;
-    top: 50px;
-    opacity: 0;
+    /*position: relative;*/
+    /*top: 50px;*/
+    /*opacity: 0;*/
 }
 
 /* top nav */

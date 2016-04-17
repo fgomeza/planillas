@@ -8,39 +8,68 @@ namespace SistemaDePlanillas.Models
 {
     public class NavigationMenuModel
     {
-        public ApplicationSubMenu[] ApplicationMenus { get; private set; }
-
-        public ApplicationSubMenu[] GetData()
-        {
-            ApplicationMenus = new ApplicationSubMenu[]
+        public ApplicationSubMenu[] ApplicationMenus {
+            get
             {
-                new ApplicationSubMenu("Home", null, new ApplicationLink[] {
-                    new ApplicationLink("Super Testing", "Test", "Home"),
-                    new ApplicationLink("Dashboard template", "Dashboard", "Home")
-                }),
-                new ApplicationSubMenu("Users", null, new ApplicationLink[] {
-                    new ApplicationLink("Lista de Usuario", "Index", "Users"),
-                    new ApplicationLink("Crear Usuario", "Create", "Users")
-                }),
-                new ApplicationSubMenu("Manage", null, new ApplicationLink[] {
-                    new ApplicationLink("Subir un archivo", "UploadFile", "Manage")
-                })
-                /*
-                new ApplicationSubMenu("Settings", null, new ApplicationLink[] {
-                    new ApplicationLink("Home", "#", null),
-                    new ApplicationLink("Messages", "#", null),
-                    new ApplicationLink("Options", "#", null),
-                    new ApplicationLink("Shoutbox", "#", null),
-                    new ApplicationLink("Staff List", "#", null),
-                    new ApplicationLink("Transactions", "#", null),
-                    new ApplicationLink("Rules", "#", null),
-                    new ApplicationLink("Logout", "#", null)
-                })
-                */
-            };
-
-            return ApplicationMenus;
+                return new ApplicationSubMenu[]
+                {
+                    new ApplicationSubMenu("Home", null, new ApplicationLink[] {
+                        new ApplicationLink("Super Testing", "test"),
+                        new ApplicationLink("Dashboard template", "dashboard")
+                    }),
+                    new ApplicationSubMenu("Users", null, new ApplicationLink[] {
+                        new ApplicationLink("Lista de Usuario", "users"),
+                        new ApplicationLink("Crear Usuario", "create")
+                    }),
+                    new ApplicationSubMenu("Manage", null, new ApplicationLink[] {
+                        new ApplicationLink("Subir un archivo", "uploadfile")
+                    })
+                    /*
+                    new ApplicationSubMenu("Settings", null, new ApplicationLink[] {
+                        new ApplicationLink("Home", "#", null),
+                        new ApplicationLink("Messages", "#", null),
+                        new ApplicationLink("Options", "#", null),
+                        new ApplicationLink("Shoutbox", "#", null),
+                        new ApplicationLink("Staff List", "#", null),
+                        new ApplicationLink("Transactions", "#", null),
+                        new ApplicationLink("Rules", "#", null),
+                        new ApplicationLink("Logout", "#", null)
+                    })
+                    */
+                };
+            }
         }
     }
+
+    public class ApplicationSubMenu
+    {
+        public ApplicationSubMenu(string displayName, string glyphicon, ApplicationLink[] links)
+        {
+            DisplayName = displayName;
+            Glyphicon = glyphicon;
+            Links = links;
+        }
+
+        public string DisplayName { get; }
+        public string Glyphicon { get; }
+        public ApplicationLink[] Links { get; }
+
+        public int NumberOfLinks()
+        {
+            return Links.Length;
+        }
+    }
+
+    public class ApplicationLink
+    {
+        public ApplicationLink(string displayName, string page)
+        {
+            DisplayName = displayName;
+            Page = page;
+        }
+        public string DisplayName { get; }
+        public string Page { get; }
+    }
+
 
 }

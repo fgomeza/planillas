@@ -6,7 +6,7 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models.ViewModels
 {
-    public class UserViewModel : BaseViewModel
+    public class UserViewModel
     {
         [Key]
         public long PrimaryKey { get; set; }

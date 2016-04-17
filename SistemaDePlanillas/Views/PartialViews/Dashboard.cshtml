@@ -1,8 +1,4 @@
-﻿@{
-    ViewBag.Title = "Dashboard";
-}
-
-<div>
+﻿<div>
     <!-- column 2 -->
     <ul class="list-inline pull-right">
         <li>
@@ -267,4 +263,7 @@
     <!-- /.modal-dalog -->
 </div>
 
-@Scripts.Render("~/Scripts/App/dashboard.js")
+<script>
+    require(['app/dashboard']);
+</script>
+

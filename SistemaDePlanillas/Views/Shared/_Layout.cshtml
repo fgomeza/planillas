@@ -1,4 +1,4 @@
-﻿@using SistemaDePlanillas.Models.ViewModels
+﻿@using SistemaDePlanillas.Models
 
 <!DOCTYPE html>
 <html>
@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title data-bind="text: ApplicationTitle">@ViewBag.Title</title>
+    <title data-bind="text: applicationName"></title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
     @Styles.Render("~/bundles/styles")
@@ -20,8 +20,9 @@
 
     @if (Request.IsAuthenticated)
     {
-        Html.RenderPartial("Sidebar",  (SidebarViewModel)ViewBag.SidebarViewModel);
-        Html.RenderPartial("TopBanner", (SidebarViewModel)ViewBag.SidebarViewModel);
+        var model = (IEnumerable<ApplicationSubMenu>) ViewBag.NavigationMenuModel;
+        Html.RenderPartial("Sidebar", model);
+        Html.RenderPartial("TopBanner");
     }
 
     <div class="body-content">

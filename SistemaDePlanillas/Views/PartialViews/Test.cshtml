@@ -1,11 +1,8 @@
-﻿@{ 
-    ViewBag.Title = "Super Testing";
-}
-
+﻿
 <div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form class="form-inline" onSubmit="enviar(); return false" action="#">
+            <form id="testingForm" class="form-inline">
 
                 <div class="form-group">
                     <input class="form-control" type="text" id="group" placeholder="Grupo" />
@@ -19,7 +16,7 @@
                     <input class="form-control" type="text" id="args" placeholder="Parámetros" />
                 </div>
 
-                <input class="btn btn-default" type="submit"/>
+                <input class="btn btn-default" type="submit" />
 
             </form>
         </div>
@@ -31,12 +28,17 @@
 </div>
 
 <script>
-    var enviar = function () {
-        actionString($("#group").val(), $("#operation").val(), $("#args").val(),
-            function (res) {
+    require(['jquery', 'app/testing'], function ($, testingApp) {
+        var enviar = function () {
+            testingApp.actionString($("#group").val(), $("#operation").val(), $("#args").val(), function (res) {
                 $("#result").html(res)
             });
-    }
+        };
 
+        $('#testingForm').submit(function (event) {
+            event.preventDefault();
+            enviar();
+        });
+    });
 </script>
 

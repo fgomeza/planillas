@@ -25,17 +25,5 @@ namespace SistemaDePlanillas.Controllers
             
         }
 
-        [AjaxOnly]
-        public ActionResult Dashboard()
-        {
-            return PartialView();
-        }
-
-        [AjaxOnly]
-        public ActionResult Test()
-        {
-            return PartialView();
-        }
-
     }
 }

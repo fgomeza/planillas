@@ -20,14 +20,21 @@
             }
 
             var sammyApp = Sammy(contentSelector);
-
+/*
             sammyApp.get(/\#\/(.*)/, function (context) {
                 var url = getUrlFromHash(context.path);
                 context.load(url).swap();
             });
+*/
+            sammyApp.get('#/navigation', function (context) {
+                //var url = getUrlFromHash(context.path);
+                var url = '/PartialViews/' + context.params.page;
+                console.log(url);
+                context.load(url).swap();
+            });
 
             return {
-                init: function () { sammyApp.run('/#/'); }
+                init: function () { sammyApp.run('/#/navigation?page=Dashboard'); }
             }
         }
     }
