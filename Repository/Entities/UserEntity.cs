@@ -29,6 +29,9 @@ namespace Repository.Entities
         [Column("password")]
         public string password { get; set; }
 
+        [Column("active")]
+        public bool active { set; get; }
+
         [ForeignKey("fkuser_role")]
         [Column("role")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

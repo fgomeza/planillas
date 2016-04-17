@@ -7,24 +7,24 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitTypesGroup
     {
-        /*
-        public static string add_Type1(User user, string name)
+        
+        public static Response add_FixedType(User user, string name)
         {
             try
             {
-                var result = DBManager.Instance.addFixedDebitType(name,user.Location);
+                var result = DBManager.Instance.addDebitType(name, user.Location);
                 return Responses.Simple(result.Status);
             }catch(Exception e)
             {
                 return Responses.ExceptionError(e);
             }
         }
-
-        public static string add_Type2(User user, string name,float interestRate,long months)
+        
+        public static Response add_PaymentType(User user, string name,float interestRate,long months)
         {
             try
             {
-                var result = DBManager.Instance.addPaymentDebitType(name,interestRate,months,user.Location);
+                var result = DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
                 return Responses.Simple(result.Status);
             }
             catch (Exception e)
@@ -32,12 +32,12 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
-
-        public static string modify(User user, long id,string name,float interestRate,long months)
+        
+        public static Response modify(User user, long id,string name, long months=0,float interestRate=0)
         {
             try
             {
-                var result = DBManager.Instance.updatePaymentDebitType(id,name,interestRate,months);
+                var result = DBManager.Instance.updateDebitType(id, name, months, interestRate);
                 return Responses.Simple(result.Status);
             }
             catch (Exception e)
@@ -45,12 +45,12 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
-
-        public static string remove_Type1(User user, long id)
+        
+        public static Response remove(User user, long id)
         {
             try
             {
-                var result = DBManager.Instance.deleteFixedDebitType(id);
+                var result = DBManager.Instance.deleteDebitType(id);
                 return Responses.Simple(result.Status);
             }
             catch (Exception e)
@@ -58,21 +58,9 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
+        
 
-        public static string remove_Type2(User user, long id)
-        {
-            try
-            {
-                var result = DBManager.Instance.deletePaymentDebitType(id);
-                return Responses.Simple(result.Status);
-            }
-            catch (Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
-        }
-
-        public static string select_Type1(User user)
+        public static Response select_FixedTypes(User user)
         {
             try
             {
@@ -85,11 +73,11 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static string select_Type2(User user)
+        public static Response select_PaymentTypes(User user)
         {
             try
             {
-                var result = DBManager.Instance.selectPaymentDebitTypes(user.Location);
+                var result = DBManager.Instance.selectNonFixedDebitTypes(user.Location);
                 return Responses.SimpleWithData(result.Status, result.Detail);
             }
             catch (Exception e)
@@ -97,6 +85,6 @@ namespace SistemaDePlanillas.Models.Operations
                 return Responses.ExceptionError(e);
             }
         }
-        */
+        
     }
 }

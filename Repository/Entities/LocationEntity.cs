@@ -21,6 +21,9 @@ namespace Repository.Entities
         [Column("call_price")]
         public Nullable<double> callPrice { set; get; }
 
+        [Column("active")]
+        public bool active { set; get; }
+
         [ForeignKey("fklocation_lastpayroll")]
         [Column("last_payroll")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

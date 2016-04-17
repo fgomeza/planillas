@@ -41,5 +41,8 @@ namespace Repository.Entities
 
         [Column("date")]
         public DateTime Date { get; set; }
+
+        [Column("active")]
+        public bool active { set; get; }
     }
 }
