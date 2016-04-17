@@ -30,7 +30,6 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var role = SessionManager.Instance.getRole(id);
             return Responses.WithData(new { id = role.id, name = role.name, privileges = role.privileges });
-
         }
 
         public static Response remove(User user, long id)
@@ -40,9 +39,9 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
-        public static Response modify(User user, long id, string name, IEnumerable<object> privs)
+        public static Response modify(User user, long id, string name, List<String> operations)
         {
-            var result = DBManager.Instance.updateRole(id, name, user.Location, privs.Cast<string>().ToList());
+            var result = DBManager.Instance.updateRole(id, name, user.Location, operations);
             return Responses.Simple(result.Status);
         }
     }

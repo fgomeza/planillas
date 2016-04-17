@@ -16,5 +16,7 @@ namespace SistemaDePlanillas.Models
         public static long inexistentRole = 6;
         public static long inexistentOperation = 7;
         public static long inexistentGroup = 8;
+        public static long locationActive = 8;
+
     }
 }
