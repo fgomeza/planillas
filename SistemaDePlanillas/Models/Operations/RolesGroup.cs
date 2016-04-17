@@ -19,9 +19,9 @@ namespace SistemaDePlanillas.Models.Operations
         }
 
 
-        public static Response add(User user, string name, IEnumerable<object> privileges)
+        public static Response add(User user, string name, List<string> operations)
         {
-            var result = DBManager.Instance.addRole(name, user.Location, privileges.Cast<string>().ToList());
+            var result = DBManager.Instance.addRole(name, user.Location, operations);
             return Responses.Simple(result.Status);
         }
 
@@ -39,10 +39,28 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
+        public static Response activate(User user, long id)
+        {
+            var result = DBManager.Instance.activateRole(id);
+            return Responses.Simple(result.Status);
+        }
+
         public static Response modify(User user, long id, string name, List<String> operations)
         {
             var result = DBManager.Instance.updateRole(id, name, user.Location, operations);
             return Responses.Simple(result.Status);
+        }
+
+        public static Response get_all(User user)
+        {
+            var result = DBManager.Instance.selectAllRoles();
+            return Responses.WithData(result.Detail);
+        }
+
+        public static Response get_active(User user)
+        {
+            var result = DBManager.Instance.selectAllActiveRoles();
+            return Responses.WithData(result.Detail);
         }
     }
 }
