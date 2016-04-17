@@ -57,7 +57,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static Response set_Administrator(User user, long  location,long administrator)
         {
-            var result = DBManager.Instance.addLocation(name, current_payroll);
+            var result = DBManager.Instance.updateAdministrator(location,administrator);
             return Responses.Simple(result.Status);
         }
 

@@ -23,11 +23,6 @@ namespace SistemaDePlanillas.Models
         {
             get
             {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var x = repository.Administrators.GetAll();
-                    var t = 0;
-                }
                 return instance == null ? (instance = new DBManager()) : instance;
             }
         }
@@ -746,7 +741,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long payRollId, long penaltyTypeId, DateTime date)
+        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long penaltyTypeId, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -775,7 +770,8 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string Detail, long amount, DateTime date)
+
+        public Result<string> updatePenalty(long idRecess, long payroll,long penaltyTypeId, string Detail, long amount, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -785,6 +781,7 @@ namespace SistemaDePlanillas.Models
                     var penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
+                        penalty.PayRollId = payroll;
                         penalty.Description = Detail;
                         penalty.PenaltyTypeId = penaltyTypeId;
                         penalty.Amount = amount;

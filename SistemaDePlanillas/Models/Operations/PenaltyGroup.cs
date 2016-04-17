@@ -19,10 +19,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
         
-        public static Response add(User user, long employee, string detail, long amount, long months, 
-            long pay_roll, long penalty_type, DateTime date)
+        public static Response add(User user, long employee, string detail, long amount, long months, long penalty_type, DateTime date)
         {
-            var result = DBManager.Instance.addPenalty(employee, detail, amount, months, pay_roll, penalty_type, date);
+            var result = DBManager.Instance.addPenalty(employee, detail, amount, months, penalty_type, date);
             return Responses.Simple(result.Status);
         }
 
@@ -35,9 +34,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
         
-        public static Response modify(User user, long id_recess, long penalty_type, string detail, long amount, DateTime date)
+        public static Response modify(User user, long id_recess,long payroll ,long penalty_type, string detail, long amount, DateTime date)
         {
-            var result = DBManager.Instance.updatePenalty(id_recess, penalty_type, detail, amount, date);
+            var result = DBManager.Instance.updatePenalty(id_recess,payroll, penalty_type, detail, amount, date);
             return Responses.Simple(result.Status);
         }
                 
