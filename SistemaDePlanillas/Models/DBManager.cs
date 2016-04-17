@@ -741,7 +741,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long payRollId, long penaltyTypeId, float penaltyPrice, DateTime date)
+        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long payRollId, long penaltyTypeId, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -770,7 +770,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string Detail, double amount, float penaltyPrice, DateTime date)
+        public Result<string> updatePenalty(long idRecess, long penaltyTypeId, string Detail, long amount, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -783,7 +783,7 @@ namespace SistemaDePlanillas.Models
                         penalty.Description = Detail;
                         penalty.PenaltyTypeId = penaltyTypeId;
                         penalty.Amount = amount;
-                        penalty.PenaltyPrice = penaltyPrice;
+                        penalty.PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId);
                         penalty.Date = date;
                     }
                     else
