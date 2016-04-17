@@ -22,7 +22,7 @@ namespace SistemaDePlanillas.Models
         public long calls;
         public double salary;
         public bool active;
-
+        public double negativeAmount;
     }
 
     public class Call
@@ -58,6 +58,7 @@ namespace SistemaDePlanillas.Models
         public string detail;
         public double amount;
         public long type;
+        public string typeName;
     }
 
     public class PaymentDebit
@@ -67,12 +68,12 @@ namespace SistemaDePlanillas.Models
         public string detail;
         public DateTime initialDate;
         public double total;
-        public Nullable<double> interestRate;
-        public Nullable<long> paymentsMade;
-        public Nullable<long> missingPayments;
+        public double interestRate;
+        public long paymentsMade;
+        public long missingPayments;
         public double remainingAmount;
-        public double payment;
         public long type;
+        public string typeName;
     }
     public class Extra
     {
@@ -89,10 +90,10 @@ namespace SistemaDePlanillas.Models
         public DateTime date;
         public string detail;
         public bool active;
-        public Nullable<double> amount;
+        public double amount;
         public long type;
         public string typeName;
-        public Nullable<double> penaltyPrice;
+        public double penaltyPrice;
     }
 
     public class PenaltyType
@@ -121,8 +122,9 @@ namespace SistemaDePlanillas.Models
         public long Id;
         public string Name;
         public double CallPrice;
-        public long LastPayroll;
-        public long CurrentPayroll;
+        public double Capitalization=0.4;
+        public Nullable<long> LastPayroll;
+        public Nullable<long> CurrentPayroll;
         public bool Active;
     }
 

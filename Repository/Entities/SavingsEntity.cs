@@ -19,7 +19,7 @@ namespace Repository.Entities
         public virtual EmployeeEntity employee { set; get; }
 
         [Column("amount")]
-        public Nullable<long> amount { get; set; }
+        public Nullable<double> amount { get; set; }
 
     }
 }

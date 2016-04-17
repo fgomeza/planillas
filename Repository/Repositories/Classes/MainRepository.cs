@@ -31,6 +31,7 @@ namespace Repository.Repositories.Classes
         public DebitTypeRepository DebitTypes { get; }
         public DebitPaymentRepository DebitPayments { get; }
         public AdministratorRepository Administrators { get; }
+        public SavingRepository Savings { get; }
 
         public MainRepository(AppContext context)
         {
@@ -52,6 +53,7 @@ namespace Repository.Repositories.Classes
             Penalties = new PenaltyRepository(_context);
             DebitPayments = new DebitPaymentRepository(_context);
             Administrators = new AdministratorRepository(_context);
+            Savings = new SavingRepository(_context);
         }
 
 

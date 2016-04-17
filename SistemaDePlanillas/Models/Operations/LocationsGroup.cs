@@ -7,9 +7,9 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class LocationsGroup
     {
-        public static Response add(User user, string name, double callPrice)
+        public static Response add(User user, string name, double callPrice, long administrator)
         {
-            var result = DBManager.Instance.addLocation(name, callPrice);
+            var result = DBManager.Instance.addLocation(name, callPrice, administrator);
             return Responses.Simple(result.Status);
         }
 

@@ -42,5 +42,8 @@ namespace Repository.Entities
         [Column("account")]
         public string account { get; set; }
 
+        [Column("negativeamount")]
+        public Nullable<double> negativeAmount { get; set; }
+
     }
 }

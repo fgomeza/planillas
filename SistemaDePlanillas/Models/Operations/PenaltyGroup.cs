@@ -65,7 +65,7 @@ namespace SistemaDePlanillas.Models.Operations
         
         public static Response get(User user, long recces_id)
         {
-            var result = DBManager.Instance.selectAllPenalty(recces_id);
+            var result = DBManager.Instance.selectAllPenalty(recces_id,DateTime.Now);
             return Responses.WithData(result.Detail);
         }
 
@@ -81,13 +81,13 @@ namespace SistemaDePlanillas.Models.Operations
         
         public static Response get_all(User user, long employee)
         {
-            var result = DBManager.Instance.selectAllPenalty(employee);
+            var result = DBManager.Instance.selectAllPenalty(employee, DateTime.Now);
             return Responses.WithData(result.Detail);
         }
 
-        public static Response pay(User user, long payroll_id, long employee_id)
+        public static Response pay(User user, long payroll_id, long employee_id ,DateTime endDate)
         {
-            var result = DBManager.Instance.payPenalty(payroll_id, employee_id);
+            var result = DBManager.Instance.payPenalty(payroll_id, employee_id, endDate);
             return Responses.Simple(result.Status);
         }
     }
