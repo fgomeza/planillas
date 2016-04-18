@@ -43,6 +43,5 @@ namespace SistemaDePlanillas.Models.Operations
             var fileStream = new FileStream(@"c:\test.txt", FileMode.Open, FileAccess.Read);
             return Responses.WithData(FileConvertions.readFromCMSFile(fileStream));          
         }
-
     }
 }
