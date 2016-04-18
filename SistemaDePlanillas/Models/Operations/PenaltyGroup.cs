@@ -8,8 +8,9 @@ namespace SistemaDePlanillas.Models.Operations
     /// <summary>
     /// Modulo de mantenimiento de penalizaciones
     /// </summary>
-    public class RecessGroup
+    public class PenaltyGroup
     {
+        
         /// <summary>
         /// Genera una penalizacion y la asocia a un empleado
         /// </summary>
@@ -17,35 +18,14 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static string add(User user,long employeeId, string detail, float amount,long months)
+        
+        public static Response add(User user, long employee, string detail, long amount, long months, long penalty_type, DateTime date)
         {
-            try
-            {
-                var result = DBManager.Instance.addRecess(employeeId, detail, amount,months).Status;
-                return Responses.Simple(result);
-            }
-            catch (Exception ex)
-            {
-                return Responses.ExceptionError(ex);
-            }
+            var result = DBManager.Instance.addPenalty(employee, detail, amount, months, penalty_type, date);
+            return Responses.Simple(result.Status);
         }
-        /// <summary>
-        /// Elimina una penalizacion asociada a un empleado
-        /// </summary>
-        /// <param name="recessId">Identificador de la penalizacion</param>
-        /// <returns>>Estado de la transaccion en formato JSON</returns>
-        public static string remove(User user,long recessId)
-        {
-            try
-            {
-                var result = DBManager.Instance.deleteRecess(recessId).Status;
-                return Responses.Simple(result);
-            }
-            catch (Exception ex)
-            {
-                return Responses.ExceptionError(ex);
-            }
-        }
+
+        
         /// <summary>
         /// Actualiza la informacion de una penalizacion
         /// </summary>
@@ -53,42 +33,27 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo de la penalizacion</param>
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static string modify(User user,long penaltyId, string detail, float amount,long months,double remainingdebt)
+        
+        public static Response modify(User user, long id_recess,long payroll ,long penalty_type, string detail, long amount, DateTime date)
         {
-            try
-            {
-                var result =  DBManager.Instance.updateRecess(penaltyId, detail, amount, months, remainingdebt);
-                return Responses.SimpleWithData(result.Status, result.Detail);
-            }
-            catch (Exception ex)
-            {
-
-                return Responses.ExceptionError(ex);
-            }
-
+            var result = DBManager.Instance.updatePenalty(id_recess,payroll, penalty_type, detail, amount, date);
+            return Responses.Simple(result.Status);
         }
+                
+        
         /// <summary>
-        /// Accesa a las penalizaciones vinculadas a un empleado
+        /// Elimina una penalizacion asociada a un empleado
         /// </summary>
-        /// <param name="employeeId">Identificador del empleado</param>
-        /// <returns>
-        /// Lista con las penalizaciones asociadas al usuario
-        /// Estado de la transaccion en formato JSON
-        /// </returns>
-        public static string get_all(User user,long employeeId)
+        /// <param name="recessId">Identificador de la penalizacion</param>
+        /// <returns>>Estado de la transaccion en formato JSON</returns>
+        
+        public static Response remove(User user, long id_recess)
         {
-            try
-            {
-                var result = DBManager.Instance.selectAllRecess(employeeId);
-                return Responses.SimpleWithData(result.Status, result.Detail);
-            }
-            catch (Exception ex)
-            {
-
-                return Responses.ExceptionError(ex);
-            }
-
+            var result = DBManager.Instance.deletePenalty(id_recess);
+            return Responses.Simple(result.Status);
         }
+
+        
         /// <summary>
         /// Accesa a una penalizacion por su identificador
         /// </summary>
@@ -97,18 +62,33 @@ namespace SistemaDePlanillas.Models.Operations
         /// Penalizacion asociada al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public static string get(User user,long recessId)
+        
+        public static Response get(User user, long recces_id)
         {
-            try
-            {
-                var result = DBManager.Instance.selectRecess(recessId);
-                return Responses.SimpleWithData(result.Status, result.Detail);
-            }
-            catch (Exception ex)
-            {
-                return Responses.ExceptionError(ex);
+            var result = DBManager.Instance.selectAllPenalty(recces_id,DateTime.Now);
+            return Responses.WithData(result.Detail);
+        }
 
-            }
+        
+        /// <summary>
+        /// Accesa a las penalizaciones vinculadas a un empleado
+        /// </summary>
+        /// <param name="employeeId">Identificador del empleado</param>
+        /// <returns>
+        /// Lista con las penalizaciones asociadas al usuario
+        /// Estado de la transaccion en formato JSON
+        /// </returns>
+        
+        public static Response get_all(User user, long employee)
+        {
+            var result = DBManager.Instance.selectAllPenalty(employee, DateTime.Now);
+            return Responses.WithData(result.Detail);
+        }
+
+        public static Response pay(User user, long payroll_id, long employee_id ,DateTime endDate)
+        {
+            var result = DBManager.Instance.payPenalty(payroll_id, employee_id, endDate);
+            return Responses.Simple(result.Status);
         }
     }
 }

@@ -7,78 +7,60 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class RolesGroup
     {
-        public static string get(User user)
+        public static Response get(User user)
         {
             var roles = SessionManager.Instance.getRoles();
             var result = new List<object>();
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
-                result.Add(new {id = role.id, name = role.name, privileges = role.privileges});
+                result.Add(new { id = role.id, name = role.name, privileges = role.privileges });
             }
             return Responses.WithData(result);
         }
 
-        public static string add(User user, string name, IEnumerable<object> privileges)
+
+        public static Response add(User user, string name, List<string> operations)
         {
-            try {
-                var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privileges)
-                {
-                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
-                    privsList.Add(new Tuple<string,string>(pair[0], pair[1]));
-                }
-                var result = DBManager.Instance.addRole(name, user.Location, privsList);
-                if (result.Status == 0)
-                {
-                    //cargar nuevo rol en el session manager
-					SessionManager.Instance.updateRoles();
-                }
-                return Responses.Simple(result.Status);
-            }
-            catch(Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+            var result = DBManager.Instance.addRole(name, user.Location, operations);
+            return Responses.Simple(result.Status);
         }
 
-        public static string get(User user, long id)
+
+        public static Response get(User user, long id)
         {
-            try {
-                var role = SessionManager.Instance.getRole(id);
-                return Responses.WithData(new { id = role.id, name = role.name, privileges = role.privileges });
-            }
-            catch(Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+            var role = SessionManager.Instance.getRole(id);
+            return Responses.WithData(new { id = role.id, name = role.name, privileges = role.privileges });
         }
 
-        public static string remove(User user, long id)
+        public static Response remove(User user, long id)
         {
             var result = DBManager.Instance.deleteRole(id);
             SessionManager.Instance.updateRoles();
             return Responses.Simple(result.Status);
         }
 
-        public static string modify(User user, long id,string name, IEnumerable<object> privs)
+        public static Response activate(User user, long id)
         {
-            try
-            {
-                var privsList = new List<Tuple<string, string>>();
-                foreach (var priv in privs)
-                {
-                    string[] pair = priv.ToString().Split(new string[] { "/" }, StringSplitOptions.None);
-                    privsList.Add(new Tuple<string, string>(pair[0], pair[1]));
-                }
-                var result = DBManager.Instance.updateRole(id, name, privsList);
-                SessionManager.Instance.updateRoles();
-                return Responses.Simple(result.Status);
-            }
-            catch (Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+            var result = DBManager.Instance.activateRole(id);
+            return Responses.Simple(result.Status);
         }
 
+        public static Response modify(User user, long id, string name, List<String> operations)
+        {
+            var result = DBManager.Instance.updateRole(id, name, user.Location, operations);
+            return Responses.Simple(result.Status);
+        }
+
+        public static Response get_all(User user)
+        {
+            var result = DBManager.Instance.selectAllRoles();
+            return Responses.WithData(result.Detail);
+        }
+
+        public static Response get_active(User user)
+        {
+            var result = DBManager.Instance.selectAllActiveRoles();
+            return Responses.WithData(result.Detail);
+        }
     }
 }

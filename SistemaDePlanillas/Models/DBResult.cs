@@ -15,13 +15,22 @@ namespace SistemaDePlanillas.Models
         public long id;
         public string idCard;
         public string name;
-        public string location;
+        public long location;
         public string account;
         public bool cms;
         public string cmsText;
         public long calls;
         public double salary;
+        public bool active;
+        public double negativeAmount;
+    }
 
+    public class Call
+    {
+        public long employee;
+        public long calls;
+        public Nullable<DateTime> date;
+        public Nullable<TimeSpan> hours;
     }
 
     public class Payroll
@@ -36,9 +45,10 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public string name;
-        public float interestRate;
-        public long months;
-        public int location;
+        public Nullable<double> interestRate;
+        public Nullable<long> months;
+        public long location;
+        public bool payment;
     }
 
     public class Debit
@@ -48,6 +58,7 @@ namespace SistemaDePlanillas.Models
         public string detail;
         public double amount;
         public long type;
+        public string typeName;
     }
 
     public class PaymentDebit
@@ -55,13 +66,14 @@ namespace SistemaDePlanillas.Models
         public long id;
         public long employee;
         public string detail;
+        public DateTime initialDate;
         public double total;
         public double interestRate;
         public long paymentsMade;
         public long missingPayments;
-        public double remainingDebt;
-        public double payment;
+        public double remainingAmount;
         public long type;
+        public string typeName;
     }
     public class Extra
     {
@@ -71,17 +83,26 @@ namespace SistemaDePlanillas.Models
         public double amount;
     }
 
-    public class Recess
+    public class Penalty
     {
         public long id;
         public long employee;
+        public DateTime date;
         public string detail;
+        public bool active;
         public double amount;
-        public long paymentsMade;
-        public long missingPayments;
-        public double remainingRecess;
-        public double payment;
+        public long type;
+        public string typeName;
+        public double penaltyPrice;
     }
+
+    public class PenaltyType
+    {
+        public long id;
+        public string name;
+        public Nullable<double> price;
+    }
+
 
     public class User
     {
@@ -92,13 +113,19 @@ namespace SistemaDePlanillas.Models
         public long Role { get; set; }
         public long Location { get; set; }
         public string Email { get; set; }
-        public HttpSessionStateBase Session { get; set; }
+        public bool Active { get; set; }
+        //public HttpSessionStateBase session { get; set; }
     }
 
     public class Location
     {
-        public long id;
-        public string name;
+        public long Id;
+        public string Name;
+        public double CallPrice;
+        public double Capitalization=0.4;
+        public Nullable<long> LastPayroll;
+        public Nullable<long> CurrentPayroll;
+        public bool Active;
     }
 
     public class Role
@@ -107,13 +134,15 @@ namespace SistemaDePlanillas.Models
         public long id;
         public string name;
         public long location;
+        public bool active;
         public Dictionary<string, HashSet<string>> privileges;
 
-        public Role(long id, string name, long location, List<Tuple<string, string>> privs)
+        public Role(long id, string name, long location, bool active, List<Tuple<string, string>> privs)
         {
             this.id = id;
             this.name = name;
             this.location = location;
+            this.active = active;
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {
@@ -126,20 +155,7 @@ namespace SistemaDePlanillas.Models
             navbar = new NavbarConfig(privileges);
         }
 
-        public void update()
-        {
-            var privs = DBManager.Instance.selectRolePrivileges(id).Detail;
-            privileges = new Dictionary<string, HashSet<string>>();
-            foreach (var priv in privs)
-            {
-                if (!privileges.ContainsKey(priv.Item1))
-                {
-                    privileges.Add(priv.Item1, new HashSet<string>());
-                }
-                privileges[priv.Item1].Add(priv.Item2);
-            }
-            navbar = new NavbarConfig(privileges);
-        }
+
     }
 
     public class OperationsGroup
@@ -148,15 +164,13 @@ namespace SistemaDePlanillas.Models
         public readonly string desc;
         public readonly string name;
         public readonly string icon;
-        public readonly bool rightAlign;
         public readonly Dictionary<string, Operation> operations;
 
-        public OperationsGroup(string desc, string name, string icon, bool rightAlign, List<Operation> operations)
+        public OperationsGroup(string desc, string name, string icon, List<Operation> operations)
         {
             this.desc = desc;
             this.name = name;
             this.icon = "".Equals(icon) ? "" : "glyphicon glyphicon-" + icon;
-            this.rightAlign = rightAlign;
             this.operations = new Dictionary<string, Operation>();
             foreach (Operation op in operations)
             {

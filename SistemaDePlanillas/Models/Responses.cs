@@ -8,40 +8,54 @@ namespace SistemaDePlanillas.Models
 {
     public class Responses
     {
-        public static readonly string OK= "{\"status\":\"OK\"}";
+        private static Response OK = new Response() { status = "OK" };
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
-        public static string Error(long errorCode)
+        public static Response Error(long errorCode)
         {
-            return "{\"status\":\"ERROR\", \"error\":" + errorCode+ ", \"detail\":\"" +
-                Errors.Instance.getDetail(errorCode)+"\"}";
+            return new ErrorResponse() {status="ERROR",error=errorCode, detail=Errors.Instance.getDetail(errorCode)};
         }
 
-        public static string ExceptionError(Exception e)
+        public static Response ExceptionError(Exception e)
         {
-            return "{\"status\":\"ERROR\", \"error\": -1, \"detail\":\"" + e.InnerException.Message+ "\"}";
+            return new ErrorResponse() { status = "ERROR", error = -1, detail = e.InnerException.Message };
         }
 
-        public static string Simple(long status)
+        public static Response Simple(long status)
         {
             return status == 0 ? OK : Error(status);
         }
 
-        public static string Error(long errorCode, string detail)
+        public static Response Error(long errorCode, string detail)
         {
-            return "{\"status\":\"ERROR\", \"error\":"+errorCode+", \"detail\":\"" + detail + "\"}";
+            return new ErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
         }
 
-        public static string WithData(object data)
+        public static Response WithData(object data)
         {
-            return "{\"status\":\"OK\", \"data\":"+js.Serialize(data)+"}";
+            return new DataResponse() { status = "OK", data = data };
         }
 
-        public static string SimpleWithData(long status, object data)
+        public static Response SimpleWithData(long status, object data)
         {
             return status == 0 ? WithData(data) : Error(status);
         }
 
+    }
+
+    public class Response {
+        public string status;
+    };
+
+    public class ErrorResponse : Response
+    {
+        public long error;
+        public string detail;
+    }
+
+    public class DataResponse : Response
+    {
+        public object data;
     }
 
     public class Errors

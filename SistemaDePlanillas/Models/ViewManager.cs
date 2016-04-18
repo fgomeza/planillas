@@ -14,7 +14,7 @@ namespace SistemaDePlanillas.Models
         private ViewManager()
         {
             groups = new Dictionary<string, OperationsGroup>();
-            var groupsList = DBManager.Instance.selectOperationsGroups().Detail;
+            var groupsList = DBManager.Instance.selectAllOperationsGroup().Detail;
             foreach(var group in groupsList)
             {
                 groups[group.name] = group;
@@ -73,7 +73,7 @@ namespace SistemaDePlanillas.Models
                     options.Add(new Tuple<string,string>(op.desc,op.url));
                 }
                 MenubarConfig menu = new MenubarConfig(og.name, options, og.icon, og.desc);
-                (og.rightAlign ? rightMenus : leftMenus).Add(menu);
+                //(og.rightAlign ? rightMenus : leftMenus).Add(menu);
                 menus[grupo.Key] = menu;
             }
         }

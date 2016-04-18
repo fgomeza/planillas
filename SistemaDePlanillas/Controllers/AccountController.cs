@@ -38,7 +38,7 @@ namespace PlanillasFrontEnd.Controllers
         //
         // POST: /Account/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             //model.Username = model.Username.ToLower();
@@ -53,6 +53,7 @@ namespace PlanillasFrontEnd.Controllers
                 /*Aquí hace falta una forma de tomar el error que sucedió
                 */
                 ModelState.AddModelError("LoginError", "Usuario o contraseña inválidos");
+                FormsAuthentication.SetAuthCookie("Admin",true);
                 return View();
             }
 

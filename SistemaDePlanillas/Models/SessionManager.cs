@@ -27,7 +27,7 @@ namespace SistemaDePlanillas.Models
             loggedUsers = new Dictionary<long, User>();
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectRoles().Detail;
+            var rolesList = DBManager.Instance.selectAllRoles().Detail;
             foreach(Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models
         {
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectRoles().Detail;
+            var rolesList = DBManager.Instance.selectAllRoles().Detail;
             foreach (Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -63,11 +63,6 @@ namespace SistemaDePlanillas.Models
         public MenubarConfig getMenuBarConfig(User user, string group)
         {
             return getRole(user.Role).navbar.menus[group];
-        }
-
-        public void updateRole(int roleId)
-        {
-            roles[roleId].update();
         }
 
         public bool verifyOperation(User user, string group, string operation)
@@ -107,7 +102,6 @@ namespace SistemaDePlanillas.Models
             if (Result.Status == 0)
             {
                 User User = Result.Detail;
-                User.Session = session;
                 session["user"] = User;
                 session["UserName"] = User.Name;
                 return true;

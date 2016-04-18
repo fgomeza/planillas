@@ -44,6 +44,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevOne.Security.Cryptography.BCrypt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.1.0.0.0\lib\DevOne.Security.Cryptography.BCrypt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.0.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.3.0.5\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -167,6 +183,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JonnController.cs" />
     <Compile Include="Controllers\OperationsApiController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\PartialViewsController.cs" />
@@ -178,13 +195,15 @@
     </Compile>
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
+    <Compile Include="Models\IErrors.cs" />
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtraGroup.cs" />
-    <Compile Include="Models\Operations\FileConvertions.cs" />
+    <Compile Include="Models\FileConvertions.cs" />
     <Compile Include="Models\Operations\LocationsGroup.cs" />
+    <Compile Include="Models\Operations\PayrollGoup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
     <Compile Include="Models\Operations\RolesGroup.cs" />
     <Compile Include="Models\Operations\UsersGroup.cs" />
@@ -270,7 +289,9 @@
     <Content Include="Scripts\lib\sammy-0.7.5.min.js" />
     <Content Include="Scripts\AppScripts\testing.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -298,10 +319,21 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Jonn\" />
+    <Folder Include="Views\Testing\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{5b8420ac-057c-4953-bde8-a3786e98b029}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
