@@ -28,9 +28,9 @@
 */
             sammyApp.swap = function (content, callback) {
                 var context = this;
-                context.$element().fadeOut(300, function () {
+                context.$element().slideUp(function () {
                     context.$element().html(content);
-                    context.$element().fadeIn(300, function () {
+                    context.$element().fadeIn(function () {
                         if (callback) {
                             callback.apply();
                         }
