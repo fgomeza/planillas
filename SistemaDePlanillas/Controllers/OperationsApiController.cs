@@ -41,7 +41,6 @@ namespace SistemaDePlanillas.Controllers
                 object[] parameters = new object[args.Length + 1];
                 parameters[0] = user;
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
-
                 //types array for calling the correct overload of the method
                 Type[] paramsTypes = new Type[parameters.Length];
                 for(int i=0; i<parameters.Length; i++)
@@ -61,7 +60,12 @@ namespace SistemaDePlanillas.Controllers
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
+                    string p = "";
+                    for (int i = 1; i < paramsTypes.Length; i++)
+                    {
+                        p += paramsTypes[i].Name + " ";
+                    }
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation+" que recibe: "+p));
                 }
                 
                 //call the method
@@ -129,7 +133,12 @@ namespace SistemaDePlanillas.Controllers
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);             
                 if (method == null)
                 {
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
+                    string p = "";
+                    for (int i = 1; i < paramsTypes.Length; i++)
+                    {
+                        p += paramsTypes[i].Name + " ";
+                    }
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation + " que recibe: " + p));
                 }
 
                 //call the method

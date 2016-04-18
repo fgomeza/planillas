@@ -197,6 +197,7 @@
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\IErrors.cs" />
     <Compile Include="Models\NavigationModel.cs" />
+    <Compile Include="Models\Operations\AppGroup.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
