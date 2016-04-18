@@ -64,12 +64,7 @@ namespace SistemaDePlanillas.Controllers
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
-                    string p = "";
-                    for (int i = 1; i < paramsTypes.Length; i++)
-                    {
-                        p += paramsTypes[i].Name + " ";
-                    }
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation+" que recibe: "+p));
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
                 }
                 
                 //call the method
@@ -140,12 +135,7 @@ namespace SistemaDePlanillas.Controllers
                 MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);             
                 if (method == null)
                 {
-                    string p = "";
-                    for (int i = 1; i < paramsTypes.Length; i++)
-                    {
-                        p += paramsTypes[i].Name + " ";
-                    }
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation + " que recibe: " + p));
+                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
                 }
 
                 //call the method
