@@ -52,7 +52,6 @@ namespace SistemaDePlanillas.Models.Operations
             var result = DBManager.Instance.deletePenalty(id_recess);
             return Responses.Simple(result.Status);
         }
-
         
         /// <summary>
         /// Accesa a una penalizacion por su identificador
