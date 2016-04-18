@@ -8,6 +8,7 @@
         this.cms = ko.observable(data.cms);
         this.cmsText = ko.observable(data.cmsText);
         this.calls = ko.observable(data.calls);
+        this.active = ko.observable(data.active);
         this.salary = ko.observable(data.salary);
     }
 
@@ -26,6 +27,7 @@
             cms: "cms",
             cmsText: "cmsText",
             calls: "Llamadas",
+            active: "Activo",
             salary: "Salario"
         };
 

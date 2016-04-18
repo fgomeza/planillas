@@ -31,7 +31,7 @@
     require(['jquery', 'app/testing'], function ($, testingApp) {
         var enviar = function () {
             testingApp.actionString($("#group").val(), $("#operation").val(), $("#args").val(), function (res) {
-                $("#result").html(res)
+                $("#result").html(JSON.stringify(res, null, 2))
             });
         };
 

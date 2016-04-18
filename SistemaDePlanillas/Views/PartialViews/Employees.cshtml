@@ -14,6 +14,7 @@
                     <th data-bind="text: cms"></th>
                     <th data-bind="text: cmsText"></th>
                     <th data-bind="text: calls"></th>
+                    <th data-bind="text: active"></th>
                     <th data-bind="text: salary"></th>
                 </tr>
             </thead>
@@ -27,6 +28,7 @@
                     <td data-bind="text: cms"></td>
                     <td data-bind="text: cmsText"></td>
                     <td data-bind="text: calls"></td>
+                    <th data-bind="text: active"></th>
                     <td data-bind="text: salary"></td>
                     <td data-bind="visible: !$parent.isEditMode()">
                         <a href="#" data-bind="click: $parent.edit">Edit</a>
@@ -96,9 +98,15 @@
                                 <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: calls" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.active"></label>
+                            <div class="col-sm-8">
+                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: active" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="saveCancelButtonsRegion" class="row">
                     <div class="pull-left">
                         <button type="button" class="btn btn-danger" data-bind="click: $root.delete">Eliminar</button>
                     </div>

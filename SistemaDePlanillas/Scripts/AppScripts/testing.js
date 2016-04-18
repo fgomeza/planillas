@@ -14,7 +14,7 @@
             data: args,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) { callback(JSON.parse(data)); },
+            success: function (data) { callback(data); },
             error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
         };
         $.ajax(xhr);
@@ -34,14 +34,14 @@
     }
 
     testingApp.actionString = function (group, operation, args, callback) {
-        args = "[" + args + "]";
+        args = '[' + args + ']';
         $.ajax({
-            url: "/api/action/" + group + "/" + operation,
-            type: "POST",
+            url: '/api/action/' + group + '/' + operation,
+            type: 'POST',
             data: args,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) { callback(JSON.stringify(JSON.parse(data), null, 2)); },
+            success: function (data) { callback(data); },
             error: function () { callback(JSON.stringify({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }, null, 2)); }
         });
     }
