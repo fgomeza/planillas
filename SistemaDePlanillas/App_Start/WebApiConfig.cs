@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using SistemaDePlanillas.Filters;
 
 namespace SistemaDePlanillas
 {
@@ -9,6 +10,7 @@ namespace SistemaDePlanillas
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Filters.Add(new PermissionCheckAttribute());
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
