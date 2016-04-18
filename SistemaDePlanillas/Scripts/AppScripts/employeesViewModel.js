@@ -49,6 +49,7 @@
         };
 
         self.delete = function (data) {
+            self.employees.destroy(data);
             self.cancel();
         }
 

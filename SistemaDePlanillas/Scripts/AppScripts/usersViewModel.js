@@ -14,6 +14,16 @@
         var self = this;
         
         self.users = ko.observableArray();
+        self.labels = {
+            id: 'Id',
+            name: 'Nombre',
+            username: 'Usuario',
+            password: 'Contraseña',
+            role: 'Rol',
+            location: 'Sede',
+            email: 'Correo electrónico',
+            session: 'Sesión'
+        };
 
         testingApp.action('users', 'get', function (data) {
             data = data.data;
