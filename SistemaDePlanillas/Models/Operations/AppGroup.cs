@@ -53,10 +53,14 @@ namespace SistemaDePlanillas.Models.Operations
                 string name;
                 if (t.IsAssignableFrom(typeof(IEnumerable<object>)))
                 {
-                    name = "Array";
+                    name = "List";
                 }
                 else if (t.Equals(typeof(Int64))){
                     name = "Int";
+                }
+                else if (t.Equals(typeof(double)))
+                {
+                    name = "Decimal";
                 }
                 else
                 {
