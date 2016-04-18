@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace SistemaDePlanillas.Models.Operations
+namespace SistemaDePlanillas.Models
 {
     public class FileConvertions
     {
@@ -13,14 +13,14 @@ namespace SistemaDePlanillas.Models.Operations
         {
             public string cmsid { get; set; }
             public int calls { get; set; }
+            public TimeSpan hours { get; set; }
             public DateTime date { get; set; }
-            public TimeSpan callsTime { get; set; }
-            public CMSRegister(string cmsid, int calls, DateTime date, TimeSpan callsTime)
+            public CMSRegister(string cmsid, int calls, TimeSpan hours, DateTime date)
             {
                 this.cmsid = cmsid;
                 this.calls = calls;
+                this.hours = hours;
                 this.date = date;
-                this.callsTime = callsTime;
             }
         }
 
@@ -36,10 +36,11 @@ namespace SistemaDePlanillas.Models.Operations
 
                 string data = reader.ReadToEnd();
                 string filePattern = @"^([^\t]+\t\d{2}/\d{2}/\d{4}\t\d+\t[^\n]\n)*$";
+                //if (!Regex.IsMatch(data, filePattern))
+                //{
+                //    return null;
+                //}
 
-                bool isdsa = Regex.IsMatch(data, filePattern);
-                return null;
-                /*
                 var employees = new Dictionary<string, CMSRegister>();
                 string dataPattern = @"(?<cmsid>[^\t]+)\t(?<date>\d{2}/\d{2}\d{4})\t(?<calls>\d+)\t[^\n]\n";
                 foreach (Match match in Regex.Matches(data, dataPattern))
@@ -49,13 +50,13 @@ namespace SistemaDePlanillas.Models.Operations
                     int hours = 0;
                     if (!employees.ContainsKey(cmsid))
                     {
-                        employees[cmsid] = new CMSRegister(cmsid, calls, hours);
+                        //employees[cmsid] = new CMSRegister(cmsid, calls, hours);
                     }
                     else
                     {
                         var register = employees[cmsid];
                         register.calls += calls;
-                        register.hours += hours;
+                       // register.hours += hours;
                     }
                 }
                 var list = new List<CMSRegister>();
@@ -64,8 +65,6 @@ namespace SistemaDePlanillas.Models.Operations
                     list.Add(register);
                 }
                 return list;
-            }
-            */
             }
             catch (Exception)
             {

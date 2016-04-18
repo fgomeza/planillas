@@ -14,8 +14,12 @@ namespace Repository.Entities
 
         [Column("name")]
         public string Name { get; set; }
+
         [Column("price")]
         public Nullable<double> Price { get; set; }
 
+        [Column("location"), ForeignKey("fkpenaltytype_location")]
+        public long location { get; set; }
+        public virtual LocationEntity fkpenaltytype_location { set; get; }
     }
 }

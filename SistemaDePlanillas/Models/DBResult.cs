@@ -21,7 +21,16 @@ namespace SistemaDePlanillas.Models
         public string cmsText;
         public long calls;
         public double salary;
+        public bool active;
+        public double negativeAmount;
+    }
 
+    public class Call
+    {
+        public long employee;
+        public long calls;
+        public Nullable<DateTime> date;
+        public Nullable<TimeSpan> hours;
     }
 
     public class Payroll
@@ -49,6 +58,7 @@ namespace SistemaDePlanillas.Models
         public string detail;
         public double amount;
         public long type;
+        public string typeName;
     }
 
     public class PaymentDebit
@@ -58,12 +68,12 @@ namespace SistemaDePlanillas.Models
         public string detail;
         public DateTime initialDate;
         public double total;
-        public Nullable<double> interestRate;
-        public Nullable<long> paymentsMade;
-        public Nullable<long> missingPayments;
+        public double interestRate;
+        public long paymentsMade;
+        public long missingPayments;
         public double remainingAmount;
-        public double payment;
         public long type;
+        public string typeName;
     }
     public class Extra
     {
@@ -77,13 +87,22 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public long employee;
+        public DateTime date;
         public string detail;
-        public Nullable<double> amount;
-        /* public long paymentsMade;
-         public long missingPayments;
-         public double remainingRecess;
-         public double payment;*/
+        public bool active;
+        public double amount;
+        public long type;
+        public string typeName;
+        public double penaltyPrice;
     }
+
+    public class PenaltyType
+    {
+        public long id;
+        public string name;
+        public Nullable<double> price;
+    }
+
 
     public class User
     {
@@ -94,6 +113,7 @@ namespace SistemaDePlanillas.Models
         public long Role { get; set; }
         public long Location { get; set; }
         public string Email { get; set; }
+        public bool Active { get; set; }
         //public HttpSessionStateBase session { get; set; }
     }
 
@@ -102,8 +122,10 @@ namespace SistemaDePlanillas.Models
         public long Id;
         public string Name;
         public double CallPrice;
-        public long LastPayroll;
-        public long CurrentPayroll;
+        public double Capitalization=0.4;
+        public Nullable<long> LastPayroll;
+        public Nullable<long> CurrentPayroll;
+        public bool Active;
     }
 
     public class Role
@@ -112,13 +134,15 @@ namespace SistemaDePlanillas.Models
         public long id;
         public string name;
         public long location;
+        public bool active;
         public Dictionary<string, HashSet<string>> privileges;
 
-        public Role(long id, string name, long location, List<Tuple<string, string>> privs)
+        public Role(long id, string name, long location, bool active, List<Tuple<string, string>> privs)
         {
             this.id = id;
             this.name = name;
             this.location = location;
+            this.active = active;
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {

@@ -15,18 +15,14 @@ namespace Repository.Repositories.Classes
         public CallRepository(AppContext context) : base(context) {
         }
 
-        public long callsbyEmployee(long employeeId)
+        public long callsbyEmployee(long employeeId , DateTime endDate)
         {
-            var x = _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId == null).Select(e => e.calls).Sum();
-
-            return x;/*_context.Set<CallEntity>().Where((c) => c.employeeId == employeeId && c.payrollId==null).Sum((c)=>c.calls);*/
-
+            return _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId==null && e.date <= endDate).Select(e => e.calls).Sum();
         }
 
-        public IEnumerable<CallEntity> selectCallsByEmployee(long employeeId)
+        public IEnumerable<CallEntity> callListbyEmployee(long employeeId, DateTime endDate)
         {
-
-            return _context.Calls.Where((e) => e.employeeId == employeeId).ToList();
+            return _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId == null && e.date <= endDate);
         }
     }
 }

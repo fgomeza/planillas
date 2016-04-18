@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     public class DebitsGroup
     {
         
-        public static Response  add_Fixed(User user, long employee, string detail, long amount, long type)
+        public static Response add_Fixed(User user, long employee, string detail, long amount, long type)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);

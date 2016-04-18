@@ -15,8 +15,12 @@ namespace SistemaDePlanillas.Models
         public static long inexistentLocation = 5;
         public static long inexistentRole = 6;
         public static long inexistentOperation = 7;
-        public static long inexistentGroup = 8;
-        public static long locationActive = 8;
-
+        public static long inexistentPenalty = 8;
+        public static long inexistentGroup = 9;
+        public static long employeeInactive = 10;
+        public static long locationInactive = 10;
+        public static long penaltyInactive = 11;
+        public static long roleInactive = 12;
+        public static long userInactive = 13;
     }
 }

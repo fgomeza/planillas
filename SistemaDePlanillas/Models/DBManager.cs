@@ -41,7 +41,6 @@ namespace SistemaDePlanillas.Models
             throw e;
         }
 
-
         public Result<string> addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
             Result<string> result = new Result<string>();
@@ -103,10 +102,10 @@ namespace SistemaDePlanillas.Models
                     var employees = repository.Employees.selectCMSEmployees(location);
                     foreach (var x in employees)
                     {
-                        var calls = repository.Calls.callsbyEmployee(x.id);
+                        var calls = repository.Calls.callsbyEmployee(x.id, DateTime.Now);
 
                         Employee employee = new Employee()
-                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls };
+                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls, active = x.active };
                         result.Detail.Add(employee);
                     }
                 }
@@ -117,6 +116,29 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
+
+        public Result<List<Call>> callListByEmployee(long employee, DateTime endDate)
+        {
+            Result<List<Call>> result = new Result<List<Call>>();
+            result.Detail = new List<Call>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var calls = repository.Calls.callListbyEmployee(employee, endDate);
+                    foreach (var call in calls)
+                    {
+                        result.Detail.Add(new Call() { employee = call.employeeId, calls = call.calls, date = call.date, hours = call.time });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
 
         public Result<string> addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
@@ -181,7 +203,7 @@ namespace SistemaDePlanillas.Models
                     foreach (var x in employees)
                     {
                         Employee employee = new Employee()
-                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary };
+                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary, active = x.active };
                         result.Detail.Add(employee);
                     }
                 }
@@ -219,6 +241,31 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
+        public Result<string> activateEmployee(long employeeId)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    EmployeeEntity employee = repository.Employees.Get(employeeId);
+                    if (employee != null)
+                    {
+                        employee.active = true;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.Status = inexistentEmployee;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
         public Result<Employee> selectEmployee(long id)
         {
             Result<Employee> result = new Result<Employee>();
@@ -240,12 +287,48 @@ namespace SistemaDePlanillas.Models
                         res.account = employee.account;
                         res.salary = employee.salary;
                         result.Detail = res;
+                        res.active = true;
+                        res.negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount;
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        result.Status = employee != null ? employeeInactive : inexistentEmployee;
                     }
 
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Employee>> selectAllActiveEmployees(long location)
+        {
+            Result<List<Employee>> result = new Result<List<Employee>>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var employees = repository.Employees.GetAll();
+                    result.Detail = new List<Employee>();
+                    foreach (var employee in employees)
+                    {
+                        Employee res = new Employee();
+                        res.id = employee.id;
+                        res.idCard = employee.idCard;
+                        res.location = employee.locationId;
+                        res.name = employee.name;
+                        res.cms = employee.cms == null ? false : true;
+                        res.calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now);
+                        res.cmsText = employee.cms;
+                        res.account = employee.account;
+                        res.salary = employee.salary;
+                        res.active = employee.active;
+                        res.negativeAmount = employee.negativeAmount==null?0:(double)employee.negativeAmount;
+                        result.Detail.Add(res);
+                    }
                 }
             }
             catch (Exception e)
@@ -274,9 +357,11 @@ namespace SistemaDePlanillas.Models
                             res.location = employee.locationId;
                             res.name = employee.name;
                             res.cms = employee.cms == null ? false : true;
+                            res.calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now);
                             res.cmsText = employee.cms;
                             res.account = employee.account;
                             res.salary = employee.salary;
+                            res.negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount;
                             result.Detail.Add(res);
                         }
                     }
@@ -288,6 +373,34 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
+
+        public Result<string> addCalls(List<FileConvertions.CMSRegister> calls)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    foreach (var call in calls)
+                    {
+                        repository.Calls.Add(new CallEntity()
+                        {
+                            employeeId = repository.Employees.selectEmployeeByCmsText(call.cmsid).id,
+                            calls = call.calls,
+                            time = call.hours,
+                            date = call.date
+                        });
+                    }
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
 
         public Result<string> addDebit(long employee, string Detail, double amount, long type)
         {
@@ -371,6 +484,32 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
+        public Result<string> activateDebit(long idDebit)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitEntity debit = repository.Debits.Get(idDebit);
+                    if (debit != null)
+                    {
+                        debit.active = true;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.Status = inexistentDebit;
+                    }
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
         public Result<Debit> selectDebit(long idDebit)
         {
             Result<Debit> result = new Result<Debit>();
@@ -387,11 +526,43 @@ namespace SistemaDePlanillas.Models
                         res.amount = debit.totalAmount;
                         res.detail = debit.description;
                         res.type = debit.debitTypeId;
+                        res.typeName = debit.fkdebit_type.name;
                         result.Detail = res;
                     }
                     else
                     {
                         result.Status = inexistentDebit;
+                    }
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Debit>> selectActiveDebits(long employee)
+        {
+            Result<List<Debit>> result = new Result<List<Debit>>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var debits = repository.Debits.selectFixDebitsByEmployee(employee);
+                    result.Detail = new List<Debit>();
+                    foreach (var debit in debits)
+                    {
+                        if (debit.active)
+                        {
+                            Debit deb = new Debit();
+                            deb.id = debit.id;
+                            deb.amount = debit.totalAmount;
+                            deb.employee = debit.employeeId;
+                            deb.detail = debit.description;
+                            deb.type = debit.debitTypeId;
+                            result.Detail.Add(deb);
+                        }
                     }
                 }
             }
@@ -510,10 +681,11 @@ namespace SistemaDePlanillas.Models
                         deb.employee = debit.employeeId;
                         deb.total = debit.totalAmount;
                         deb.remainingAmount = debit.remainingAmount;
-                        deb.paymentsMade = debit.paidMonths;
-                        deb.missingPayments = debit.remainingMonths;
-                        deb.interestRate = debit.interestRate;
+                        deb.paymentsMade = (long)debit.paidMonths;
+                        deb.missingPayments = (long)debit.remainingMonths;
+                        deb.interestRate = (double)debit.interestRate;
                         deb.type = debit.debitTypeId;
+                        deb.typeName = debit.fkdebit_type.name;
                     }
                     else
                     {
@@ -548,10 +720,11 @@ namespace SistemaDePlanillas.Models
                             deb.employee = debit.employeeId;
                             deb.total = debit.totalAmount;
                             deb.remainingAmount = debit.remainingAmount;
-                            deb.paymentsMade = debit.paidMonths;
-                            deb.missingPayments = debit.remainingMonths;
-                            deb.interestRate = debit.interestRate;
+                            deb.paymentsMade = debit.paidMonths==null?0:(long)debit.paidMonths;
+                            deb.missingPayments = debit.remainingMonths == null?0:(long)debit.remainingMonths;
+                            deb.interestRate = debit.interestRate==null?0:(double)debit.interestRate;
                             deb.type = debit.debitTypeId;
+                            deb.typeName = debit.fkdebit_type.name;
                         }
                     }
                 }
@@ -755,7 +928,8 @@ namespace SistemaDePlanillas.Models
                         Description = Detail,
                         EmployeeId = employee,
                         PenaltyTypeId = penaltyTypeId,
-                        PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId)
+                        PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId),
+                        active = true
                     };
                     repository.Penalties.Add(penalty);
                     repository.Complete();
@@ -771,7 +945,7 @@ namespace SistemaDePlanillas.Models
         }
 
 
-        public Result<string> updatePenalty(long idRecess, long payroll,long penaltyTypeId, string Detail, long amount, DateTime date)
+        public Result<string> updatePenalty(long idRecess, long payroll, long penaltyTypeId, string Detail, long amount, DateTime date)
         {
             Result<string> result = new Result<string>();
             try
@@ -815,7 +989,8 @@ namespace SistemaDePlanillas.Models
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        repository.Penalties.Remove(penalty);
+                        //repository.Penalties.Remove(penalty);
+                        penalty.active = false;
                         repository.Complete();
                     }
                     else
@@ -831,7 +1006,34 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<Penalty> selectPenalties(long idRecess)
+        public Result<string> activatePenalty(long idRecess)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    PenaltyEntity penalty = repository.Penalties.Get(idRecess);
+                    if (penalty != null)
+                    {
+                        //repository.Penalties.Remove(penalty);
+                        penalty.active = true;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.Status = inexistentEmployee;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<Penalty> selectPenalty(long idRecess)
         {
             Result<Penalty> result = new Result<Penalty>();
             try
@@ -840,20 +1042,23 @@ namespace SistemaDePlanillas.Models
                 {
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
 
-                    if (penalty != null)
+                    if (penalty != null && penalty.active)
                     {
                         result.Detail = new Penalty()
                         {
                             id = penalty.Id,
-                            amount = penalty.Amount,
+                            amount = penalty.Amount==null?0:(double)penalty.Amount,
+                            date = penalty.Date,
                             detail = penalty.Description,
-                            employee = penalty.EmployeeId
-
+                            employee = penalty.EmployeeId,
+                            type = penalty.PenaltyTypeId,
+                            typeName = penalty.fkpenalty_type.Name,
+                            penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
                         };
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        result.Status = penalty != null ? penaltyInactive : inexistentPenalty;
                     }
 
                 }
@@ -865,7 +1070,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<List<Penalty>> selectAllPenalty(long employee)
+        public Result<List<Penalty>> selectAllPenalty(long employee, DateTime endDate)
         {
             Result<List<Penalty>> result = new Result<List<Penalty>>();
             result.Detail = new List<Penalty>();
@@ -873,15 +1078,19 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employee);
-                    foreach (PenaltyEntity p in penalties)
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employee, endDate);
+                    foreach (var p in penalties)
                     {
                         result.Detail.Add(new Penalty()
                         {
+                            id = p.Id,
                             amount = (double)p.Amount,
+                            date = p.Date,
                             detail = p.Description,
                             employee = p.EmployeeId,
-                            id = p.Id
+                            type = p.PenaltyTypeId,
+                            typeName = p.fkpenalty_type.Name,
+                            penaltyPrice = p.PenaltyPrice == null ? 0 : (double)p.PenaltyPrice
                         });
                     }
                 }
@@ -896,17 +1105,42 @@ namespace SistemaDePlanillas.Models
         }
 
 
-        public Result<String> payPenalty(long payrollId, long employeeId)
+        public Result<String> payPenalty(long payrollId, long employeeId, DateTime endDate)
         {
             Result<String> result = new Result<String>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId);
+                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId, endDate);
                     foreach (PenaltyEntity p in penalties)
                     {
                         p.PayRollId = payrollId;
+                    }
+                    repository.Complete();
+
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+
+        }
+
+        public Result<Dictionary<long, PenaltyType>> selectAllPenaltyTypes(long location)
+        {
+            Result<Dictionary<long, PenaltyType>> result = new Result<Dictionary<long, PenaltyType>>();
+            result.Detail = new Dictionary<long, PenaltyType>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var types = repository.PenaltyTypes.getAllbyLocation(location);
+                    foreach (var p in types)
+                    {
+                        result.Detail.Add(p.Id, new PenaltyType() { id = p.Id, name = p.Name, price = p.Price });
                     }
                     repository.Complete();
 
@@ -1004,7 +1238,7 @@ namespace SistemaDePlanillas.Models
             return res;
         }
 
-        public Result<string> addLocation(string name, double call_price,long administrator)
+        public Result<string> addLocation(string name, double call_price, long administrator)
         {
             Result<string> result = new Result<string>();
             try
@@ -1012,11 +1246,11 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = new LocationEntity()
-                    { name = name, callPrice = call_price };
+                    { name = name, callPrice = call_price, active = true };
                     repository.Locations.Add(location);
                     repository.Complete();
-                    var lo=repository.Locations.lastLocation(name);
-                    updateAdministrator(lo.id,administrator);
+                    var lo = repository.Locations.lastLocation(name);
+                    updateAdministrator(lo.id, administrator);
                 }
 
             }
@@ -1041,9 +1275,10 @@ namespace SistemaDePlanillas.Models
                         Location location_result = new Location()
                         {
                             Name = location.name,
-                            CallPrice = (double)location.callPrice,
-                            LastPayroll = (long)location.lastPayrollId,
-                            CurrentPayroll = (long)location.currentPayrollId
+                            CallPrice = location.callPrice == null ? 0 : (long)location.callPrice,
+                            LastPayroll = location.lastPayrollId,
+                            CurrentPayroll = location.currentPayrollId,
+                            Active = location.active
                         };
                         result.Detail = location_result;
                     }
@@ -1076,7 +1311,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = location != null ? locationActive : inexistentLocation;
+                        result.Status = location != null ? locationInactive : inexistentLocation;
                     }
                 }
             }
@@ -1095,7 +1330,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     AdministratorEntity admin = repository.Administrators.Get(location);
-                    if (admin != null )
+                    if (admin != null)
                     {
                         admin.user_id = administrator;
                     }
@@ -1103,8 +1338,8 @@ namespace SistemaDePlanillas.Models
                     {
                         repository.Administrators.Add(new AdministratorEntity()
                         {
-                            location=location,
-                            user_id=administrator
+                            location = location,
+                            user_id = administrator
                         });
                     }
                     repository.Complete();
@@ -1284,7 +1519,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     RoleEntity role = new RoleEntity()
-                    { name = name, locationId = location };
+                    { name = name, locationId = location, active = true };
                     repository.Roles.Add(role);
                     foreach (var op in operations)
                     {
@@ -1314,7 +1549,7 @@ namespace SistemaDePlanillas.Models
                 {
                     RoleEntity role = repository.Roles.Get(id);
 
-                    if (role != null)
+                    if (role != null && role.active == true)
                     {
                         List<Tuple<string, string>> list = new List<Tuple<string, string>>();
                         foreach (var op in role.operations)
@@ -1322,12 +1557,12 @@ namespace SistemaDePlanillas.Models
                             Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
                             list.Add(tuple);
                         }
-                        Role role_result = new Role(role.id, role.name, role.locationId, list);
+                        Role role_result = new Role(role.id, role.name, role.locationId, true, list);
                         result.Detail = role_result;
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        result.Status = role != null ? roleInactive : inexistentRole;
                     }
                 }
             }
@@ -1385,7 +1620,35 @@ namespace SistemaDePlanillas.Models
                     RoleEntity role = repository.Roles.Get(id);
                     if (role != null)
                     {
-                        repository.Roles.Remove(role);
+                        //repository.Roles.Remove(role);
+                        role.active = false;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        result.Status = inexistentRole;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<string> activateRole(long id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    RoleEntity role = repository.Roles.Get(id);
+                    if (role != null)
+                    {
+                        role.active = true;
                         repository.Complete();
                     }
                     else
@@ -1419,7 +1682,38 @@ namespace SistemaDePlanillas.Models
                             Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
                             list.Add(tuple);
                         }
-                        result.Detail.Add(new Role(x.id, x.name, x.locationId, list));
+                        result.Detail.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
+
+        public Result<List<Role>> selectAllActiveRoles()
+        {
+            Result<List<Role>> result = new Result<List<Role>>();
+            result.Detail = new List<Role>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var roles = repository.Roles.GetAll();
+                    foreach (var x in roles)
+                    {
+                        if (x.active == true)
+                        {
+                            List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                            foreach (var op in x.operations)
+                            {
+                                Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
+                                list.Add(tuple);
+                            }
+                            result.Detail.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                        }
                     }
                 }
             }
@@ -1691,7 +1985,8 @@ namespace SistemaDePlanillas.Models
                         locationId = location,
                         password = BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()),
                         roleId = role,
-                        userName = username.ToLower()
+                        userName = username.ToLower(),
+                        active = true
                     });
 
                     repository.Complete();
@@ -1749,7 +2044,36 @@ namespace SistemaDePlanillas.Models
                     var user = repository.Users.Get(id);
                     if (user != null)
                     {
-                        repository.Users.Remove(user);
+                        //repository.Users.Remove(user);
+                        user.active = false;
+                    }
+                    else
+                    {
+                        result.Status = inexistentUser;
+                    }
+                    var rows = repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+
+                result.Status = validate(e);
+            }
+
+            return result;
+        }
+
+        public Result<string> activateUser(long id)
+        {
+            Result<string> result = new Result<string>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var user = repository.Users.Get(id);
+                    if (user != null)
+                    {
+                        user.active = true;
                     }
                     else
                     {
@@ -1775,7 +2099,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var user = repository.Users.Get(id);
-                    if (user != null)
+                    if (user != null && user.active == true)
                     {
                         var newUser = new User()
                         {
@@ -1785,13 +2109,14 @@ namespace SistemaDePlanillas.Models
                             Name = user.name,
                             Password = user.password,
                             Role = user.roleId,
-                            Username = user.userName
+                            Username = user.userName,
+                            Active = true
                         };
                         result.Detail = newUser;
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        result.Status = user != null ? userInactive : inexistentUser;
                     }
 
                 }
@@ -1823,8 +2148,45 @@ namespace SistemaDePlanillas.Models
                             Name = ue.name,
                             Password = ue.password,
                             Role = ue.roleId,
-                            Username = ue.userName
+                            Username = ue.userName,
+                            Active = (bool)ue.active
                         });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                result.Status = validate(e);
+            }
+
+            return result;
+        }
+
+        public Result<List<User>> selectAllActiveUsers(long location)
+        {
+            Result<List<User>> result = new Result<List<User>>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var users = repository.Users.GetAll();
+                    foreach (UserEntity ue in users)
+                    {
+                        if (ue.active == true)
+                        {
+                            result.Detail.Add(new User()
+                            {
+                                Id = ue.id,
+                                Email = ue.email,
+                                Location = ue.locationId,
+                                Name = ue.name,
+                                Password = ue.password,
+                                Role = ue.roleId,
+                                Username = ue.userName,
+                                Active = true
+                            });
+                        }
                     }
                 }
             }
@@ -2038,6 +2400,26 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-    }
+        public Result<double> selectSavingByEmployee(long employee)
+        {
+            Result<double> result = new Result<double>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var saving = repository.Savings.Get(employee);
+                    result.Detail= saving != null ? (double)saving.amount : 0;
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                result.Status = validate(e);
+            }
+            return result;
+        }
 
+
+    }
 }
+
+

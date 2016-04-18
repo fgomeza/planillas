@@ -12,9 +12,9 @@ namespace Repository.Repositories.Classes
     {
         public PenaltyRepository(AppContext context) : base(context) { }
 
-        public IEnumerable<PenaltyEntity> selectPenaltiesByEmployee(long employee)
+        public IEnumerable<PenaltyEntity> selectPenaltiesByEmployee(long employee, DateTime endDate)
         {
-            return _context.Penalties.Where((p)=>p.EmployeeId==employee && p.PayRollId == null).ToList();
+            return _context.Penalties.Where((p)=>p.EmployeeId==employee && p.PayRollId == null && p.Date<=endDate).ToList();
         }
     }
 }

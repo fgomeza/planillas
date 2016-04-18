@@ -94,6 +94,7 @@
     <Compile Include="Repositories\Classes\Repository.cs" />
     <Compile Include="Repositories\Classes\RoleRepository.cs" />
     <Compile Include="Repositories\Classes\SalaryRepository.cs" />
+    <Compile Include="Repositories\Classes\SavingRepository.cs" />
     <Compile Include="Repositories\Classes\UserRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Classes\MainRepository.cs" />
