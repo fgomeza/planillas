@@ -20,7 +20,7 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
-        public static Response get_all(User user)
+        public static Response get(User user)
         {
             var result = DBManager.Instance.selectAllUsers(user.Location);
             return Responses.SimpleWithData(result.Status, result.Detail);
