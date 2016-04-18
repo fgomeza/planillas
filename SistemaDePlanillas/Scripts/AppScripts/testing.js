@@ -14,7 +14,7 @@
             data: args,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) { callback(data); },
+            success: callback,
             error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
         };
         $.ajax(xhr);
@@ -28,7 +28,7 @@
             data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) { callback(JSON.parse(data)); },
+            success: callback,
             error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
         });
     }
@@ -41,8 +41,8 @@
             data: args,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) { callback(data); },
-            error: function () { callback(JSON.stringify({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }, null, 2)); }
+            success: callback,
+            error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
         });
     }
 
