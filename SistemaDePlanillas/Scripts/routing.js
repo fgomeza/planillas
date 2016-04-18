@@ -7,7 +7,7 @@
         // No module loader (plain <script> tag) - put directly in global namespace
         window.routing = factory(Sammy);
     }
-})(function (Sammy) {
+})(function (Sammy, Presenter) {
 
     return {
         config: function (appRoot, contentSelector, defaultRoute) {

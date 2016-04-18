@@ -16,13 +16,12 @@
         self.users = ko.observableArray();
 
         testingApp.action('users', 'get', function (data) {
-            console.log(data);
             data = data.data;
-            var mappedUsers = $.map(data, function (item) { return new User(item); });
-            self.users(mappedUsers);
+            var mappedData = $.map(data, function (item) { return new User(item); });
+            self.users(mappedData);
         });
 
     };
 
-    return new UsersViewModel;
+    return UsersViewModel;
 });

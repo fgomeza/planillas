@@ -1,4 +1,4 @@
-﻿<div class="container-fluid">
+﻿<div id="usersSection" class="container-fluid">
     <div class="row">
         <p>
             <a href="/#/modal/?window=CreateUser">Crear un nuevo usuario</a>
@@ -24,23 +24,19 @@
                     <td data-bind="text: email"></td>
                     <td data-bind="text: session"></td>
                     <td>
-                        <a>Edit</a> |
-                        <a>Delete</a>
+                        <a>Edit</a>
                     </td>
                 </tr>
             </tbody>
 
         </table>
 
-        <textarea data-bind="value: ko.toJSON(users)"></textarea>
-
     </div>
 </div>
 
 <script>
-    require(['knockout', 'app/usersViewModel'], function (ko, vm) {
-        var contentContainer = document.getElementById('page');
-        ko.cleanNode(contentContainer);
-        ko.applyBindings(vm, contentContainer);
+    require(['knockout', 'app/usersViewModel'], function (ko, viewModel) {
+        var element = document.getElementById('usersSection');
+        ko.applyBindings(new viewModel(), element);
     });
 </script>
