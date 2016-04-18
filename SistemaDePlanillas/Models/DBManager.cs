@@ -2133,12 +2133,13 @@ namespace SistemaDePlanillas.Models
         public Result<List<User>> selectAllUsers(long location)
         {
             Result<List<User>> result = new Result<List<User>>();
+            result.Detail = new List<User>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var users = repository.Users.GetAll();
-                    foreach (UserEntity ue in users)
+                    foreach (var ue in users)
                     {
                         result.Detail.Add(new User()
                         {
