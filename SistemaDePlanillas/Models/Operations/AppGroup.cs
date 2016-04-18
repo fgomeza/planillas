@@ -33,7 +33,7 @@ namespace SistemaDePlanillas.Models.Operations
             Type type = Type.GetType(@namespace+"."+group+"Group", false, true);
             if (type == null)
             {
-                return Responses.Error(123, "No se encuentra el grupo");
+                return Responses.Error(123, "No se encuentra el grupo "+group);
             }
             var methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase).Where(m => m.GetParameters().Length > 0 && m.GetParameters()[0].ParameterType.Equals(typeof(User)))
                 .Select((m) => m.Name.Replace('_', '/') + getParametersDesc(m.GetParameters()));
