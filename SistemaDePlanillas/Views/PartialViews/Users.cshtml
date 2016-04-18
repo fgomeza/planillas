@@ -29,6 +29,8 @@
             </tbody>
         </table>
 
+        <pre class="well well-sm" data-bind="text: JSON.stringify(ko.toJS(users), null, 2)"></pre>
+
         <div id="usersEditSection" class="well well-lg" data-bind="visible: isEditMode, with: editingObject">
             <form id="userEditForm" class="form-horizontal container-fluid">
                 <div class="row">

@@ -35,8 +35,9 @@
                     </td>
                 </tr>
             </tbody>
-
         </table>
+
+        <pre class="well well-sm" data-bind="text: JSON.stringify(ko.toJS(employees), null, 2)"></pre>
 
         <div id="employeesEditSection" class="well well-lg" data-bind="visible: isEditMode, with: editingObject">
             <form id="employeeEditForm" class="form-horizontal container-fluid">
