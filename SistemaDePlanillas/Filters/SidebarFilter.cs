@@ -24,20 +24,13 @@ namespace SistemaDePlanillas.Filters
 
             ViewBag.AppTitle = ApplicationName;
             NavigationMenuModel data = new NavigationMenuModel();
-            SidebarViewModel viewModel = new SidebarViewModel();
 
-            viewModel.ApplicationName = ApplicationName;
-            viewModel.ApplicationMenus = data.GetData();
-            ViewBag.SidebarViewModel = viewModel;
+            ViewBag.NavigationMenuModel = data.ApplicationMenus;
 
             ViewResult v = filterContext.Result as ViewResult;
             if(v != null)
             {
-                BaseViewModel model = v.Model as BaseViewModel;
-                if(model != null)
-                {
-                    //ctx.Session
-                }
+                //ctx.Session
             }
         }
     }

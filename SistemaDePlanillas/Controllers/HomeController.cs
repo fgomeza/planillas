@@ -4,35 +4,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SistemaDePlanillas.Models;
+using SistemaDePlanillas.Filters;
 
 namespace SistemaDePlanillas.Controllers
 {
     public class HomeController : Controller
     {
 
+        [SidebarFilter]
         public ActionResult Index()
         {
-            if(Request.IsAuthenticated)
-            {
-                return RedirectToAction("Dashboard");
-            }
-            else
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            
-        }
-
-        public ActionResult Dashboard()
-        {
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View();
-        }
-
-        public ActionResult Test()
-        {
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View();
+                return View();
         }
 
     }
