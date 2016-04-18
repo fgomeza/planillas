@@ -55,34 +55,34 @@ namespace SistemaDePlanillas.Models.Operations
 
         private static List<object> paymentDebitsByEmployee(List<PaymentDebit> debitsByEmployee)
         {
-            return debitsByEmployee.GroupBy(d => d.typeName, d => d, (k, g) => (object)new
+            return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
-                TypeName = k,
-                amount = g.Count(),
-                total = g.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate),
-                debitList = g
+                TypeName = name,
+                amount = list.Count(),
+                total = list.Sum(debit => (debit.remainingAmount / debit.missingPayments) + debit.total * debit.interestRate),
+                debitList = list
             }).ToList();
         }
 
         private static List<object> fixedDebitsByEmployee(List<Debit> debitsByEmployee)
         {
-            return debitsByEmployee.GroupBy(d => d.typeName, d => d, (k, g) => (object)new
+            return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
-                TypeName = k,
-                amount = g.Count(),
-                total = g.Sum(d => d.amount),
-                debitList = g
+                TypeName = name,
+                amount = list.Count(),
+                total = list.Sum(debit => debit.amount),
+                debitList = list
             }).ToList();
         }
 
         private static List<object> penaltiesByEmployee(List<Penalty> penaltiesByEmployee)
         {
-            return penaltiesByEmployee.GroupBy(p => p.typeName, p => p, (k, g) => (object)new
+            return penaltiesByEmployee.GroupBy(penalty => penalty.typeName, penalty => penalty, (name, lista) => (object)new
             {
-                typeName = k,
-                amount = g.Sum(p => p.amount),
-                total = g.Sum(p => p.amount * p.penaltyPrice),
-                typeList = g
+                typeName = name,
+                amount = lista.Sum(penalty => penalty.amount),
+                total = lista.Sum(penalty => penalty.amount * penalty.penaltyPrice),
+                typeList = lista
             }).ToList();
         }
     }
