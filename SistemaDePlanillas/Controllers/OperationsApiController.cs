@@ -19,6 +19,10 @@ namespace SistemaDePlanillas.Controllers
         {
             try
             {
+                if (args == null)
+                {
+                    args = new object[0];
+                }
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 
@@ -89,7 +93,10 @@ namespace SistemaDePlanillas.Controllers
         {
             try
             {
-
+                if (args == null)
+                {
+                    args = new object[0];
+                }
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 
