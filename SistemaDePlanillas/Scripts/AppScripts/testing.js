@@ -33,18 +33,6 @@
         });
     }
 
-    testingApp.actionString = function (group, operation, args, callback) {
-        args = '[' + args + ']';
-        $.ajax({
-            url: '/api/action/' + group + '/' + operation,
-            type: 'POST',
-            data: args,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: callback,
-            error: function () { callback({ status: 'ERROR', error: 404, detail: 'Sin respuesta del servidor' }); }
-        });
-    }
 
     return testingApp;
 

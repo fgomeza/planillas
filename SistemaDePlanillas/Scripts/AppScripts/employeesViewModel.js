@@ -18,6 +18,9 @@
         self.employees = ko.observableArray();
         self.isEditMode = ko.observable(false);
         self.editingObject = ko.observable();
+        self.activeEmployees = ko.computed(function () {
+            return ko.utils.arrayFilter(self.employees(), function (emp) { return !emp._destroy });
+        });
         self.labels = {
             id: "identificador",
             idCard: "Cédula",
@@ -35,7 +38,7 @@
             console.log(data);
             self.isEditMode(true);
             self.editingObject(data);
-            $('body').animate({ scrollTop: $('#editSection').offset().top }, 'slow');
+            $('body').animate({ scrollTop: $('#employeesEditSection').offset().top }, 'slow');
         };
 
         self.cancel = function (data) {
