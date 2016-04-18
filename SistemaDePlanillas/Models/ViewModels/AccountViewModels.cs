@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Models.ViewModels
         public string Email { get; set; }
     }
 
-    public class LoginViewModel : BaseViewModel
+    public class LoginViewModel
     {
         [Required(ErrorMessage = "Debe entrar un nombre de usuario")]
         [Display(Name = "Usuario")]

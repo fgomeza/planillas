@@ -1,0 +1,35 @@
+﻿{
+  "navigation": [
+    {
+      "displayName": "Home",
+      "links": [
+        {
+          "displayName": "Super Testing",
+          "page": "test"
+        },
+        {
+          "displayName": "Dashboard Template",
+          "page": "dashboard"
+        }
+      ]
+    },
+    {
+      "displayName": "Users",
+      "links": [
+        {
+          "displayName": "Lista de usuarios",
+          "page": "users"
+        }
+      ]
+    },
+    {
+      "displayName": "Manage",
+      "links": [
+        {
+          "displayName": "Subir un archivo",
+          "page": "uploadFile"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 ﻿
+
 @{
     ViewBag.Title = "Cargar Archivos";
 
@@ -23,11 +24,10 @@
 
 </div>
 
-@section scripts {
-    @Scripts.Render("~/bundles/js/dropzone")
-    <script type="text/javascript">
-            Dropzone.options.uploadDemo = {
-                paramName: "file"
-            };
-    </script>
-}
+<script type="text/javascript">
+    require(['dropzone-amd-module'], function (Dropzone) {
+        var uploader = new Dropzone('#uploadDemo', {
+            paramName: "file"
+        });
+    });
+</script>
