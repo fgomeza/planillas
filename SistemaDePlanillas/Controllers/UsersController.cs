@@ -1,4 +1,5 @@
 ﻿
+using SistemaDePlanillas.Filters;
 using SistemaDePlanillas.Models;
 using SistemaDePlanillas.Models.Operations;
 using SistemaDePlanillas.Models.ViewModels;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace SistemaDePlanillas.Controllers
 {
-    [Authorize]
+    [AjaxOnly]
     public class UsersController : Controller
     {
         // GET: Users
@@ -46,8 +47,7 @@ namespace SistemaDePlanillas.Controllers
                     UsersList.Add(UserViewModel);
                 }
 
-                ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-                return View(UsersList);
+                return PartialView(UsersList);
 
             }
             else
@@ -76,15 +76,13 @@ namespace SistemaDePlanillas.Controllers
                 Email = User.Email
             };
 
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View(viewModel);
+            return PartialView(viewModel);
         }
 
         // GET: Users/Create
         public ActionResult Create()
         {
-            ViewBag.IsAjaxRequest = Request.IsAjaxRequest();
-            return View();
+            return PartialView();
         }
 
         // POST: Users/Create
@@ -104,18 +102,18 @@ namespace SistemaDePlanillas.Controllers
                 string error = "Format exception. UsersController: Create()";
                 Console.WriteLine(error);
                 ViewBag.Error = error;
-                return View();
+                return PartialView();
             }
             catch
             {
-                return View();
+                return PartialView();
             }
         }
 
         // GET: Users/Edit/5
         public ActionResult Edit(long id)
         {
-            return View();
+            return PartialView();
         }
 
         // POST: Users/Edit/5
@@ -130,7 +128,7 @@ namespace SistemaDePlanillas.Controllers
             }
             catch
             {
-                return View();
+                return PartialView();
             }
         }
 

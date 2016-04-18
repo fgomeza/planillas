@@ -8,33 +8,49 @@ namespace SistemaDePlanillas
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/js/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+            /******************/
+            /*      Libs      */
+            /******************/
+            bundles.Add(new ScriptBundle("~/bundles/js/libs").Include(
+                        "~/Scripts/lib/jquery-{version}.js",
+                        "~/Scripts/lib/knockout-{version}.js",
+                        "~/Scripts/lib/sammy-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/js/scripts").Include(
-                        "~/Scripts/jquery.validate*",
-                        "~/Scripts/modernizr-*",
-                        //"~/Scripts/dropzone/dropzone.js",
-                        "~/Scripts/jquery.unobtrusive-ajax.js",
-                        "~/Scripts/AppScripts/site.js"));
+            bundles.Add(new ScriptBundle("~/bundles/js/modernizr").Include(
+                        "~/Scripts/lib/modernizr-*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/dropzone").Include(
+                      "~/Scripts/lib/dropzone.js"));
+
+
+            /*****************/
+            /*      App      */
+            /*****************/
+            bundles.Add(new ScriptBundle("~/bundles/js/knockout").Include(
+                        "~/Scripts/App/knockout-config.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/sammy").Include(
+                        "~/Scripts/App/sammy-routing.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/app-scripts").Include(
+                        "~/Scripts/App/site.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js",
-                      "~/Scripts/jasny-bootstrap.js"));
+                      "~/Scripts/lib/bootstrap.js",
+                      "~/Scripts/lib/respond.js",
+                      "~/Scripts/lib/jasny-bootstrap.js"));
 
-            bundles.Add(new StyleBundle("~/bundles/styles/common").Include(
+
+            /********************/
+            /*      Styles      */
+            /********************/
+            bundles.Add(new StyleBundle("~/bundles/styles").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
                       "~/Content/dropzone/dropzone.css",
-                      "~/Content/AppStyles/site.css",
-                      "~/Content/AppStyles/sidebar.css"));
+                      "~/Content/site.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/js/dropzone").Include(
-                      "~/scripts/dropzone/dropzone.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/js/partials"));
-            bundles.Add(new StyleBundle("~/bundles/styles/partials"));
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

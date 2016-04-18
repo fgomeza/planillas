@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models.ViewModels
     //Si una vista especifica no requiere un modelo puede ser omitido sin problemas
 
     //Nombre debe ser GroupOperationViewModel
-    public class DebitsGetViewModel : BaseViewModel
+    public class DebitsGetViewModel
     {
 
         //definir datos de vista

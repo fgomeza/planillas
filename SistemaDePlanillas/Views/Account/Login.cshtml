@@ -5,6 +5,18 @@
     ViewBag.Error = Html.ValidationMessage("LoginError");
 }
 
+@section scripts {
+    <script>
+        require(['bootstrap', 'respond'], function () {
+            require(['app/site']);
+        });
+        require(['jquery', 'knockout', 'app/titleViewModel'], function ($, ko, vm) {
+            vm.partialViewTitle('Ingreso');
+            ko.applyBindings(vm, $('head')[0]);
+        });
+    </script>
+}
+
 <style>
     body {
         padding-left: 0;

@@ -23,13 +23,13 @@ namespace PlanillasFrontEnd.Controllers
         [HttpGet]
         public ActionResult Login(string returnUrl)
         {
-            if(Request.IsAjaxRequest())
+            ViewBag.returnUrl = returnUrl;
+            if (Request.IsAuthenticated)
             {
-                return RedirectToLocal(returnUrl);
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.returnUrl = returnUrl;
                 return View();
             }
 
@@ -38,21 +38,21 @@ namespace PlanillasFrontEnd.Controllers
         //
         // POST: /Account/Login
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            //model.Username = model.Username.ToLower();
+            model.Username = model.Username.ToLower();
             if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
             {
                 FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);
-                return RedirectToLocal(returnUrl);
+                ViewBag.returnUrl = returnUrl;
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 /*Aquí hace falta una forma de tomar el error que sucedió
                 */
                 ModelState.AddModelError("LoginError", "Usuario o contraseña inválidos");
-                FormsAuthentication.SetAuthCookie("Admin",true);
                 return View();
             }
 

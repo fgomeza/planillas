@@ -1,0 +1,42 @@
+﻿<div id="usersSection" class="container-fluid">
+    <div class="row">
+        <p>
+            <a href="/#/modal/?window=CreateUser">Crear un nuevo usuario</a>
+        </p>
+        <table id="usersTable" class="table" data-bind="visible: users().length > 0">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Sede</th>
+                    <th>Correo Electrónico</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: users">
+                <tr>
+                    <td data-bind="text: id"></td>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: username"></td>
+                    <td data-bind="text: password"></td>
+                    <td data-bind="text: role"></td>
+                    <td data-bind="text: location"></td>
+                    <td data-bind="text: email"></td>
+                    <td data-bind="text: session"></td>
+                    <td>
+                        <a>Edit</a>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<script>
+    require(['knockout', 'app/usersViewModel'], function (ko, viewModel) {
+        var element = document.getElementById('usersSection');
+        ko.applyBindings(new viewModel(), element);
+    });
+</script>
