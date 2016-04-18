@@ -1,7 +1,7 @@
 ﻿var require = {
     baseUrl: '/Scripts/lib',
     paths: {
-        'app': '/Scripts',
+        'app': '/Scripts/AppScripts',
         'jquery': 'jquery-2.2.1.min',
         'knockout': 'knockout-3.4.0',
         'sammy': 'sammy-0.7.5',
