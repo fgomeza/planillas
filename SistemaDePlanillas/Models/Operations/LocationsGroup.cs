@@ -7,11 +7,13 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class LocationsGroup
     {
+        /*
         public static Response add(User user, string name, double callPrice)
         {
             var result = DBManager.Instance.addLocation(name, callPrice);
             return Responses.Simple(result.Status);
         }
+        */
 
         public static Response get(User user, long location_id)
         {

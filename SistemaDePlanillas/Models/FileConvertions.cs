@@ -13,12 +13,14 @@ namespace SistemaDePlanillas.Models.Operations
         {
             public string cmsid { get; set; }
             public int calls { get; set; }
-            public double hours { get; set; }
-            public CMSRegister(string cmsid, int calls, double hours)
+            public DateTime date { get; set; }
+            public TimeSpan callsTime { get; set; }
+            public CMSRegister(string cmsid, int calls, DateTime date, TimeSpan callsTime)
             {
                 this.cmsid = cmsid;
                 this.calls = calls;
-                this.hours = hours;
+                this.date = date;
+                this.callsTime = callsTime;
             }
         }
 
@@ -34,11 +36,10 @@ namespace SistemaDePlanillas.Models.Operations
 
                 string data = reader.ReadToEnd();
                 string filePattern = @"^([^\t]+\t\d{2}/\d{2}/\d{4}\t\d+\t[^\n]\n)*$";
-                //if (!Regex.IsMatch(data, filePattern))
-                //{
-                //    return null;
-                //}
 
+                bool isdsa = Regex.IsMatch(data, filePattern);
+                return null;
+                /*
                 var employees = new Dictionary<string, CMSRegister>();
                 string dataPattern = @"(?<cmsid>[^\t]+)\t(?<date>\d{2}/\d{2}\d{4})\t(?<calls>\d+)\t[^\n]\n";
                 foreach (Match match in Regex.Matches(data, dataPattern))
@@ -63,6 +64,8 @@ namespace SistemaDePlanillas.Models.Operations
                     list.Add(register);
                 }
                 return list;
+            }
+            */
             }
             catch (Exception)
             {
