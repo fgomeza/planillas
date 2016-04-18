@@ -3,7 +3,7 @@
         <p>
             <a href="/#/modal/?window=CreateEmployee">Agregar empleado</a>
         </p>
-        <table id="employeesTable" class="table" data-bind="visible: employees().length > 0">
+        <table id="employeesTable" class="table" data-bind="visible: activeEmployees().length > 0">
             <thead>
                 <tr data-bind="with: labels">
                     <th data-bind="text: id"></th>
@@ -31,15 +31,16 @@
                     <th data-bind="text: active"></th>
                     <td data-bind="text: salary"></td>
                     <td data-bind="visible: !$parent.isEditMode()">
-                        <a href="#" data-bind="click: $parent.edit">Edit</a>
+                        <a href="#" data-bind="click: $parent.edit">Editar</a>
                     </td>
                 </tr>
             </tbody>
-
         </table>
 
-        <div id="editSection" class="well well-lg" data-bind="visible: isEditMode, with: editingObject">
-            <form class="form-horizontal container-fluid">
+        <pre class="well well-sm" data-bind="text: JSON.stringify(ko.toJS(employees), null, 2)"></pre>
+
+        <div id="employeesEditSection" class="well well-lg" data-bind="visible: isEditMode, with: editingObject">
+            <form id="employeeEditForm" class="form-horizontal container-fluid">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
