@@ -10,11 +10,7 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response get(User user)
         {
             var roles = SessionManager.Instance.getRoles();
-            var result = new List<object>();
-            foreach (var role in roles)
-            {
-                result.Add(new { id = role.id, name = role.name, privileges = role.privileges });
-            }
+            var result = roles.Select(role => new { id = role.id, name = role.name, privileges = role.privileges });
             return Responses.WithData(result);
         }
 

@@ -1,18 +1,16 @@
-﻿using SistemaDePlanillas.Models;
-using SistemaDePlanillas.Models.Operations;
+﻿using SistemaDePlanillas.Filters;
+using SistemaDePlanillas.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Linq;
 
 namespace SistemaDePlanillas.Controllers
 {
     [Authorize]
+    [PermissionCheck]
     public class OperationsApiController : ApiController
     {
         
@@ -36,22 +34,13 @@ namespace SistemaDePlanillas.Controllers
                 }
 
                 User user = sm.getUser(Session);
-                //checks if the user have privileges to do the current operation
-                //if (!sm.verifyOperation(user, group, operation))
-                //{
-                //    return Responses.Error(11, "El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation);
-                //}    
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];
                 parameters[0] = user;
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
                 //types array for calling the correct overload of the method
-                Type[] paramsTypes = new Type[parameters.Length];
-                for(int i=0; i<parameters.Length; i++)
-                {
-                    paramsTypes[i] = parameters[i].GetType();
-                }
+                Type[] paramsTypes = parameters.Select(p => p.GetType()).ToArray();
 
                 //formatting the class name
                 string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
@@ -85,6 +74,8 @@ namespace SistemaDePlanillas.Controllers
             }
         }
 
+        [Authorize]
+        [PermissionCheck]
         public JsonResult<Response> Post(string group, string operation, string call, [FromBody]object[] args)
         {
             try
@@ -105,11 +96,6 @@ namespace SistemaDePlanillas.Controllers
                 }
 
                 User user = sm.getUser(Session);
-                //checks if the user have privileges to do the current operation
-                //if (!sm.verifyOperation(user, group, operation))
-                //{
-                //    return Responses.Error(11, "El rol: "+sm.getRoleName(user)+" no cuenta con el permiso para realizar "+group+"/"+operation+"/"+call);
-                //}    
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];
@@ -117,11 +103,7 @@ namespace SistemaDePlanillas.Controllers
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
 
                 //types array for calling the correct overload of the method
-                Type[] paramsTypes = new Type[parameters.Length];
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    paramsTypes[i] = parameters[i].GetType();
-                }
+                Type[] paramsTypes = parameters.Select(p => p.GetType()).ToArray();
 
                 //formatting the class name
                 string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";

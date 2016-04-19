@@ -189,6 +189,7 @@
     <Compile Include="Controllers\PartialViewsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AjaxOnlyAttribute.cs" />
+    <Compile Include="Filters\PermissionCheckAttribute.cs" />
     <Compile Include="Filters\SidebarFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
