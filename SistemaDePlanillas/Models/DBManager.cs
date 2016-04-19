@@ -161,7 +161,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, float salary)
+        public Result<string> updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, double salary)
         {
             Result<string> result = new Result<string>();
             try
@@ -636,7 +636,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, float total, double interestRate, long months, double remainingAmount)
+        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, double interestRate, long months, double remainingAmount)
         {
             Result<string> result = new Result<string>();
             try

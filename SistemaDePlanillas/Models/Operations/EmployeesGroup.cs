@@ -46,52 +46,52 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/modify/noncms (number, string,string,number,string,decimal)
         public static Response modify_nonCMS(User user, long id, string idCard, string name, long location, string BCRAccount, double salary)
         {
-            var result = DBManager.Instance.updateNonCmsEmployeee((int)id, idCard, name, (int)location, BCRAccount, (float)salary);
+            var result = DBManager.Instance.updateNonCmsEmployeee(id, idCard, name, location, BCRAccount, salary);
             return Responses.Simple(result.Status);
         }
 
         //employees/remove (number)
         public static Response remove(User user, long id)
         {
-            var result = DBManager.Instance.deleteEmployee((int)id);
+            var result = DBManager.Instance.deleteEmployee(id);
             return Responses.Simple(result.Status);
         }
 
         public static Response activate(User user, long id)
         {
-            var result = DBManager.Instance.activateEmployee((int)id);
+            var result = DBManager.Instance.activateEmployee(id);
             return Responses.Simple(result.Status);
         }
 
         //employees/get
-        public static Response get(User user)
+        public static Response get_all(User user)
         {
-            var result = DBManager.Instance.selectAllEmployees((int)user.Location);
+            var result = DBManager.Instance.selectAllEmployees(user.Location);
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
-        public static Response get_active(User user)
+        public static Response get(User user)
         {
-            var result = DBManager.Instance.selectAllActiveEmployees((int)user.Location);
+            var result = DBManager.Instance.selectAllActiveEmployees(user.Location);
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
         //employees/get/cms
         public static Response get_CMS(User user)
         {
-            var result = DBManager.Instance.selectAllCmsEmployees((int)user.Location);
+            var result = DBManager.Instance.selectAllCmsEmployees(user.Location);
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
         //employees/get/noncms
         public static Response get_nonCMS(User user)
         {
-            var result = DBManager.Instance.selectAllNonCmsEmployees((int)user.Location);
+            var result = DBManager.Instance.selectAllNonCmsEmployees(user.Location);
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
 
         public static Response get(User user, long id)
         {
-            var result = DBManager.Instance.selectEmployee((int)id);
+            var result = DBManager.Instance.selectEmployee(id);
             return Responses.SimpleWithData(result.Status, result.Detail);
         }
     }

@@ -50,6 +50,7 @@ namespace SistemaDePlanillas.Models.Operations
                       negativeAmount = employee.negativeAmount
                   };
               });
+            var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
             return Responses.WithData(rows);
         }
 
@@ -88,3 +89,5 @@ namespace SistemaDePlanillas.Models.Operations
     }
 
 }
+
+

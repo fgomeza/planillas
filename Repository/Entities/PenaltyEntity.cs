@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Entities
 {
-    [Table("Penalties")]
+    [Table("penalties")]
     public class PenaltyEntity
     {
         [Key]
