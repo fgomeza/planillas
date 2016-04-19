@@ -53,6 +53,15 @@
             self.cancel();
         }
 
+        self.create = function (data) {
+            $.when($.get('Modals/Template'), $.get('Modals/CreateUser')).done(function (template, createUser) {
+                var elem = $('#createUserModal');
+                elem.html(template[0]);
+                elem.find('.modal-body').html(createUser[0]);
+                elem.find('.modal').modal();
+            });
+        }
+
         testingApp.action('users', 'get', function (data) {
             data = data.data;
             var mappedData = $.map(data, function (item) { return new User(item); });
