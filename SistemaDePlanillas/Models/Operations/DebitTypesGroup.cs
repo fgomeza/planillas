@@ -10,30 +10,19 @@ namespace SistemaDePlanillas.Models.Operations
         
         public static Response add_FixedType(User user, string name)
         {
-            try
-            {
-                var result = DBManager.Instance.addDebitType(name, user.Location);
-                return Responses.Simple(result.Status);
-            }catch(Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+
+            var result = DBManager.Instance.addDebitType(name, user.Location);
+            return Responses.Simple(result.Status);
         }
         
-        public static Response add_PaymentType(User user, string name,float interestRate,long months)
+        public static Response add_PaymentType(User user, string name,double interestRate,long months)
         {
-            try
-            {
-                var result = DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
-                return Responses.Simple(result.Status);
-            }
-            catch (Exception e)
-            {
-                return Responses.ExceptionError(e);
-            }
+
+             var result = DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
+             return Responses.Simple(result.Status);
         }
         
-        public static Response modify(User user, long id,string name, long months=0,float interestRate=0)
+        public static Response modify(User user, long id,string name, long months=0, double interestRate =0)
         {
             try
             {

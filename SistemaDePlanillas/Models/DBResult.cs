@@ -122,7 +122,7 @@ namespace SistemaDePlanillas.Models
         public long Id;
         public string Name;
         public double CallPrice;
-        public double Capitalization=0.4;
+        public double Capitalization=0.04;
         public Nullable<long> LastPayroll;
         public Nullable<long> CurrentPayroll;
         public bool Active;

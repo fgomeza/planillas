@@ -11,12 +11,10 @@ namespace Repository.Entities
     [Table("savings")]
     public class SavingsEntity
     {
-        [Key]
-        [Column("employee")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long employeeId { get; set; }
+        [Column("employee") ,Key,ForeignKey("fksaving")]
+        public long employee { get; set; }
 
-        public virtual EmployeeEntity employee { set; get; }
+        public virtual EmployeeEntity fksaving { set; get; }
 
         [Column("amount")]
         public Nullable<double> amount { get; set; }

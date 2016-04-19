@@ -22,6 +22,12 @@ namespace SistemaDePlanillas.Controllers
                 {
                     args = new object[0];
                 }
+                args = args.Select(o => o is string && o.Equals("NOW") ? (object)DateTime.Now : o).ToArray();
+                args =args.Select(o=>
+                {
+                    string s = o.ToString();
+                    return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
+                }).ToArray();
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 
@@ -84,6 +90,12 @@ namespace SistemaDePlanillas.Controllers
                 {
                     args = new object[0];
                 }
+                args = args.Select(o => o is string && o.Equals("NOW") ? (object)DateTime.Now : o).ToArray();
+                args = args.Select(o =>
+                {
+                    string s = o.ToString();
+                    return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
+                }).ToArray();
                 //gets the session state
                 var Session = HttpContext.Current.Session;
 

@@ -14,43 +14,45 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var employees = DBManager.Instance.selectAllActiveEmployees(user.Location).Detail;
             double totalPayroll = 0;
-            var rows = employees.Select(employee =>
-              {
-                  var calls = DBManager.Instance.callListByEmployee(employee.id, endDate).Detail;
-                  long totalCalls = calls.Sum(c => c.calls);
-                  var location = DBManager.Instance.getLocation(user.Location).Detail;
-                  double callPrice = location.CallPrice;
-                  var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate).Detail;
-                  var penalties = penaltiesByEmployee(penaltiesDB);
-                  double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
-                  var extras = DBManager.Instance.selectExtras(employee.id).Detail;
-                  double totalExtras = extras.Sum(e => e.amount);
-                  var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id).Detail;
-                  var fixedDebits = fixedDebitsByEmployee(fixedDebitsDB);
-                  double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
-                  var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id).Detail;
-                  var paymentDebits = paymentDebitsByEmployee(paymentDebitsDB);
-                  double totalPaymentDebits = paymentDebitsDB.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
-                  double grossAmount = (employee.salary / 30.4167) * (endDate - initialDate).Days + (totalCalls * callPrice);
-                  double saving = DBManager.Instance.selectSavingByEmployee(employee.id).Detail;
-                  double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalFixedDebits - employee.negativeAmount;
+            var location = DBManager.Instance.getLocation(user.Location).Detail;
+            double callPrice = location.CallPrice;
+            List<object> rows = new List<object>();
+            foreach (var employee in employees)
+            {
+                var calls = DBManager.Instance.callListByEmployee(employee.id, endDate).Detail;
+                long totalCalls = calls.Sum(c => c.calls);
+                var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate).Detail;
+                var penalties = penaltiesByEmployee(penaltiesDB);
+                double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
+                var extras = DBManager.Instance.selectExtras(employee.id).Detail;
+                double totalExtras = extras.Sum(e => e.amount);
+                var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id).Detail;
+                var fixedDebits = fixedDebitsByEmployee(fixedDebitsDB);
+                double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
+                var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id).Detail;
+                var paymentDebits = paymentDebitsByEmployee(paymentDebitsDB);
+                double totalPaymentDebits = paymentDebitsDB.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
+                double grossAmount = (employee.salary / 30.4167) * (endDate - initialDate).Days + (totalCalls * callPrice);
+                double saving = DBManager.Instance.selectSavingByEmployee(employee.id).Detail;
+                double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalFixedDebits - employee.negativeAmount;
 
-                  totalPayroll += netSalary > 0 ? netSalary : 0;
-                  return new
-                  {
-                      employee = employee.name,
-                      calls = new { amount = totalCalls, total = totalCalls * callPrice, callList = calls },
-                      penalties = penalties,
-                      extras = new { total = totalExtras, extraList = extras },
-                      fixedDebits = fixedDebits,
-                      paymentDebits = paymentDebits,
-                      salary = grossAmount,
-                      saving = new { amount = grossAmount * location.Capitalization, total = saving + grossAmount * location.Capitalization },
-                      netSalary = netSalary,
-                      negativeAmount = employee.negativeAmount
-                  };
-              });
-            return Responses.WithData(rows);
+                totalPayroll += netSalary > 0 ? netSalary : 0;
+                rows.Add(new
+                {
+                    employee = employee.name,
+                    calls = new { count = totalCalls, total = totalCalls * callPrice, callList = calls },
+                    penalties = new { count = penaltiesDB.Sum(p => p.amount), total = totalPenalties, penaltyList = penalties },
+                    extras = new { total = totalExtras, extraList = extras },
+                    fixedDebits = fixedDebits,
+                    paymentDebits = paymentDebits,
+                    salary = grossAmount,
+                    saving = new { monthlyAmount = grossAmount * location.Capitalization, total = saving + grossAmount * location.Capitalization },
+                    netSalary = netSalary,
+                    negativeAmount = employee.negativeAmount
+                });
+            }
+            var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
+            return Responses.WithData(payroll);
         }
 
         private static List<object> paymentDebitsByEmployee(List<PaymentDebit> debitsByEmployee)
@@ -58,7 +60,7 @@ namespace SistemaDePlanillas.Models.Operations
             return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
                 TypeName = name,
-                amount = list.Count(),
+                count = list.Count(),
                 total = list.Sum(debit => (debit.remainingAmount / debit.missingPayments) + debit.total * debit.interestRate),
                 debitList = list
             }).ToList();
@@ -69,7 +71,7 @@ namespace SistemaDePlanillas.Models.Operations
             return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
                 TypeName = name,
-                amount = list.Count(),
+                count = list.Count(),
                 total = list.Sum(debit => debit.amount),
                 debitList = list
             }).ToList();
@@ -80,7 +82,7 @@ namespace SistemaDePlanillas.Models.Operations
             return penaltiesByEmployee.GroupBy(penalty => penalty.typeName, penalty => penalty, (name, lista) => (object)new
             {
                 typeName = name,
-                amount = lista.Sum(penalty => penalty.amount),
+                count = lista.Sum(penalty => penalty.amount),
                 total = lista.Sum(penalty => penalty.amount * penalty.penaltyPrice),
                 typeList = lista
             }).ToList();
@@ -88,3 +90,5 @@ namespace SistemaDePlanillas.Models.Operations
     }
 
 }
+
+
