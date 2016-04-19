@@ -23,7 +23,9 @@
                     <td data-bind="text: email"></td>
                     <td data-bind="text: active"></td>
                     <td data-bind="visible: !$parent.isEditMode()">
-                        <a href="#" data-bind="click: $parent.edit">Editar</a>
+                        <a href="#" data-bind="click: $parent.edit">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
                     </td>
                 </tr>
             </tbody>

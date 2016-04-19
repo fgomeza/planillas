@@ -30,10 +30,11 @@
             active: 'Activo'
         };
 
-        self.edit = function (data) {
+        self.edit = function (data, event) {
             console.log(data);
             self.isEditMode(true);
             self.editingObject(data);
+            //$(event.target.closest('tr')).addClass('highlight');
             $('body').animate({ scrollTop: $('#usersEditSection').offset().top }, 'slow');
         };
 

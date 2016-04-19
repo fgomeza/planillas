@@ -9,10 +9,10 @@ using SistemaDePlanillas.Models.ViewModels;
 
 namespace SistemaDePlanillas.Controllers
 {
+    [Authorize]
     public class OperationsController : Controller
     {
         // GET: Operations
-        
         public ActionResult process(string group, string operation)
         {
             group = group.ToLower();

@@ -12,6 +12,7 @@ using System.Web.Http.Results;
 
 namespace SistemaDePlanillas.Controllers
 {
+    [Authorize]
     public class OperationsApiController : ApiController
     {
         
