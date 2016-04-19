@@ -39,19 +39,19 @@ namespace SistemaDePlanillas.Models.Operations
                   return new
                   {
                       employee = employee.name,
-                      calls = new { amount = totalCalls, total = totalCalls * callPrice, callList = calls },
+                      calls = new { count = totalCalls, total = totalCalls * callPrice, callList = calls },
                       penalties = penalties,
                       extras = new { total = totalExtras, extraList = extras },
                       fixedDebits = fixedDebits,
                       paymentDebits = paymentDebits,
                       salary = grossAmount,
-                      saving = new { amount = grossAmount * location.Capitalization, total = saving + grossAmount * location.Capitalization },
+                      saving = new {  monthlyAmount= grossAmount * location.Capitalization, total = saving + grossAmount * location.Capitalization },
                       netSalary = netSalary,
                       negativeAmount = employee.negativeAmount
                   };
               });
             var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
-            return Responses.WithData(rows);
+            return Responses.WithData(payroll);
         }
 
         private static List<object> paymentDebitsByEmployee(List<PaymentDebit> debitsByEmployee)
@@ -59,7 +59,7 @@ namespace SistemaDePlanillas.Models.Operations
             return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
                 TypeName = name,
-                amount = list.Count(),
+                count = list.Count(),
                 total = list.Sum(debit => (debit.remainingAmount / debit.missingPayments) + debit.total * debit.interestRate),
                 debitList = list
             }).ToList();
@@ -70,7 +70,7 @@ namespace SistemaDePlanillas.Models.Operations
             return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
             {
                 TypeName = name,
-                amount = list.Count(),
+                count = list.Count(),
                 total = list.Sum(debit => debit.amount),
                 debitList = list
             }).ToList();
@@ -81,7 +81,7 @@ namespace SistemaDePlanillas.Models.Operations
             return penaltiesByEmployee.GroupBy(penalty => penalty.typeName, penalty => penalty, (name, lista) => (object)new
             {
                 typeName = name,
-                amount = lista.Sum(penalty => penalty.amount),
+                count = lista.Sum(penalty => penalty.amount),
                 total = lista.Sum(penalty => penalty.amount * penalty.penaltyPrice),
                 typeList = lista
             }).ToList();

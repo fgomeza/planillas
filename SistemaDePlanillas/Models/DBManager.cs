@@ -888,6 +888,7 @@ namespace SistemaDePlanillas.Models
         public Result<List<Extra>> selectExtras(long employee)
         {
             Result<List<Extra>> result = new Result<List<Extra>>();
+            result.Detail = new List<Extra>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
