@@ -39,7 +39,7 @@ namespace SistemaDePlanillas.Controllers
                     return Json(Responses.Error(10, "No se ha iniciado sesion"));
                 }
 
-                User user = sm.getUser(Session);   
+                User user = sm.getUser(Session);
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];
@@ -113,6 +113,7 @@ namespace SistemaDePlanillas.Controllers
                 object[] parameters = new object[args.Length + 1];
                 parameters[0] = user;
                 System.Array.Copy(args, 0, parameters, 1, args.Length);
+
                 //types array for calling the correct overload of the method
                 Type[] paramsTypes = parameters.Select(p => p.GetType()).ToArray();
 

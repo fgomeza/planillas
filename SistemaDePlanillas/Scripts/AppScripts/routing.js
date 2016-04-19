@@ -1,32 +1,14 @@
-﻿(function (factory) {
-    // Support module loading scenarios
-    if (typeof define === 'function' && define.amd) {
-        // AMD Anonymous Module
-        define(['sammy'], factory);
-    } else {
-        // No module loader (plain <script> tag) - put directly in global namespace
-        window.routing = factory(Sammy);
-    }
-})(function (Sammy, Presenter) {
+﻿define(['sammy'], function (Sammy) {
+    function Router(contentSelector, defaultRoute) {
+        var sammyApp = Sammy(contentSelector, function (context) {
 
-    return {
-        config: function (appRoot, contentSelector, defaultRoute) {
+            this.raise_errors = true;
 
-            function getUrlFromHash(hash) {
-                var url = hash.replace('#/', '');
-                if (url === appRoot)
-                    url = defaultRoute;
-                return url;
-            }
+            this.notFound = function () {
+                console.log('404');
+            };
 
-            var sammyApp = Sammy(contentSelector);
-/*
-            sammyApp.get(/\#\/(.*)/, function (context) {
-                var url = getUrlFromHash(context.path);
-                context.load(url).swap();
-            });
-*/
-            sammyApp.swap = function (content, callback) {
+            this.swap = function (content, callback) {
                 var context = this;
                 context.$element().slideUp(function () {
                     context.$element().html(content);
@@ -37,18 +19,43 @@
                     });
                 });
             };
+            
+            var options = function (context) {
+                return {
+                    error: function (response) {
+                        //$(context.app.element_selector).html(response.responseText);
+                        document.write(response.responseText);
+                        switch (response.status) {
+                            case 404:
+                                context.notFound();
+                                break;
+                            case 401:
+                                //context.redirect('/');
+                                setTimeout(location.reload.bind(location), 2000);
+                                break;
+                        }
+                    }
+                };
+            };
 
-            sammyApp.get('#/navigation', function (context) {
-                //var url = getUrlFromHash(context.path);
+            this.get('#/navigation', function (context) {
                 var url = '/PartialViews/' + context.params.page;
-                console.log(url);
+                console.log('loading', url);
                 $('html').trigger('click');
-                context.load(url).swap();
+                context.load(url, options(context)).swap();
             });
 
-            return {
-                init: function () { sammyApp.run('/#/navigation?page=Dashboard'); }
-            }
-        }
+
+            this.get('#/', function (context) {
+                context.redirect(defaultRoute);
+            });
+
+        });
+
+        return sammyApp;
+
     }
+
+    return Router;
+
 });

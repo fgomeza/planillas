@@ -30,10 +30,11 @@
             active: 'Activo'
         };
 
-        self.edit = function (data) {
+        self.edit = function (data, event) {
             console.log(data);
             self.isEditMode(true);
             self.editingObject(data);
+            //$(event.target.closest('tr')).addClass('highlight');
             $('body').animate({ scrollTop: $('#usersEditSection').offset().top }, 'slow');
         };
 
@@ -50,6 +51,15 @@
         self.delete = function (data) {
             self.users.destroy(data);
             self.cancel();
+        }
+
+        self.create = function (data) {
+            $.when($.get('Modals/Template'), $.get('Modals/CreateUser')).done(function (template, createUser) {
+                var elem = $('#createUserModal');
+                elem.html(template[0]);
+                elem.find('.modal-body').html(createUser[0]);
+                elem.find('.modal').modal();
+            });
         }
 
         testingApp.action('users', 'get', function (data) {

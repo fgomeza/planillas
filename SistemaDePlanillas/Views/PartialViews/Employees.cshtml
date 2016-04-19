@@ -3,120 +3,133 @@
         <p>
             <a href="/#/modal/?window=CreateEmployee">Agregar empleado</a>
         </p>
-        <table id="employeesTable" class="table" data-bind="visible: activeEmployees().length > 0">
-            <thead>
-                <tr data-bind="with: labels">
-                    <th data-bind="text: id"></th>
-                    <th data-bind="text: idCard"></th>
-                    <th data-bind="text: name"></th>
-                    <th data-bind="text: location"></th>
-                    <th data-bind="text: account"></th>
-                    <th data-bind="text: cms"></th>
-                    <th data-bind="text: cmsText"></th>
-                    <th data-bind="text: calls"></th>
-                    <th data-bind="text: active"></th>
-                    <th data-bind="text: salary"></th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: employees">
-                <tr>
-                    <td data-bind="text: id"></td>
-                    <td data-bind="text: idCard"></td>
-                    <td data-bind="text: name"></td>
-                    <td data-bind="text: location"></td>
-                    <td data-bind="text: account"></td>
-                    <td data-bind="text: cms"></td>
-                    <td data-bind="text: cmsText"></td>
-                    <td data-bind="text: calls"></td>
-                    <th data-bind="text: active"></th>
-                    <td data-bind="text: salary"></td>
-                    <td data-bind="visible: !$parent.isEditMode()">
-                        <a href="#" data-bind="click: $parent.edit">Editar</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="employeesTable" class="table table-hover" data-bind="visible: activeEmployees().length > 0">
+                        <thead>
+                            <tr data-bind="with: labels">
+                                <th data-bind="text: id"></th>
+                                <th data-bind="text: idCard"></th>
+                                <th data-bind="text: name"></th>
+                                <th data-bind="text: location"></th>
+                                <th data-bind="text: account"></th>
+                                <th data-bind="text: cms"></th>
+                                <th data-bind="text: cmsText"></th>
+                                <th data-bind="text: calls"></th>
+                                <th data-bind="text: active"></th>
+                                <th data-bind="text: salary"></th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: employees">
+                            <tr>
+                                <td data-bind="text: id"></td>
+                                <td data-bind="text: idCard"></td>
+                                <td data-bind="text: name"></td>
+                                <td data-bind="text: location"></td>
+                                <td data-bind="text: account"></td>
+                                <td data-bind="text: cms"></td>
+                                <td data-bind="text: cmsText"></td>
+                                <td data-bind="text: calls"></td>
+                                <th data-bind="text: active"></th>
+                                <td data-bind="text: salary"></td>
+                                <td data-bind="visible: !$parent.isEditMode()">
+                                    <a href="#" data-bind="click: $parent.edit">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <pre class="well well-sm" data-bind="text: ko.toJSON(employees, null, 2)"></pre>
 
-        <div id="employeesEditSection" class="well well-lg" data-bind="visible: isEditMode, with: editingObject" style="display:none">
-            <form id="employeeEditForm" class="form-horizontal container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="employeeEditFormId" class="col-sm-4 control-label" data-bind="text: $root.labels.id"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormId" type="text" class="form-control" data-bind="value: id" readonly />
+        <div id="employeesEditSection" class="panel panel-primary" data-bind="visible: isEditMode, with: editingObject" style="display:none">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <form id="employeeEditForm" class="form-horizontal container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="employeeEditFormId" class="col-sm-4 control-label" data-bind="text: $root.labels.id"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormId" type="text" class="form-control" data-bind="value: id" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEditFormName" class="col-sm-4 control-label" data-bind="text: $root.labels.name"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormName" type="text" class="form-control" data-bind="value: name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEditFormAccount" class="col-sm-4 control-label" data-bind="text: $root.labels.account"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormAccount" type="text" class="form-control" data-bind="value: account" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEditFormCmsText" class="col-sm-4 control-label" data-bind="text: $root.labels.cmsText"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormCmsText" type="text" class="form-control" data-bind="value: cmsText" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.salary"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: salary" />
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormName" class="col-sm-4 control-label" data-bind="text: $root.labels.name"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormName" type="text" class="form-control" data-bind="value: name" />
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.idCard"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: idCard" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormAccount" class="col-sm-4 control-label" data-bind="text: $root.labels.account"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormAccount" type="text" class="form-control" data-bind="value: account" />
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.location"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: location" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormCmsText" class="col-sm-4 control-label" data-bind="text: $root.labels.cmsText"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormCmsText" type="text" class="form-control" data-bind="value: cmsText" />
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.cms"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: cms" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.salary"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: salary" />
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.calls"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: calls" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.active"></label>
+                                <div class="col-sm-8">
+                                    <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: active" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.idCard"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: idCard" />
-                            </div>
+                    <div id="saveCancelButtonsRegion" class="row">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-danger" data-bind="click: $root.delete">Eliminar</button>
                         </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.location"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: location" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.cms"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: cms" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.calls"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: calls" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.active"></label>
-                            <div class="col-sm-8">
-                                <input id="employeeEditFormSalary" type="text" class="form-control" data-bind="value: active" />
-                            </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-bind="click: $root.cancel">Cancelar</button>
+                            <button type="submit" class="btn btn-success" data-bind="click: $root.save">Guardar</button>
                         </div>
                     </div>
-                </div>
-                <div id="saveCancelButtonsRegion" class="row">
-                    <div class="pull-left">
-                        <button type="button" class="btn btn-danger" data-bind="click: $root.delete">Eliminar</button>
-                    </div>
-                    <div class="pull-right">
-                        <button type="button" class="btn btn-default" data-bind="click: $root.cancel">Cancelar</button>
-                        <button type="submit" class="btn btn-success" data-bind="click: $root.save">Guardar</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
