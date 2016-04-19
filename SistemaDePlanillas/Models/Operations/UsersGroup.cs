@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response add(User user, string name, string username, string password, string email, long role)
         {
             var result=DBManager.Instance.addUser(name, username, password, role, user.Location, email);
-            return Responses.Simple(result.Status);
+            return Responses.Simple(result.Status); 
         }
 
         public static Response get(User user, long id)

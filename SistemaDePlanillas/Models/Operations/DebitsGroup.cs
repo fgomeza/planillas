@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     public class DebitsGroup
     {
         
-        public static Response add_Fixed(User user, long employee, string detail, long amount, long type)
+        public static Response add_Fixed(User user, long employee, string detail, double amount, long type)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
@@ -21,10 +21,10 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
         
-        public static Response add_Payment(User user, long employee, string detail, double total, long type)
+        public static Response add_Payment(User user, long employee,DateTime initialDate, string detail, double total,double interestRate,long months, long type)
         {
             try {
-                var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, total, type);
+                var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee,initialDate, detail, total, interestRate, months, type);
                 return Responses.Simple(dataBaseResponse.Status);
             }
             catch (Exception e)
@@ -82,7 +82,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static Response modify_Fixed(User user, long idDebit, string detail, long amount)
+        public static Response modify_Fixed(User user, long idDebit, string detail, double amount)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updateDebit(idDebit, detail, amount);
@@ -94,7 +94,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
         }
 
-        public static Response modify_Payment(User user, long idDebit,DateTime initialDate, string detail, float total, double interestRate, long months, double remainingAmount)
+        public static Response modify_Payment(User user, long idDebit,DateTime initialDate, string detail, double total, double interestRate, long months, double remainingAmount)
         {
             try {
                 var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, initialDate, detail, total, interestRate, months, remainingAmount);
