@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Linq;
+using System.Web.Security;
 
 namespace SistemaDePlanillas.Controllers
 {
@@ -38,6 +39,11 @@ namespace SistemaDePlanillas.Controllers
                 {
                     return Json(Responses.Error(10, "No se ha iniciado sesion"));
                 }
+
+                FormsIdentity id = (FormsIdentity) RequestContext.Principal.Identity;
+                FormsAuthenticationTicket ticket = id.Ticket;
+                string locationString = ticket.UserData.Split('|')[0];
+                long location = long.Parse(locationString);
 
                 User user = sm.getUser(Session);
 

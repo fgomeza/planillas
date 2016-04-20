@@ -16,7 +16,7 @@
                     <input class="form-control" type="text" id="args" placeholder="Parámetros" />
                 </div>
 
-                <input class="btn btn-default" type="submit" />
+                <button id="testSubmitBttn" class="btn btn-default">Submit</button>
 
             </form>
         </div>
@@ -35,10 +35,11 @@
             });
         };
 
-        $('#testingForm').submit(function (event) {
+        $('#testSubmitBttn').click(function (event) {
             event.preventDefault();
             enviar();
         });
+
     });
 </script>
 

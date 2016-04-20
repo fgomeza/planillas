@@ -67,7 +67,12 @@ namespace SistemaDePlanillas.Models
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            var privileges = getRole(user.Role).privileges;
+            return verifyOperation(user.Role, group, operation);
+        }
+
+        public bool verifyOperation(long role, string group, string operation)
+        {
+            var privileges = getRole(role).privileges;
             return privileges.ContainsKey(group) && privileges[group].Contains(operation);
         }
 
@@ -96,17 +101,11 @@ namespace SistemaDePlanillas.Models
             return (User)session["user"];
         }
 
-        public bool login(string username, string password, HttpSessionStateBase session)
+        public User validateUser(string username, string password)
         {
             var Result = DBManager.Instance.login(username, password);
-            if (Result.Status == 0)
-            {
-                User User = Result.Detail;
-                session["user"] = User;
-                session["UserName"] = User.Name;
-                return true;
-            }
-            return false;
+            return Result.Status == 0 ?
+                Result.Detail : null;
         }
 
         public bool logout(HttpSessionStateBase session)
