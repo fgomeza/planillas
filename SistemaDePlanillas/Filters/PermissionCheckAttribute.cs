@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
+using System.Net.Http.Headers;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using System.Web.Security;
+using SistemaDePlanillas.Models;
 
 namespace SistemaDePlanillas.Filters
 {
@@ -16,12 +18,16 @@ namespace SistemaDePlanillas.Filters
             var requestValues = actionContext.RequestContext.RouteData.Values;
             string group = requestValues["group"].ToString();
             string action = requestValues["operation"].ToString();
-            if (false)//resolver permisos
+
+            User user = SessionManager.Instance.getSessionUser(actionContext.RequestContext);
+            
+            if (true || !SessionManager.Instance.verifyOperation(user, group, action))
+            {
+                base.OnActionExecuting(actionContext);
+            }
+            else
             {
                 actionContext.Response = new HttpResponseMessage(HttpStatusCode.Forbidden);
-            }
-            else {
-                base.OnActionExecuting(actionContext);
             }
         }
     }

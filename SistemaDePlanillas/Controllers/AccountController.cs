@@ -42,9 +42,14 @@ namespace PlanillasFrontEnd.Controllers
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             model.Username = model.Username.ToLower();
-            if (ModelState.IsValid && SessionManager.Instance.login(model.Username, model.Password, Session))
+            User user = SessionManager.Instance.validateUser(model.Username, model.Password);
+            if (ModelState.IsValid && user != null)
             {
-                FormsAuthentication.SetAuthCookie(model.Username, model.RememberMe);
+                SessionManager.Instance.setSessionUser(Response, user, model.RememberMe);
+
+                // Redirect back to original URL.
+                Response.Redirect(FormsAuthentication.GetRedirectUrl(model.Username, model.RememberMe));
+
                 ViewBag.returnUrl = returnUrl;
                 return RedirectToAction("Index", "Home");
             }
@@ -69,8 +74,7 @@ namespace PlanillasFrontEnd.Controllers
         [HttpGet]
         public ActionResult SignOut()
         {
-            SessionManager.Instance.logout(Session);
-            FormsAuthentication.SignOut();
+            SessionManager.Instance.removeSessionUser(Request);
             return RedirectToAction("Index", "Home");
         }
 
