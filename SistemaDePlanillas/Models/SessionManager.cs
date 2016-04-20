@@ -12,8 +12,25 @@ namespace SistemaDePlanillas.Models
     public class SessionManager
     {
         private static SessionManager instance;
-        private Dictionary<long, User> loggedUsers;
+        private Dictionary<long, User> activeUsers;
         private Dictionary<long, Role> roles;
+
+        class InexistentUserException : Exception
+        {
+            long id;
+            public InexistentUserException(long id)
+            {
+                this.id = id;
+            }
+
+            public override string Message
+            {
+                get
+                {
+                    return "The user with id = "+id+", not longer exist in the database, CLOSE HIS SESSION!";
+                }
+            }
+        }
 
         public static SessionManager Instance
         {
@@ -25,7 +42,7 @@ namespace SistemaDePlanillas.Models
 
         private SessionManager()
         {
-            loggedUsers = new Dictionary<long, User>();
+            activeUsers = new Dictionary<long, User>();
             roles = new Dictionary<long, Role>();
 
             var rolesList = DBManager.Instance.selectAllRoles().Detail;
@@ -48,9 +65,9 @@ namespace SistemaDePlanillas.Models
 
         public void updateUser(long id)
         {
-            if (loggedUsers.ContainsKey(id))
+            if (activeUsers.ContainsKey(id))
             {
-                loggedUsers[id] = DBManager.Instance.selectUser(id).Detail;
+                activeUsers[id] = DBManager.Instance.selectUser(id).Detail;
             }
         }
 
@@ -83,7 +100,22 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            return loggedUsers[userId];
+            User user;
+            if (activeUsers.ContainsKey(userId))
+            {
+                user = activeUsers[userId];
+                return user;
+            }
+            user = DBManager.Instance.selectUser(userId).Detail;
+            if (user != null)
+            {
+                activeUsers[user.Id] = user;
+                return userFromTicket(ticket);
+            }
+            else
+            {
+                throw new InexistentUserException(userId);
+            }
         }
 
         public void setSessionUser(HttpResponseBase response, User user, bool isPersistent)
@@ -96,12 +128,11 @@ namespace SistemaDePlanillas.Models
                 isPersistent,
                 userId,
                 FormsAuthentication.FormsCookiePath);
-
             // Encrypt the ticket.
             string encTicket = FormsAuthentication.Encrypt(ticket);
             // Create the cookie.
             response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
-            loggedUsers[user.Id] = user;
+            activeUsers[user.Id] = user;
         }
 
         public void removeSessionUser(HttpRequestBase request)
@@ -109,7 +140,7 @@ namespace SistemaDePlanillas.Models
             var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
             FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
             long userId = long.Parse(ticket.UserData);
-            loggedUsers.Remove(userId);
+            activeUsers.Remove(userId);
             FormsAuthentication.SignOut();
         }
 

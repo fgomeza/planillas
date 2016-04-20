@@ -5,13 +5,12 @@
     testingApp.action = function (group, operation, args, callback) {
         if (typeof args === 'function') {
             callback = args;
-            args = '';
+            args = [];
         }
-        args = "[" + args + "]";
         var xhr = {
             url: "/api/action/" + group + "/" + operation,
             type: "POST",
-            data: args,
+            data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: callback,
