@@ -18,7 +18,7 @@ namespace SistemaDePlanillas.Models
 
         public static Response ExceptionError(Exception e)
         {
-            return new ErrorResponse() { status = "ERROR", error = -1, detail = e.InnerException.Message };
+            return new ErrorResponse() { status = "ERROR", error = -1, detail = e.InnerException.Message!=null?e.InnerException.Message:e.Message };
         }
 
         public static Response Simple(long status)
@@ -67,9 +67,24 @@ namespace SistemaDePlanillas.Models
         private Errors()
         {
             details = new Dictionary<long, string>();
+            /*
             var err = DBManager.Instance.selectAllErrors().Detail;
             foreach (var x in err)
                 details.Add(x.Item1,x.Item2);
+                */
+            details[1] = "inexistentEmployee";
+            details[2] = "inexistentUser";
+            details[3] = "inexistentDebit";
+            details[4] = "inexistentLocation";
+            details[5] = "inexistentRole";
+            details[6] = "inexistentOperation";
+            details[7] = "inexistentPenalty";
+            details[8] = "inexistentGroup";
+            details[9] = "employeeInactive";
+            details[10] = "locationInactive";
+            details[11] = "penaltyInactive";
+            details[12] = "roleInactive";
+            details[13] = "userInactive";
         }
         
         public static Errors Instance

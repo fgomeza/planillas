@@ -16,7 +16,7 @@
                     <input class="form-control" type="text" id="args" placeholder="Parámetros" />
                 </div>
 
-                <input class="btn btn-default" type="submit" />
+                <button id="testSubmitBttn" class="btn btn-default">Submit</button>
 
             </form>
         </div>
@@ -30,15 +30,16 @@
 <script>
     require(['jquery', 'app/testing'], function ($, testingApp) {
         var enviar = function () {
-            testingApp.action($("#group").val(), $("#operation").val(), $("#args").val(), function (res) {
+            testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("["+$("#args").val()+"]"), function (res) {
                 $("#result").html(JSON.stringify(res, null, 2))
             });
         };
 
-        $('#testingForm').submit(function (event) {
+        $('#testSubmitBttn').click(function (event) {
             event.preventDefault();
             enviar();
         });
+
     });
 </script>
 

@@ -1,7 +1,7 @@
 ﻿<div id="usersSection" class="container-fluid">
     <div class="row">
         <p>
-            <a href="#" data-bind="click: create">Crear un nuevo usuario</a>
+            <a href="#" data-toggle="modal" data-target="#createUserModal">Crear un nuevo usuario</a>
         </p>
     </div>
     <div class="row">
@@ -39,9 +39,13 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <pre class="well well-sm" data-bind="text: ko.toJSON(users, null, 2)"></pre>
+    </div>
 
+    <div class="row">
         <div id="usersEditSection" class="panel panel-primary" data-bind="visible: isEditMode, with: editingObject">
             <div class="panel-heading"></div>
             <div class="panel-body">
@@ -114,8 +118,82 @@
                 </form>
             </div>
         </div>
+        <!--layout background #e7ebee-->
+        <div id="createUserModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="userEditForm" class="form-horizontal container-fluid">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormId" class="col-sm-4 control-label" data-bind="text: $root.labels.id"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormId" type="text" class="form-control" name="id" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormName" class="col-sm-4 control-label" data-bind="text: $root.labels.name"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormName" type="text" class="form-control" name="name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormAccount" class="col-sm-4 control-label" data-bind="text: $root.labels.username"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormAccount" type="text" class="form-control" name="username" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormCmsText" class="col-sm-4 control-label" data-bind="text: $root.labels.password"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormCmsText" type="text" class="form-control" name="password" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.role"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormSalary" type="text" class="form-control" name="role" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.location"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormSalary" type="text" class="form-control" namheight="location" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.email"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormSalary" type="text" class="form-control" namheight="email" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="userEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.labels.active"></label>
+                                    <div class="col-sm-8">
+                                        <input id="userEditFormSalary" type="text" class="form-control" name="active" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div id="createUserModal"></div>
 
     </div>
 </div>

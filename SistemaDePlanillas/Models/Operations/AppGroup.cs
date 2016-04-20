@@ -8,6 +8,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class AppGroup
     {
+
         public static Response actions(User user)
         {
             string @namespace = "SistemaDePlanillas.Models.Operations";

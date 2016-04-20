@@ -6,108 +6,38 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Linq;
+using System.Web.Security;
 
 namespace SistemaDePlanillas.Controllers
 {
-    [Authorize]
-    [PermissionCheck]
+
     public class OperationsApiController : ApiController
     {
-        
+        readonly string OperationsNamespace = "SistemaDePlanillas.Models.Operations";
+
+        [Authorize]
+        [PermissionCheck]
         public JsonResult<Response> Post(string group, string operation, [FromBody]object[] args)
         {
-            try
-            {
-                if (args == null)
-                {
-                    args = new object[0];
-                }
-                args = args.Select(o => o is string && o.Equals("NOW") ? (object)DateTime.Now : o).ToArray();
-                args =args.Select(o=>
-                {
-                    string s = o.ToString();
-                    return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
-                }).ToArray();
-                //gets the session state
-                var Session = HttpContext.Current.Session;
-
-                SessionManager sm = SessionManager.Instance;
-
-                //checks if the user is logged
-                if (!sm.isLogged(Session))
-                {
-                    return Json(Responses.Error(10, "No se ha iniciado sesion"));
-                }
-
-                User user = sm.getUser(Session);
-
-                //add the user to the parameters   
-                object[] parameters = new object[args.Length + 1];
-                parameters[0] = user;
-                System.Array.Copy(args, 0, parameters, 1, args.Length);
-                //types array for calling the correct overload of the method
-                Type[] paramsTypes = parameters.Select(p => p.GetType()).ToArray();
-
-                //formatting the class name
-                string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
-
-                //Uses reflexion to get the correct method
-                Type type = Type.GetType(groupType, false, true);
-                if (type == null)
-                {
-                    return Json(Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion"));
-                }
-                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
-                if (method == null)
-                {
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
-                }
-                
-                //call the method
-                return Json((Response)method.Invoke(null, parameters));
-            }
-            catch (TargetParameterCountException)
-            {
-                return Json(Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation));
-            }
-            catch (ArgumentException)
-            {
-                return Json(Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation));
-            }
-            catch (Exception e)
-            {
-                return Json(Responses.ExceptionError(e));
-            }
+            return Json(doAction(group, operation, args));
         }
 
         [Authorize]
         [PermissionCheck]
         public JsonResult<Response> Post(string group, string operation, string call, [FromBody]object[] args)
         {
+            return Json(doAction(group, operation + "_" + call, args));
+        }
+
+        private Response doAction(string group, string action, object[] args)
+        {
+            if (args == null) args = new object[0];
+            DateTime callTime = DateTime.Now;
+            User user = null;
             try
             {
-                if (args == null)
-                {
-                    args = new object[0];
-                }
-                args = args.Select(o => o is string && o.Equals("NOW") ? (object)DateTime.Now : o).ToArray();
-                args = args.Select(o =>
-                {
-                    string s = o.ToString();
-                    return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
-                }).ToArray();
-                //gets the session state
-                var Session = HttpContext.Current.Session;
-
-                SessionManager sm = SessionManager.Instance;
-
-                //checks if the user is logged
-                if (!sm.isLogged(Session))
-                {
-                    return Json(Responses.Error(10, "No se ha iniciado sesion"));
-                }
-
-                User user = sm.getUser(Session);
+                //gets the session user
+                user = SessionManager.Instance.getSessionUser(RequestContext);
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];
@@ -118,37 +48,40 @@ namespace SistemaDePlanillas.Controllers
                 Type[] paramsTypes = parameters.Select(p => p.GetType()).ToArray();
 
                 //formatting the class name
-                string groupType = "SistemaDePlanillas.Models.Operations." + group + "Group";
-                operation = operation + "_" + call;
+                string groupType = string.Format("{0}.{1}Group", OperationsNamespace, group);
 
-                //Uses reflexion to get the correct method
+                //Uses reflexion to get the group
                 Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
-                    return Json(Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion"));
+                    return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
                 }
-                MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);             
+
+                //Uses reflexion to get the correct method
+                MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
-                    return Json(Responses.Error(13, "No se encuentra la operacion: " + group + "/" + operation));
+                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + action);
                 }
 
                 //call the method
-                return Json((Response)method.Invoke(null, parameters));
+                Response response = (Response)method.Invoke(null, parameters);
+                Logger.Instance.LogAction(response, group, action, args, user, callTime);
+                return response;
             }
             catch (TargetParameterCountException)
             {
-                return Json(Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + operation + "/" + call));
+                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + action);
             }
             catch (ArgumentException)
             {
-                return Json(Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + operation + "/" + call));
+                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + action);
             }
             catch (Exception e)
             {
-                return Json(Responses.ExceptionError(e));
+                Logger.Instance.LogActionError(e, group, action, args, user, callTime);
+                return Responses.ExceptionError(e);
             }
         }
-
     }
 }
