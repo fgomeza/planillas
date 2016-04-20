@@ -19,12 +19,9 @@ namespace SistemaDePlanillas.Filters
             string group = requestValues["group"].ToString();
             string action = requestValues["operation"].ToString();
 
-            FormsIdentity id = (FormsIdentity) actionContext.RequestContext.Principal.Identity;
-            FormsAuthenticationTicket ticket = id.Ticket;
-            string roleString = ticket.UserData.Split('|')[1];
-            long role = long.Parse(roleString);
+            User user = SessionManager.Instance.getSessionUser(actionContext.RequestContext);
             
-            if (!SessionManager.Instance.verifyOperation(role, group, action))
+            if (true || !SessionManager.Instance.verifyOperation(user, group, action))
             {
                 base.OnActionExecuting(actionContext);
             }

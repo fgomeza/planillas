@@ -45,29 +45,11 @@ namespace PlanillasFrontEnd.Controllers
             User user = SessionManager.Instance.validateUser(model.Username, model.Password);
             if (ModelState.IsValid && user != null)
             {
-                
-                /* https://msdn.microsoft.com/en-us/library/system.web.security.formsauthenticationticket.aspx */
-
-                string userData = string.Format("{0}|{1}", user.Location, user.Role);
-
-                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1,
-                    user.Name,
-                    DateTime.Now,
-                    DateTime.Now.AddMinutes(30),
-                    model.RememberMe,
-                    userData,
-                    FormsAuthentication.FormsCookiePath);
-
-                // Encrypt the ticket.
-                string encTicket = FormsAuthentication.Encrypt(ticket);
-
-                // Create the cookie.
-                Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
+                SessionManager.Instance.setSessionUser(Response, user, model.RememberMe);
 
                 // Redirect back to original URL.
                 Response.Redirect(FormsAuthentication.GetRedirectUrl(model.Username, model.RememberMe));
 
-                Session["user"] = user;
                 ViewBag.returnUrl = returnUrl;
                 return RedirectToAction("Index", "Home");
             }
@@ -92,8 +74,7 @@ namespace PlanillasFrontEnd.Controllers
         [HttpGet]
         public ActionResult SignOut()
         {
-            SessionManager.Instance.logout(Session);
-            FormsAuthentication.SignOut();
+            SessionManager.Instance.removeSessionUser(Request);
             return RedirectToAction("Index", "Home");
         }
 
