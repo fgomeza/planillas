@@ -15,9 +15,10 @@ namespace SistemaDePlanillas.Controllers
     public class UsersController : Controller
     {
         // GET: Users
+        /*
         public ActionResult Index()
         {
-            User user = SessionManager.Instance.getUser(Session);
+            { User user = SessionManager.Instance.getUser(Session);
             if(user == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -42,11 +43,11 @@ namespace SistemaDePlanillas.Controllers
                         /* Actualmente Role y Location son números.
                          * Se debe crear una lógica que convierta este índice en el string
                          * que será renderizado en la vista.
-                         */
+                         
                     };
                     UsersList.Add(UserViewModel);
                 }
-
+                }
                 return PartialView(UsersList);
 
             }
@@ -56,6 +57,7 @@ namespace SistemaDePlanillas.Controllers
                 return View();
             }
         }
+*/
 
         // GET: Users/Details/5
         public ActionResult Details(long id)

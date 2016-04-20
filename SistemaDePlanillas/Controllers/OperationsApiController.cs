@@ -29,23 +29,9 @@ namespace SistemaDePlanillas.Controllers
                     string s = o.ToString();
                     return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
                 }).ToArray();
-                //gets the session state
-                var Session = HttpContext.Current.Session;
 
-                SessionManager sm = SessionManager.Instance;
-
-                //checks if the user is logged
-                if (!sm.isLogged(Session))
-                {
-                    return Json(Responses.Error(10, "No se ha iniciado sesion"));
-                }
-
-                FormsIdentity id = (FormsIdentity) RequestContext.Principal.Identity;
-                FormsAuthenticationTicket ticket = id.Ticket;
-                string locationString = ticket.UserData.Split('|')[0];
-                long location = long.Parse(locationString);
-
-                User user = sm.getUser(Session);
+                //gets the session user
+                User user = SessionManager.Instance.getSessionUser(RequestContext);
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];
@@ -102,18 +88,9 @@ namespace SistemaDePlanillas.Controllers
                     string s = o.ToString();
                     return s.StartsWith("#") ? DateTime.Parse(s.Substring(1, s.Length - 1)) : o;
                 }).ToArray();
-                //gets the session state
-                var Session = HttpContext.Current.Session;
 
-                SessionManager sm = SessionManager.Instance;
-
-                //checks if the user is logged
-                if (!sm.isLogged(Session))
-                {
-                    return Json(Responses.Error(10, "No se ha iniciado sesion"));
-                }
-
-                User user = sm.getUser(Session);
+                //gets the session user
+                User user = SessionManager.Instance.getSessionUser(RequestContext);
 
                 //add the user to the parameters   
                 object[] parameters = new object[args.Length + 1];

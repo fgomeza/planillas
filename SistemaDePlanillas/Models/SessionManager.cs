@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http.Controllers;
 using System.Web.Security;
 using System.Web.SessionState;
 
@@ -45,6 +46,14 @@ namespace SistemaDePlanillas.Models
             }
         }
 
+        public void updateUser(long id)
+        {
+            if (loggedUsers.ContainsKey(id))
+            {
+                loggedUsers[id] = DBManager.Instance.selectUser(id).Detail;
+            }
+        }
+
         public IEnumerable<Role> getRoles()
         {
             return roles.Values;
@@ -52,17 +61,7 @@ namespace SistemaDePlanillas.Models
 
         public Role getRole(long id)
         {
-                return roles[id];
-        }
-
-        public NavbarConfig getNavbarConfig(User user)
-        {
-            return getRole(user.Role).navbar;
-        }
-
-        public MenubarConfig getMenuBarConfig(User user, string group)
-        {
-            return getRole(user.Role).navbar.menus[group];
+            return roles[id];
         }
 
         public bool verifyOperation(User user, string group, string operation)
@@ -81,24 +80,51 @@ namespace SistemaDePlanillas.Models
             return getRole(user.Role).name;
         }
 
-        public bool isLogged(HttpSessionStateBase session)
+        private User userFromTicket(FormsAuthenticationTicket ticket)
         {
-            return session["user"] != null;
+            long userId = long.Parse(ticket.UserData);
+            return loggedUsers[userId];
         }
 
-        public User getUser(HttpSessionStateBase session)
+        public void setSessionUser(HttpResponseBase response, User user, bool isPersistent)
         {
-            return (User)session["user"];
+            string userId = user.Id.ToString();
+            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1,
+                user.Name,
+                DateTime.Now,
+                DateTime.Now.AddMinutes(30),
+                isPersistent,
+                userId,
+                FormsAuthentication.FormsCookiePath);
+
+            // Encrypt the ticket.
+            string encTicket = FormsAuthentication.Encrypt(ticket);
+            // Create the cookie.
+            response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
+            loggedUsers[user.Id] = user;
         }
 
-        public bool isLogged(HttpSessionState session)
+        public void removeSessionUser(HttpRequestBase request)
         {
-            return session["user"] != null;
+            var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+            long userId = long.Parse(ticket.UserData);
+            loggedUsers.Remove(userId);
+            FormsAuthentication.SignOut();
         }
 
-        public User getUser(HttpSessionState session)
+        public User getSessionUser(HttpRequestContext request)
         {
-            return (User)session["user"];
+            FormsIdentity id = (FormsIdentity)request.Principal.Identity;
+            FormsAuthenticationTicket ticket = id.Ticket;
+            return userFromTicket(ticket);
+        }
+
+        public User getSessionUser(HttpRequestBase request)
+        {
+            var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+            return userFromTicket(ticket);
         }
 
         public User validateUser(string username, string password)
@@ -108,21 +134,5 @@ namespace SistemaDePlanillas.Models
                 Result.Detail : null;
         }
 
-        public bool logout(HttpSessionStateBase session)
-        {
-            User user = getUser(session);
-            session.Remove("user");
-            return true;
-        }
-
-        /*
-        public bool logout(int id)
-        {
-            User user = loggedUsers[id];
-            loggedUsers.Remove(id);
-            user.session.Remove("user");
-            return true;
-        }
-        */
     }
 }
