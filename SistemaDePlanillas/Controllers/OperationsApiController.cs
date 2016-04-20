@@ -80,7 +80,7 @@ namespace SistemaDePlanillas.Controllers
             catch (Exception e)
             {
                 Logger.Instance.LogActionError(e, group, action, args, user, callTime);
-                return Responses.ExceptionError(e);
+                return Responses.ExceptionError(e); 
             }
         }
     }
