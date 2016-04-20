@@ -10,8 +10,10 @@ namespace SistemaDePlanillas.Models.Operations
     {
 
 
-        public static Response calculate(User user, DateTime initialDate, DateTime endDate)
+        public static Response calculate(User user, string iDate, string eDate)
         {
+            DateTime initialDate = DateTime.Parse(iDate);
+            DateTime endDate = DateTime.Parse(eDate);
             var employees = DBManager.Instance.selectAllActiveEmployees(user.Location).Detail;
             double totalPayroll = 0;
             var location = DBManager.Instance.getLocation(user.Location).Detail;
