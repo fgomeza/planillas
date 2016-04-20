@@ -8,8 +8,6 @@ namespace SistemaDePlanillas.Models
     public class Logger
     {
         private static Logger instance;
-        private readonly string ActionErrorsFile;
-        private readonly string ActionsFile;
 
         public static Logger Instance
         {
