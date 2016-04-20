@@ -68,7 +68,7 @@ namespace SistemaDePlanillas.Controllers
             }
             catch (Exception e)
             {
-                return Json(Responses.ExceptionError(e));
+                return Json(Responses.ExceptionError(e)); 
             }
         }
 
