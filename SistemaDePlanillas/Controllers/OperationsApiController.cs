@@ -2,11 +2,8 @@
 using SistemaDePlanillas.Models;
 using System;
 using System.Reflection;
-using System.Web;
 using System.Web.Http;
-using System.Web.Http.Results;
 using System.Linq;
-using System.Web.Security;
 using System.Net;
 
 namespace SistemaDePlanillas.Controllers
