@@ -57,10 +57,10 @@
         }
 
         self.create = function (data) {
-            var form = $('#userEditForm').serialize();
-            console.log(form);
+            var form = testingApp.formToArray('#createUserForm');
+            //args = form.name 
             testingApp.action('users', 'add', form, function (response) {
-                console.log(response)
+                console.log(response);
             });
         }
 
