@@ -21,7 +21,7 @@ namespace SistemaDePlanillas.Filters
 
             User user = SessionManager.Instance.getSessionUser(actionContext.RequestContext);
             
-            if (true || !SessionManager.Instance.verifyOperation(user, group, action))
+            if (SessionManager.Instance.verifyOperation(user, group, action))
             {
                 base.OnActionExecuting(actionContext);
             }

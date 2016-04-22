@@ -130,7 +130,6 @@ namespace SistemaDePlanillas.Models
 
     public class Role
     {
-        public NavbarConfig navbar;
         public long id;
         public string name;
         public long location;
@@ -152,9 +151,7 @@ namespace SistemaDePlanillas.Models
                 }
                 privileges[priv.Item1].Add(priv.Item2);
             }
-            navbar = new NavbarConfig(privileges);
         }
-
 
     }
 
