@@ -12,7 +12,6 @@ namespace SistemaDePlanillas.Models
     public class SessionManager
     {
         private static SessionManager instance;
-        private Dictionary<long, User> activeUsers;
         private Dictionary<long, Role> roles;
 
         class InexistentUserException : Exception
@@ -42,7 +41,6 @@ namespace SistemaDePlanillas.Models
 
         private SessionManager()
         {
-            activeUsers = new Dictionary<long, User>();
             roles = new Dictionary<long, Role>();
 
             var rolesList = DBManager.Instance.selectAllRoles().Detail;
@@ -60,14 +58,6 @@ namespace SistemaDePlanillas.Models
             foreach (Role role in rolesList)
             {
                 roles[role.id] = role;
-            }
-        }
-
-        public void updateUser(long id)
-        {
-            if (activeUsers.ContainsKey(id))
-            {
-                activeUsers[id] = DBManager.Instance.selectUser(id).Detail;
             }
         }
 
@@ -100,17 +90,10 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            User user;
-            if (activeUsers.ContainsKey(userId))
-            {
-                user = activeUsers[userId];
-                return user;
-            }
-            user = DBManager.Instance.selectUser(userId).Detail;
+            User user = DBManager.Instance.selectUser(userId).Detail;
             if (user != null)
             {
-                activeUsers[user.Id] = user;
-                return userFromTicket(ticket);
+                return user;
             }
             else
             {
@@ -132,15 +115,10 @@ namespace SistemaDePlanillas.Models
             string encTicket = FormsAuthentication.Encrypt(ticket);
             // Create the cookie.
             response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
-            activeUsers[user.Id] = user;
         }
 
         public void removeSessionUser(HttpRequestBase request)
         {
-            var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
-            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
-            long userId = long.Parse(ticket.UserData);
-            activeUsers.Remove(userId);
             FormsAuthentication.SignOut();
         }
 
