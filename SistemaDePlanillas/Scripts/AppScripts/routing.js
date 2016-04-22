@@ -1,6 +1,6 @@
 ﻿define(['sammy'], function (Sammy) {
     function Router(contentSelector, defaultRoute) {
-        var sammyApp = Sammy(contentSelector, function (context) {
+        return Sammy(contentSelector, function (context) {
 
             this.raise_errors = true;
 
@@ -12,7 +12,7 @@
                 var context = this;
                 context.$element().slideUp(function () {
                     context.$element().html(content);
-                    context.$element().fadeIn(function () {
+                    context.$element().fadeIn(500, function () {
                         if (callback) {
                             callback.apply();
                         }
@@ -51,8 +51,6 @@
             });
 
         });
-
-        return sammyApp;
 
     }
 
