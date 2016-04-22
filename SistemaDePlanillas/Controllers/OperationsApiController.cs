@@ -18,16 +18,16 @@ namespace SistemaDePlanillas.Controllers
 
         [Authorize]
         [PermissionCheck]
-        public JsonResult<Response> Post(string group, string operation, [FromBody]object[] args)
+        public Response Post(string group, string operation, [FromBody]object[] args)
         {
-            return Json(doAction(group, operation, args));
+            return doAction(group, operation, args);
         }
 
         [Authorize]
         [PermissionCheck]
-        public JsonResult<Response> Post(string group, string operation, string call, [FromBody]object[] args)
+        public Response Post(string group, string operation, string call, [FromBody]object[] args)
         {
-            return Json(doAction(group, operation + "_" + call, args));
+            return doAction(group, operation + "_" + call, args);
         }
 
         private Response doAction(string group, string action, object[] args)
@@ -53,10 +53,10 @@ namespace SistemaDePlanillas.Controllers
             Type type = Type.GetType(groupType, false, true);
             if (type == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(HttpStatusCode.NotFound);   
             }
 
-            //Uses reflexion to get the correct method
+            //Uses reflexion to get the correct method  
             MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
             if (method == null)
             {

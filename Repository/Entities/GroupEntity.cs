@@ -21,8 +21,6 @@ namespace Repository.Entities
         [Column("icon")]
         public string Icon { get; set; }
 
-        //public virtual ICollection<Operation> Operations { set; get; }
-
-        //public virtual ICollection<Role> Roles { set; get; }
+        //public virtual ICollection<OperationEntity> Operations { set; get; }
     }
 }

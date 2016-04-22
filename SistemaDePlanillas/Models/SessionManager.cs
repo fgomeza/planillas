@@ -73,7 +73,7 @@ namespace SistemaDePlanillas.Models
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            return verifyOperation(user.Role, group, operation);
+            return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
         }
 
         public bool verifyOperation(long role, string group, string operation)

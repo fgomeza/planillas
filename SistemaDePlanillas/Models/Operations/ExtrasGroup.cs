@@ -17,9 +17,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response add(User user,long employeeId, string detail,double amount)
+        public static Response add(User user,long employeeId, string detail,long hours)
         {
-                var result = DBManager.Instance.addExtra(employeeId, detail, (float)amount).Status;
+                var result = DBManager.Instance.addExtra(employeeId, detail, hours).Status;
                 return Responses.Simple(result);
         }
         /// <summary>
@@ -41,10 +41,10 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response modify(User user,long extraId, string detail, double amount)
+        public static Response modify(User user,long extraId, string detail, long hours)
         {
 
-                var result = DBManager.Instance.updateExtra(extraId, detail, (float)amount).Status;
+                var result = DBManager.Instance.updateExtra(extraId, detail, hours).Status;
                 return Responses.Simple(result);
 
 

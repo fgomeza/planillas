@@ -22,5 +22,6 @@ namespace SistemaDePlanillas.Models
         public static long penaltyInactive = 12;
         public static long roleInactive = 13;
         public static long userInactive = 14;
+        public static long noSalaries = 15;
     }
 }

@@ -12,5 +12,11 @@ namespace Repository.Repositories.Classes
     public class SalaryRepository:Repository<SalaryEntity>
     {
         public SalaryRepository(AppContext context) : base(context){}
+
+        public IEnumerable<SalaryEntity> selectLastSalariesByEmployee(long employee)
+        {
+            var list = _context.Salaries.Where(s=>s.employeeId==employee);
+            return _context.Salaries.Where(s => s.employeeId == employee).OrderByDescending(s=>s.fksalary_payroll.endDate).Take(5).ToList();
+        }
     }
 }

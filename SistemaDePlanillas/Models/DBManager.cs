@@ -8,6 +8,7 @@ using Repository.Context;
 using Repository.Entities;
 using System.Collections;
 using DevOne.Security.Cryptography.BCrypt;
+using System.Linq;
 
 namespace SistemaDePlanillas.Models
 
@@ -415,7 +416,6 @@ namespace SistemaDePlanillas.Models
                         description = Detail,
                         totalAmount = amount,
                         debitTypeId = type,
-                        interestRate = 0,
                         active = true,
                         payment = false
                     });
@@ -604,7 +604,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, double interestRate, long months, long type)
+        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long months, long type)
         {
             Result<string> result = new Result<string>();
             try
@@ -620,7 +620,6 @@ namespace SistemaDePlanillas.Models
                         remainingAmount = total,
                         paidMonths = 0,
                         remainingMonths = months,
-                        interestRate = interestRate,
                         debitTypeId = type,
                         active = true,
                         payment = true
@@ -636,7 +635,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, double interestRate, long months, double remainingAmount)
+        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, long months, double remainingAmount)
         {
             Result<string> result = new Result<string>();
             try
@@ -651,7 +650,6 @@ namespace SistemaDePlanillas.Models
                         debit.totalAmount = total;
                         debit.remainingAmount = remainingAmount;
                         debit.remainingMonths = months - debit.paidMonths;
-                        debit.interestRate = interestRate;
                         repository.Complete();
                     }
                 }
@@ -683,7 +681,7 @@ namespace SistemaDePlanillas.Models
                         deb.remainingAmount = debit.remainingAmount;
                         deb.paymentsMade = (long)debit.paidMonths;
                         deb.missingPayments = (long)debit.remainingMonths;
-                        deb.interestRate = (double)debit.interestRate;
+                        deb.interestRate = (double)debit.fkdebit_type.interestRate;
                         deb.type = debit.debitTypeId;
                         deb.typeName = debit.fkdebit_type.name;
                     }
@@ -722,7 +720,7 @@ namespace SistemaDePlanillas.Models
                             deb.remainingAmount = debit.remainingAmount;
                             deb.paymentsMade = debit.paidMonths==null?0:(long)debit.paidMonths;
                             deb.missingPayments = debit.remainingMonths == null?0:(long)debit.remainingMonths;
-                            deb.interestRate = debit.interestRate==null?0:(double)debit.interestRate;
+                            deb.interestRate = (double)debit.fkdebit_type.interestRate;
                             deb.type = debit.debitTypeId;
                             deb.typeName = debit.fkdebit_type.name;
                         }
@@ -768,7 +766,29 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> addExtra(long employee, string Detail, float amount)
+        public Result<List<double>> getLastSalaries(long employeeId)
+        {
+            Result<List<double>> result = new Result<List<double>>();
+            result.Detail = new List<double>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var all = (List<SalaryEntity>)repository.Salarys.selectLastSalariesByEmployee(employeeId);
+                    foreach (var salary in all)
+                        result.Detail.Add((double)salary.salary);
+                }
+            }
+            catch (Exception e)
+            {
+
+                result.Status = validate(e);
+            }
+
+            return result;
+        }
+
+        public Result<string> addExtra(long employee, string Detail, long hours)
         {
             Result<string> result = new Result<string>();
             try
@@ -779,7 +799,7 @@ namespace SistemaDePlanillas.Models
                     {
                         employeeId = employee,
                         description = Detail,
-                        amount = amount
+                        hours = hours
                     };
                     repository.Extras.Add(extra);
                     var rows = repository.Complete();
@@ -795,7 +815,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public Result<string> updateExtra(long idExtra, string Detail, float amount)
+        public Result<string> updateExtra(long idExtra, string Detail, long hours)
         {
             Result<string> result = new Result<string>();
             try
@@ -805,7 +825,7 @@ namespace SistemaDePlanillas.Models
                     var extra = repository.Extras.Get(idExtra);
                     if (extra != null)
                     {
-                        extra.amount = (double)amount;
+                        extra.hours = (long)hours;
                         extra.description = Detail;
                     }
                     else
@@ -864,7 +884,7 @@ namespace SistemaDePlanillas.Models
                     var extra = repository.Extras.Get(idExtra);
                     if (extra != null)
                     {
-                        result.Detail.amount = extra.amount;
+                        result.Detail.hours = extra.hours;
                         result.Detail.detail = extra.description;
                         result.Detail.employee = extra.employeeId;
                         result.Detail.id = extra.id;
@@ -900,7 +920,7 @@ namespace SistemaDePlanillas.Models
                         {
                             id = ex.id,
                             detail = ex.description,
-                            amount = ex.amount,
+                            hours = ex.hours,
                             employee = ex.employeeId
                         });
                     }
@@ -1733,7 +1753,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     OperationEntity operation = new OperationEntity()
-                    { Name = name, Description = description, URL = url, GroupId = group };
+                    { Name = name, Description = description, GroupId = group };
                     repository.Operations.Add(operation);
                     repository.Complete();
                 }
@@ -1836,7 +1856,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.Detail.Add(new Operation(x.Description, x.URL, x.Name));
+                        result.Detail.Add(new Operation(x.Description, x.Name , x.GroupId));
                 }
             }
             catch (Exception e)
@@ -1856,7 +1876,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.Detail.Add(new Operation(x.Description, x.URL, x.Name));
+                        result.Detail.Add(new Operation(x.Description, x.Name , x.GroupId));
                 }
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevOne.Security.Cryptography.BCrypt;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,7 +9,36 @@ namespace SistemaDePlanillas.Models.Operations
 
     public class PayrollGroup
     {
+        public static long workHoursByMonth = 208;
 
+        public static Response password(User user, String password)
+        {
+            return Responses.WithData(BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()));
+        }
+
+        public static Response xxx(User user, double total, long mo, double inte)
+        {
+
+                //formula para calcular cuota fija
+                ///de un prestamo usando el metodo frances de cuota fija
+
+                double Monto = total;
+                long Plazos = mo;
+                double taza = inte;
+
+
+                //A = 1-(1+taza)^-plazos
+                long p = Plazos * -1;
+                double b = (1 + taza);
+                double A = (1 - Math.Pow(b, p)) / taza;
+
+                //Cuota Fija = Monto / A;
+                double Cuota_F = Monto / A;
+
+
+            return Responses.WithData(Cuota_F);
+    
+}
 
         public static Response calculate(User user, string iDate, string eDate)
         {
@@ -26,15 +56,17 @@ namespace SistemaDePlanillas.Models.Operations
                 var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate).Detail;
                 var penalties = penaltiesByEmployee(penaltiesDB);
                 double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
-                var extras = DBManager.Instance.selectExtras(employee.id).Detail;
-                double totalExtras = extras.Sum(e => e.amount);
                 var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id).Detail;
                 var fixedDebits = fixedDebitsByEmployee(fixedDebitsDB);
                 double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
                 var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id).Detail;
                 var paymentDebits = paymentDebitsByEmployee(paymentDebitsDB);
                 double totalPaymentDebits = paymentDebitsDB.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
-                double grossAmount = (employee.salary / 30.4167) * (endDate - initialDate).Days + (totalCalls * callPrice);
+                double grossAmount = (employee.salary / 2) + (totalCalls * callPrice);
+                var lastSalaries = DBManager.Instance.getLastSalaries(employee.id).Detail;
+                var extraPrice = (grossAmount + lastSalaries.Sum() / lastSalaries.Count + 1)/ workHoursByMonth;
+                var extras = DBManager.Instance.selectExtras(employee.id).Detail;
+                double totalExtras = extras.Sum(e => e.hours)*extraPrice;
                 double saving = DBManager.Instance.selectSavingByEmployee(employee.id).Detail;
                 double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalFixedDebits - employee.negativeAmount;
 

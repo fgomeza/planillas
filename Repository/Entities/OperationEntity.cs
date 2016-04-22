@@ -19,9 +19,6 @@ namespace Repository.Entities
         [Column("description")]
         public string Description { set; get; }
 
-        [Column("url")]
-        public string URL { set; get; }
-
         [ForeignKey("fkoperation_group")]
         [Column("group_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -30,5 +27,6 @@ namespace Repository.Entities
         public virtual GroupEntity fkoperation_group { set; get;}
 
         public virtual ICollection<RoleEntity>  Roles { set; get; }
+
     }
 }
