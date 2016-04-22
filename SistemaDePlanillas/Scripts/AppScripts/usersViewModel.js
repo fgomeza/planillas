@@ -1,6 +1,5 @@
 ﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
     function User(data) {
-        console.log(data);
         this.id = ko.observable(data.id);
         this.name = ko.observable(data.name);
         this.username = ko.observable(data.username);
@@ -19,7 +18,7 @@
         self.activeUsers = ko.computed(function () {
             return ko.utils.arrayFilter(self.users(), function (user) { return !user._destroy; });
         });
-        self.labels = {
+        self.strings = {
             id: 'Id',
             name: 'Nombre',
             username: 'Usuario',
@@ -27,7 +26,11 @@
             role: 'Rol',
             location: 'Sede',
             email: 'Correo electrónico',
-            active: 'Activo'
+            active: 'Activo',
+            createUserLink: 'Crear un nuevo usuario',
+            createUserModalTitle: 'Creación de usuarios',
+            closeModalButton: 'Cerrar',
+            SaveModalButton: 'Guardar cambios'
         };
 
         self.edit = function (data, event) {
@@ -54,17 +57,16 @@
         }
 
         self.create = function (data) {
-            $.when($.get('Modals/Template'), $.get('Modals/CreateUser')).done(function (template, createUser) {
-                var elem = $('#createUserModal');
-                elem.html(template[0]);
-                elem.find('.modal-body').html(createUser[0]);
-                elem.find('.modal').modal();
+            var form = $('#userEditForm').serialize();
+            console.log(form);
+            testingApp.action('users', 'add', form, function (response) {
+                console.log(response)
             });
         }
 
-        testingApp.action('users', 'get', function (data) {
-            data = data.data;
-            var mappedData = $.map(data, function (item) { return new User(item); });
+        testingApp.action('users', 'get', function (response) {
+            response = response.data;
+            var mappedData = $.map(response, function (item) { return new User(item); });
             self.users(mappedData);
         });
 

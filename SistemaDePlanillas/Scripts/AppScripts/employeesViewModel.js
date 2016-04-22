@@ -21,7 +21,7 @@
         self.activeEmployees = ko.computed(function () {
             return ko.utils.arrayFilter(self.employees(), function (emp) { return !emp._destroy });
         });
-        self.labels = {
+        self.strings = {
             id: "identificador",
             idCard: "Cédula",
             name: "Nombre",
@@ -31,7 +31,9 @@
             cmsText: "cmsText",
             calls: "Llamadas",
             active: "Activo",
-            salary: "Salario"
+            salary: "Salario",
+            createEmployeeLink: 'Agregar un asociado',
+            createEmployeeModalTitle: 'Creación de asociados'
         };
 
         self.edit = function (data) {
