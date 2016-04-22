@@ -19,7 +19,7 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
         {
 
-            var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, interestRate, months, type);
+            var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
             return Responses.Simple(dataBaseResponse.Status);
 
         }
@@ -58,7 +58,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static Response modify_Payment(User user, long idDebit, DateTime initialDate, string detail, double total, double interestRate, long months, double remainingAmount)
         {
-            var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, initialDate, detail, total, interestRate, months, remainingAmount);
+            var dataBaseResponse = DBManager.Instance.updatePaymentDebit(idDebit, initialDate, detail, total, months, remainingAmount);
             return Responses.Simple(dataBaseResponse.Status);
 
         }

@@ -80,7 +80,7 @@ namespace SistemaDePlanillas.Models
         public long id;
         public long employee;
         public string detail;
-        public double amount;
+        public double hours;
     }
 
     public class Penalty

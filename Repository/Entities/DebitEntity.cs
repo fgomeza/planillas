@@ -35,8 +35,6 @@ namespace Repository.Entities
         [Column("remaining_months")]
         public Nullable<long> remainingMonths { set; get; }
         
-        [Column("interest_rate")]
-        public Nullable<double> interestRate { set; get; }
 
         [Column("paid_months")]
         public Nullable<long> paidMonths { set; get; }

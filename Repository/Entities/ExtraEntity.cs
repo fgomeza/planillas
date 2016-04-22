@@ -25,7 +25,7 @@ namespace Repository.Entities
         [Column("description")]
         public string description { set; get; }
 
-        [Column("amount")]
-        public double amount { set; get; }
+        [Column("hours")]
+        public long hours { set; get; }
     }
 }
