@@ -35,7 +35,7 @@ namespace SistemaDePlanillas.Models
                 e = e.InnerException;
                 if (e.InnerException != null && e.InnerException is NpgsqlException)
                 {
-                    return 1;
+                    return 200; // TODO arreglar esto
                     //return errors[(e.InnerException as NpgsqlException).ConstraintName];
                 }
             }

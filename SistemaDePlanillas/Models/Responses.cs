@@ -86,6 +86,7 @@ namespace SistemaDePlanillas.Models
             details[12] = "penaltyInactive";
             details[13] = "roleInactive";
             details[14] = "userInactive";
+            details[200] = "duplicatedUser"; // TODO: cambiar esto
         }
         
         public static Errors Instance
