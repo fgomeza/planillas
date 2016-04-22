@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using System.Linq;
 using System.Web.Security;
+using System.Net;
 
 namespace SistemaDePlanillas.Controllers
 {
@@ -54,14 +55,14 @@ namespace SistemaDePlanillas.Controllers
                 Type type = Type.GetType(groupType, false, true);
                 if (type == null)
                 {
-                    return Responses.Error(12, "No se encuentra el grupo: " + group + ", imposible realizar operacion");
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
                 //Uses reflexion to get the correct method
                 MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
                 if (method == null)
                 {
-                    return Responses.Error(13, "No se encuentra la operacion: " + group + "/" + action);
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
                 //call the method
@@ -69,18 +70,14 @@ namespace SistemaDePlanillas.Controllers
                 Logger.Instance.LogAction(response, group, action, args, user, callTime);
                 return response;
             }
-            catch (TargetParameterCountException)
+            catch (HttpResponseException e)
             {
-                return Responses.Error(14, "No coincide el numero de parametros esperado para: " + group + "/" + action);
-            }
-            catch (ArgumentException)
-            {
-                return Responses.Error(15, "No coincide el tipo de los argumentos esperados para: " + group + "/" + action);
+                throw e;
             }
             catch (Exception e)
             {
                 Logger.Instance.LogActionError(e, group, action, args, user, callTime);
-                return Responses.ExceptionError(e); 
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
     }
