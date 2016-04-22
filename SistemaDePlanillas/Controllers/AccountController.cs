@@ -48,7 +48,7 @@ namespace PlanillasFrontEnd.Controllers
                 SessionManager.Instance.setSessionUser(Response, user, model.RememberMe);
 
                 // Redirect back to original URL.
-                Response.Redirect(FormsAuthentication.GetRedirectUrl(model.Username, model.RememberMe));
+                FormsAuthentication.RedirectFromLoginPage(model.Username, model.RememberMe);
 
                 ViewBag.returnUrl = returnUrl;
                 return RedirectToAction("Index", "Home");
