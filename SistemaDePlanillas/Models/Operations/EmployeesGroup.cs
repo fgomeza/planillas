@@ -15,12 +15,6 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
-        //employees/add/cms (string,string,string,number,string)
-        public static Response add_CMS(User user, string idCard, string idCMS, string name, long location, string BCRAccount)
-        {
-            var result = DBManager.Instance.addCmsEmployee(idCard, idCMS, name, (int)location, BCRAccount);
-            return Responses.Simple(result.Status);
-        }
 
         //employees/add/noncms (string,string,string,decimal)
         public static Response add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
@@ -29,12 +23,6 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.Simple(result.Status);
         }
 
-        //employees/add/noncms (string,string,number,string,decimal)
-        public static Response add_nonCMS(User user, string idCard, string name, long location, string BCRAccount, double salary)
-        {
-            var result = DBManager.Instance.addNonCmsEmployee(idCard, name, (int)location, BCRAccount, (float)salary);
-            return Responses.Simple(result.Status);
-        }
 
         //employees/modify/noncms (number, string,string,string,number,string)
         public static Response modify_CMS(User user, long id, string idCard, string idCMS, string name, long location, string BCRAccount)

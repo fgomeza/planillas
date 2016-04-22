@@ -18,16 +18,16 @@ namespace SistemaDePlanillas.Controllers
 
         [Authorize]
         [PermissionCheck]
-        public JsonResult<Response> Post(string group, string operation, [FromBody]object[] args)
+        public Response Post(string group, string operation, [FromBody]object[] args)
         {
-            return Json(doAction(group, operation, args));
+            return doAction(group, operation, args);
         }
 
         [Authorize]
         [PermissionCheck]
-        public JsonResult<Response> Post(string group, string operation, string call, [FromBody]object[] args)
+        public Response Post(string group, string operation, string call, [FromBody]object[] args)
         {
-            return Json(doAction(group, operation + "_" + call, args));
+            return doAction(group, operation + "_" + call, args);
         }
 
         private Response doAction(string group, string action, object[] args)
