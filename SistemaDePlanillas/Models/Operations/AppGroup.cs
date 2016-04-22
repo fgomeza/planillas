@@ -16,7 +16,7 @@ namespace SistemaDePlanillas.Models.Operations
             var q = from t in Assembly.GetExecutingAssembly().GetTypes()
                     where t.IsClass && t.Namespace == @namespace && t.Name.EndsWith("Group")
                     select t;
-
+               
             var groups = q.ToList();
             List<object> actions = new List<object>();
             foreach (var group in groups)
