@@ -53,10 +53,10 @@ namespace SistemaDePlanillas.Controllers
             Type type = Type.GetType(groupType, false, true);
             if (type == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(HttpStatusCode.NotFound);   
             }
 
-            //Uses reflexion to get the correct method
+            //Uses reflexion to get the correct method  
             MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
             if (method == null)
             {
