@@ -30,8 +30,10 @@
 <script>
     require(['jquery', 'app/testing'], function ($, testingApp) {
         var enviar = function () {
-            testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("["+$("#args").val()+"]"), function (res) {
-                $("#result").html(JSON.stringify(res, null, 2))
+            var $container = $("#result")
+            $container.html("");
+            testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("[" + $("#args").val() + "]"), function (res) {
+                $container.html(JSON.stringify(res, null, 2))
             });
         };
 

@@ -234,6 +234,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
+    <Content Include="Scripts\AppScripts\debitsViewModel.js" />
     <Content Include="Scripts\AppScripts\employeesViewModel.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.min.js" />
@@ -321,6 +322,7 @@
     <Content Include="Views\PartialViews\UploadFile.cshtml" />
     <Content Include="Views\Modals\CreateUser.cshtml" />
     <Content Include="Views\Modals\Template.cshtml" />
+    <Content Include="Views\PartialViews\Debits.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

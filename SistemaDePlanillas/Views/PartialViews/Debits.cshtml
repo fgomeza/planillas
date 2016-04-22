@@ -1,11 +1,11 @@
-﻿<div id="usersSection" class="container-fluid">
+﻿<div id="debitsSection" class="container-fluid">
     <div class="row">
         <p>
-            <a href="#" data-toggle="modal" data-target="#createUserModal">Crear un nuevo usuario</a>
+            <a href="#" data-toggle="modal" data-target="#createUserModal">Crear un débito</a>
         </p>
     </div>
     <div class="row">
-        <div class="panel panel-primary" data-bind="visible: activeUsers().length > 0">
+        <div class="panel panel-primary" data-bind="visible: activeDebits().length > 0">
             <div class="panel-heading"></div>
             <div class="panel-body">
                 <div class="table-responsive">
@@ -185,8 +185,8 @@
 </div>
 
 <script>
-    require(['knockout', 'app/usersViewModel'], function (ko, viewModel) {
-        var element = document.getElementById('usersSection');
+    require(['knockout', 'app/debitsViewModel'], function (ko, viewModel) {
+        var element = document.getElementById('debitsSection');
         ko.applyBindings(new viewModel(), element);
     });
 </script>

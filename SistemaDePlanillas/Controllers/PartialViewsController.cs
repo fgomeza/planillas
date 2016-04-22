@@ -36,6 +36,11 @@ namespace SistemaDePlanillas.Controllers
             return PartialView();
         }
 
+        public ActionResult Debits()
+        {
+            return PartialView();
+        }
+
         public ActionResult UploadFile()
         {
             return PartialView();
