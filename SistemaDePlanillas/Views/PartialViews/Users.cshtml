@@ -167,6 +167,6 @@
 <script>
     require(['knockout', 'app/usersViewModel'], function (ko, viewModel) {
         var element = document.getElementById('usersSection');
-        ko.applyBindings(new viewModel(), element);
+        ko.applyBindings(viewModel, element);
     });
 </script>

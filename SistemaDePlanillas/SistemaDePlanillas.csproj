@@ -235,12 +235,12 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\AppScripts\debitsViewModel.js" />
     <Content Include="Scripts\AppScripts\employeesViewModel.js" />
+    <Content Include="Scripts\AppScripts\titleViewModel.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\AppScripts\dashboard.js" />
     <Content Include="Scripts\AppScripts\usersViewModel.js" />
     <Content Include="Scripts\AppScripts\main.js" />
-    <Content Include="Scripts\AppScripts\mainViewModel.js" />
     <Content Include="Scripts\AppScripts\require-config.js" />
     <Content Include="Scripts\AppScripts\routing.js" />
     <Content Include="Scripts\AppScripts\site.js" />
