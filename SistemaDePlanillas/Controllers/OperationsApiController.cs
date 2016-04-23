@@ -13,15 +13,11 @@ namespace SistemaDePlanillas.Controllers
     {
         readonly string OperationsNamespace = "SistemaDePlanillas.Models.Operations";
 
-        [Authorize]
-        [PermissionCheck]
         public Response Post(string group, string operation, [FromBody]object[] args)
         {
             return doAction(group, operation, args);
         }
 
-        [Authorize]
-        [PermissionCheck]
         public Response Post(string group, string operation, string call, [FromBody]object[] args)
         {
             return doAction(group, operation + "_" + call, args);

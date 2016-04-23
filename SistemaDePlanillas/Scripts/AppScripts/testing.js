@@ -16,8 +16,8 @@
             success: callback,
             error: function (error) { callback({ status: 'ERROR', error: error.status, detail: error.statusText }); }
         };
-        $.ajax(xhr);
         console.log('requesting ' + xhr.url + ' args=' + xhr.data);
+        return $.ajax(xhr);
     }
 
     testingApp.actionMethod = function (group, operation, method, args, callback) {
@@ -50,8 +50,8 @@
         console.log('requesting ' + xhr.url + ' args=' + xhr.data);
     }
 
-    testingApp.formToJSON = function (formID) {
-        return $(formID).serializeArray().reduce(function (data, x) {
+    testingApp.formToJSON = function ($formElement) {
+        return $formElement.serializeArray().reduce(function (data, x) {
             data[x.name] = x.value;
             return data;
         }, {});

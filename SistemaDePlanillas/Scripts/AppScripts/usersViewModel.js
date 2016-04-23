@@ -1,5 +1,6 @@
 ﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
     function User(data) {
+        data = data || {};
         this.id = ko.observable(data.id);
         this.name = ko.observable(data.name);
         this.username = ko.observable(data.username);
@@ -57,9 +58,10 @@
         }
 
         self.create = function (data) {
-            var form = testingApp.formToArray('#createUserForm');
-            //args = form.name 
-            testingApp.action('users', 'add', form, function (response) {
+            var $form = $('#createUserForm');
+            var fields = testingApp.formToJSON($form);
+            var args = [fields.name, fields.username, fields.password, fields.email, parseInt(fields.role)];
+            testingApp.action('users', 'add', args, function (response) {
                 console.log(response);
             });
         }
@@ -70,7 +72,9 @@
             self.users(mappedData);
         });
 
+        console.log('inside users vm');
+
     };
 
-    return UsersViewModel;
+    return new UsersViewModel();
 });
