@@ -16,6 +16,10 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.WithData(BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()));
         }
 
+        public static void test(User user)
+        {
+        }
+
         public static Response xxx(User user, double total, long mo, double inte)
         {
 

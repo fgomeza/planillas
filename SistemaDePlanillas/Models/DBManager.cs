@@ -265,7 +265,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(employee != null ? employeeInactive : inexistentEmployee);
+                        validateException(employee != null ? employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }

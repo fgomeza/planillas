@@ -71,13 +71,14 @@ namespace SistemaDePlanillas.Controllers
             if (method == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             //map args as key/value dictionary for listeners pleasure
-            var argsMap = method.GetParameters().Zip(parameters, (k, v)=> new { k, v }).ToDictionary(x => x.k.Name, x => x.v);
+            var argsMap = method.GetParameters().Zip(parameters, (k, v)=> new { k.Name, v }).ToDictionary(x => x.Name, x => x.v);
 
             try
             {
                 //call the method
-                Response response = (Response)method.Invoke(null, parameters);
-                listener.OnActionComplete(response,user, callTime, group, operation, argsMap);
+                var result = method.Invoke(null, parameters);
+                Response response = result == null ? Responses.OK : Responses.WithData(result);
+                listener.OnActionComplete(response, user, callTime, group, operation, argsMap);
                 return response;
             }
             catch (Exception e) when (e.InnerException is AppException)
@@ -130,7 +131,8 @@ namespace SistemaDePlanillas.Controllers
                 }).ToArray();
 
                 //call the method
-                Response response = (Response)method.Invoke(null, parameters);
+                var result = method.Invoke(null, parameters);
+                Response response = result == null ? Responses.OK : Responses.WithData(result);
                 listener.OnActionComplete(response, user, callTime, group, operation, args);
                 return response;
             }
