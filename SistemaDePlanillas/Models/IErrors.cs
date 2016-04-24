@@ -25,17 +25,17 @@ namespace SistemaDePlanillas.Models
                 {
                     string code = App_LocalResoures.Errors.ResourceManager.GetString((e.InnerException as NpgsqlException).ConstraintName);
                     string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-                    throw new AplicationException(code, description);
+                    throw new AppException(code, description);
                 }
             }
             throw e;
         }
 
-        public static AplicationException validateException(string code)
+        public static AppException validateException(string code)
         {
 
             string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-            throw new AplicationException(code, description);
+            throw new AppException(code, description);
         }
 
         public static string inexistentEmployee = "EmployeeError1";

@@ -10,24 +10,21 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static Response add_Fixed(User user, long employee, string detail, double amount, long type)
         {
-            var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
-            return Responses.Simple(dataBaseResponse.Status);
+            DBManager.Instance.addDebit(employee, detail, amount, type);
+            return Responses.OK; 
         }
 
         public static Response add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
         {
 
-            var dataBaseResponse = DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
-            return Responses.Simple(dataBaseResponse.Status);
-
+            DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
+            return Responses.OK;
         }
 
         public static Response get_AllFixed(User user, long employee)
         {
-
             var dataBaseResponse = DBManager.Instance.selectDebits(employee);
-            return Responses.SimpleWithData(dataBaseResponse.Status, dataBaseResponse.Detail);
-
+            return Responses.WithData(dataBaseResponse.Detail);
         }
 
         public static Response get_AllPayment(User user, long employee)
