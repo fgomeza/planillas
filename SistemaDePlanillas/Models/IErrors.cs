@@ -16,7 +16,7 @@ namespace SistemaDePlanillas.Models
        // private static ResourceManager Errors = new ResourceManager(Errors.BaseName, Assembly.GetExecutingAssembly());
        // private static ResourceManager DescriptionErrors = new ResourceManager(DescriptionError.ResourceManager., Assembly.GetExecutingAssembly());
 
-        public static AplicationException validateException(Exception e)
+        public static AppException validateException(Exception e)
         {
             if (e.InnerException != null)
             {
@@ -25,17 +25,17 @@ namespace SistemaDePlanillas.Models
                 {
                     string code = App_LocalResoures.Errors.ResourceManager.GetString((e.InnerException as NpgsqlException).ConstraintName);
                     string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-                    throw new AplicationException(code, description);
+                    throw new AppException(code, description);
                 }
             }
             throw e;
         }
 
-        public static AplicationException validateException(string code)
+        public static AppException validateException(string code)
         {
 
             string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-            throw new AplicationException(code, description);
+            throw new AppException(code, description);
         }
 
         public static string inexistentEmployee = "EmployeeError1";
@@ -54,12 +54,12 @@ namespace SistemaDePlanillas.Models
         
     }
 
-    public class AplicationException : Exception
+    public class AppException : Exception
     {
         public  string Code { get; set; }
         public  string DescriptionError { get; set; }
 
-        public AplicationException(string code, string description) : base(description)
+        public AppException(string code, string description) : base(description)
         {
             Code = code;
             DescriptionError = description;

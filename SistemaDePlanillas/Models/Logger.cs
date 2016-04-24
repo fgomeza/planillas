@@ -17,12 +17,12 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        public void LogAction(Response response, string group, string action, object[] args, User user, DateTime callTime)
+        public void LogAction(Response response, string group, string action, IDictionary<string, object> args, User user, DateTime callTime)
         {
 
         }
 
-        public void LogActionError(Exception e, string group, string action, object[] args, User user, DateTime callTime)
+        public void LogActionException(Exception e, string group, string action, IDictionary<string, object> args, User user, DateTime callTime)
         {
 
         }
