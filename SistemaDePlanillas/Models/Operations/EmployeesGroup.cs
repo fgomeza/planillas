@@ -46,29 +46,25 @@ namespace SistemaDePlanillas.Models.Operations
         }
 
         //employees/get
-        public static object get_all(User user)
-        {
-            var result = DBManager.Instance.selectAllEmployees(user.Location);
-            return Responses.WithData(result);
-        }
-
         public static object get(User user)
         {
-            var result = DBManager.Instance.selectAllActiveEmployees(user.Location);
-            return Responses.WithData(result);
+            return DBManager.Instance.selectAllEmployees(user.Location);
+        }
+
+        public static object get_active(User user)
+        {
+            return DBManager.Instance.selectAllActiveEmployees(user.Location);
         }
         //employees/get/cms
         public static object get_CMS(User user)
         {
-            var result = DBManager.Instance.selectAllCmsEmployees(user.Location);
-            return Responses.WithData(result);
+            return DBManager.Instance.selectAllCmsEmployees(user.Location);
         }
 
         //employees/get/noncms
         public static object get_nonCMS(User user)
         {
-            var result = DBManager.Instance.selectAllNonCmsEmployees(user.Location);
-            return Responses.WithData(result);
+            return DBManager.Instance.selectAllNonCmsEmployees(user.Location);
         }
 
         public static object get(User user, long id)
