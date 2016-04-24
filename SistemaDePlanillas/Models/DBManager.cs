@@ -64,7 +64,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -156,7 +156,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -204,7 +204,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -936,7 +936,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -961,7 +961,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentEmployee);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -1861,7 +1861,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentUser);
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                     var rows = repository.Complete();
                 }

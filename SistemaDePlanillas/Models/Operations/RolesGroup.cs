@@ -17,8 +17,8 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static Response add(User user, string name, IEnumerable<object> operations)
         {
-            var result = DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
-            return Responses.Simple(result.Status);
+            DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
+            return Responses.OK;
         }
 
 
@@ -30,33 +30,33 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static Response remove(User user, long id)
         {
-            var result = DBManager.Instance.deleteRole(id);
+            DBManager.Instance.deleteRole(id);
             SessionManager.Instance.updateRoles();
-            return Responses.Simple(result.Status);
+            return Responses.OK;
         }
 
         public static Response activate(User user, long id)
         {
-            var result = DBManager.Instance.activateRole(id);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.activateRole(id);
+            return Responses.OK;
         }
 
         public static Response modify(User user, long id, string name, List<String> operations)
         {
-            var result = DBManager.Instance.updateRole(id, name, user.Location, operations);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.updateRole(id, name, user.Location, operations);
+            return Responses.OK;
         }
 
         public static Response get_all(User user)
         {
             var result = DBManager.Instance.selectAllRoles();
-            return Responses.WithData(result.Detail);
+            return Responses.WithData(result);
         }
 
         public static Response get_active(User user)
         {
             var result = DBManager.Instance.selectAllActiveRoles();
-            return Responses.WithData(result.Detail);
+            return Responses.WithData(result);
         }
     }
 }

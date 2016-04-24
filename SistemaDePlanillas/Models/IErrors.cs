@@ -33,12 +33,10 @@ namespace SistemaDePlanillas.Models
 
         public static AppException validateException(string code)
         {
-
             string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
             throw new AppException(code, description);
         }
 
-        public static string inexistentEmployee = "EmployeeError1";
         public static string employeeInactive = "EmployeeError4";
         public static string inexistentLocation = "LocationError1";
         public static string locationInactive = "LocationError2";

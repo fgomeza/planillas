@@ -42,30 +42,30 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static Response calculate(User user, DateTime initialDate, DateTime endDate)
         {
-            var employees = DBManager.Instance.selectAllActiveEmployees(user.Location).Detail;
+            var employees = DBManager.Instance.selectAllActiveEmployees(user.Location);
             double totalPayroll = 0;
-            var location = DBManager.Instance.getLocation(user.Location).Detail;
+            var location = DBManager.Instance.getLocation(user.Location);
             double callPrice = location.CallPrice;
             List<object> rows = new List<object>();
             foreach (var employee in employees)
             {
-                var calls = DBManager.Instance.callListByEmployee(employee.id, endDate).Detail;
+                var calls = DBManager.Instance.callListByEmployee(employee.id, endDate);
                 long totalCalls = calls.Sum(c => c.calls);
-                var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate).Detail;
+                var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate);
                 var penalties = penaltiesByEmployee(penaltiesDB);
                 double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
-                var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id).Detail;
+                var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id);
                 var fixedDebits = fixedDebitsByEmployee(fixedDebitsDB);
                 double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
-                var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id).Detail;
+                var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id);
                 var paymentDebits = paymentDebitsByEmployee(paymentDebitsDB);
                 double totalPaymentDebits = paymentDebitsDB.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
                 double grossAmount = (employee.salary / 2) + (totalCalls * callPrice);
-                var lastSalaries = DBManager.Instance.getLastSalaries(employee.id).Detail;
+                var lastSalaries = DBManager.Instance.getLastSalaries(employee.id);
                 var extraPrice = (grossAmount + lastSalaries.Sum() / lastSalaries.Count + 1)/ workHoursByMonth;
-                var extras = DBManager.Instance.selectExtras(employee.id).Detail;
+                var extras = DBManager.Instance.selectExtras(employee.id);
                 double totalExtras = extras.Sum(e => e.hours)*extraPrice;
-                double saving = DBManager.Instance.selectSavingByEmployee(employee.id).Detail;
+                double saving = DBManager.Instance.selectSavingByEmployee(employee.id);
                 double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalFixedDebits - employee.negativeAmount;
 
                 totalPayroll += netSalary > 0 ? netSalary : 0;

@@ -43,7 +43,7 @@ namespace SistemaDePlanillas.Models
         {
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectAllRoles().Detail;
+            var rolesList = DBManager.Instance.selectAllRoles();
             foreach(Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -54,7 +54,7 @@ namespace SistemaDePlanillas.Models
         {
             roles = new Dictionary<long, Role>();
 
-            var rolesList = DBManager.Instance.selectAllRoles().Detail;
+            var rolesList = DBManager.Instance.selectAllRoles();
             foreach (Role role in rolesList)
             {
                 roles[role.id] = role;
@@ -90,7 +90,7 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            User user = DBManager.Instance.selectUser(userId).Detail;
+            User user = DBManager.Instance.selectUser(userId);
             if (user != null)
             {
                 return user;
@@ -138,9 +138,7 @@ namespace SistemaDePlanillas.Models
 
         public User validateUser(string username, string password)
         {
-            var Result = DBManager.Instance.login(username, password);
-            return Result.Status == 0 ?
-                Result.Detail : null;
+            return DBManager.Instance.login(username, password);
         }
 
     }

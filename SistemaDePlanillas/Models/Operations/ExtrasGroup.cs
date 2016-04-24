@@ -19,8 +19,8 @@ namespace SistemaDePlanillas.Models.Operations
         /// <returns>Estado de la transaccion en formato JSON</returns>
         public static Response add(User user,long employeeId, string detail,long hours)
         {
-                var result = DBManager.Instance.addExtra(employeeId, detail, hours).Status;
-                return Responses.Simple(result);
+                DBManager.Instance.addExtra(employeeId, detail, hours);
+                return Responses.OK;
         }
         /// <summary>
         /// Elimina un pago extra
@@ -30,8 +30,8 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response remove(User user,long extraId)
         {
 
-                var result = DBManager.Instance.deleteExtra(extraId).Status;
-                return Responses.Simple(result);
+                DBManager.Instance.deleteExtra(extraId);
+                return Responses.OK;
 
         }
         /// <summary> 
@@ -44,11 +44,8 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response modify(User user,long extraId, string detail, long hours)
         {
 
-                var result = DBManager.Instance.updateExtra(extraId, detail, hours).Status;
-                return Responses.Simple(result);
-
-
-            
+                DBManager.Instance.updateExtra(extraId, detail, hours);
+                return Responses.OK;
         }
         /// <summary>
         /// Accesa los pagos extra asociados a un empleado
@@ -62,8 +59,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
 
                 var result = DBManager.Instance.selectExtras(employeeId);
-                return Responses.SimpleWithData(result.Status,result.Detail);
-
+                return Responses.WithData(result);
       
         }
         /// <summary>
@@ -78,7 +74,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
 
                 var result = DBManager.Instance.selectExtra(extraId);
-                return Responses.SimpleWithData(result.Status, result.Detail);
+                return Responses.WithData(result);
 
         }
     }

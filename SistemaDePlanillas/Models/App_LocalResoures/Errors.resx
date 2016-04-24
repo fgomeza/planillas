@@ -213,4 +213,10 @@
   <data name="ukuser_username" xml:space="preserve">
     <value>UserError3</value>
   </data>
+  <data name="pkuser" xml:space="preserve">
+    <value>UserError4</value>
+  </data>
+  <data name="inexistentEmployee" xml:space="preserve">
+    <value>EmployeeError1</value>
+  </data>
 </root>

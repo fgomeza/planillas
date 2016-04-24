@@ -286,11 +286,29 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EmployeeError1.
+        /// </summary>
+        internal static string inexistentEmployee {
+            get {
+                return ResourceManager.GetString("inexistentEmployee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CallError1.
         /// </summary>
         internal static string pkcall {
             get {
                 return ResourceManager.GetString("pkcall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserError4.
+        /// </summary>
+        internal static string pkuser {
+            get {
+                return ResourceManager.GetString("pkuser", resourceCulture);
             }
         }
         

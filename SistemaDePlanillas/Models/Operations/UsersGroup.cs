@@ -10,18 +10,14 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static Response add(User user, string name, string username, string password, string email, long role)
         {
-            var result = DBManager.Instance.addUser(name, username, password, role, user.Location, email);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.addUser(name, username, password, role, user.Location, email);
+            return Responses.OK;
         }
 
         public static Response get(User user, long id)
         {
             var result = DBManager.Instance.selectUser(id);
-            if (result.Status == 0)
-            {
-                return Responses.WithData(formatUser(result.Detail));
-            }
-            return Responses.Error(result.Status);
+            return Responses.WithData(formatUser(result));
         }
 
         private static object formatUser(User user)
@@ -42,23 +38,19 @@ namespace SistemaDePlanillas.Models.Operations
         public static Response get(User user)
         {
             var result = DBManager.Instance.selectAllUsers(user.Location);
-            if (result.Status == 0)
-            {
-                return Responses.WithData(result.Detail.Select(u => formatUser(u)));
-            }
-            return Responses.Error(result.Status);
+            return Responses.WithData(result.Select(u => formatUser(u)));
         }
 
         public static Response modify(User user, string name, string username, string password, string email, long role, long location)
         {
-            var result = DBManager.Instance.addUser(name, username, password, role, location, email);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.addUser(name, username, password, role, location, email);
+            return Responses.OK;
         }
 
         public static Response remove(User user, long id)
         {
-            var result = DBManager.Instance.deleteUser(id);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.deleteUser(id);
+            return Responses.OK;
         }
 
         public static Response root_get(User user)
