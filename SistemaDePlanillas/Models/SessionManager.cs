@@ -41,24 +41,13 @@ namespace SistemaDePlanillas.Models
 
         private SessionManager()
         {
-            roles = new Dictionary<long, Role>();
-
-            var rolesList = DBManager.Instance.selectAllRoles();
-            foreach(Role role in rolesList)
-            {
-                roles[role.id] = role;
-            }
+            updateRoles();
         }
 
         public void updateRoles()
         {
-            roles = new Dictionary<long, Role>();
-
-            var rolesList = DBManager.Instance.selectAllRoles();
-            foreach (Role role in rolesList)
-            {
-                roles[role.id] = role;
-            }
+            var rolesList = DBManager.Instance.selectAllActiveRoles();
+            roles = rolesList.ToDictionary(r => r.id);
         }
 
         public IEnumerable<Role> getRoles()

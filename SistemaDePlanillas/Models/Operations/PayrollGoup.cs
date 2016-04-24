@@ -16,35 +16,7 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.WithData(BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()));
         }
 
-        public static void test(User user)
-        {
-        }
-
-        public static Response xxx(User user, double total, long mo, double inte)
-        {
-
-                //formula para calcular cuota fija
-                ///de un prestamo usando el metodo frances de cuota fija
-
-                double Monto = total;
-                long Plazos = mo;
-                double taza = inte;
-
-
-                //A = 1-(1+taza)^-plazos
-                long p = Plazos * -1;
-                double b = (1 + taza);
-                double A = (1 - Math.Pow(b, p)) / taza;
-
-                //Cuota Fija = Monto / A;
-                double Cuota_F = Monto / A;
-
-
-            return Responses.WithData(Cuota_F);
-    
-}
-
-        public static Response calculate(User user, DateTime initialDate, DateTime endDate)
+        public static object calculate(User user, DateTime initialDate, DateTime endDate)
         {
             var employees = DBManager.Instance.selectAllActiveEmployees(user.Location);
             double totalPayroll = 0;
