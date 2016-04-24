@@ -150,7 +150,7 @@ namespace SistemaDePlanillas.Controllers
             }
             catch (Exception e)
             {
-                listener.OnException(user, callTime, group, operation, args, e.InnerException);
+                listener.OnException(user, callTime, group, operation, args, e);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
