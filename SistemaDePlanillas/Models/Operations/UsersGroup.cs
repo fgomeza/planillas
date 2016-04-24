@@ -37,13 +37,13 @@ namespace SistemaDePlanillas.Models.Operations
         public static object get(User user)
         {
             var result = DBManager.Instance.selectAllUsers(user.Location);
-            return Responses.WithData(result.Select(u => formatUser(u)));
+            return result.Select(u => formatUser(u));
         }
 
         public static object get_active(User user)
         {
             var result = DBManager.Instance.selectAllActiveUsers(user.Location);
-            return Responses.WithData(result.Select(u => formatUser(u)));
+            return result.Select(u => formatUser(u));
         }
 
         public static void modify(User user, string name, string username, string password, string email, long role, long location)
