@@ -136,6 +136,7 @@ namespace SistemaDePlanillas.Controllers
                 listener.OnActionComplete(response, user, callTime, group, operation, args);
                 return response;
             }
+
             catch (Exception e) when (e is FormatException || e is InvalidCastException || e is ArgumentException)
             {
                 listener.OnBadActionArguments(user, callTime, group, operation, args, method.GetParameters());
