@@ -41,24 +41,13 @@ namespace SistemaDePlanillas.Models
 
         private SessionManager()
         {
-            roles = new Dictionary<long, Role>();
-
-            var rolesList = DBManager.Instance.selectAllRoles().Detail;
-            foreach(Role role in rolesList)
-            {
-                roles[role.id] = role;
-            }
+            updateRoles();
         }
 
         public void updateRoles()
         {
-            roles = new Dictionary<long, Role>();
-
-            var rolesList = DBManager.Instance.selectAllRoles().Detail;
-            foreach (Role role in rolesList)
-            {
-                roles[role.id] = role;
-            }
+            var rolesList = DBManager.Instance.selectAllActiveRoles();
+            roles = rolesList.ToDictionary(r => r.id);
         }
 
         public IEnumerable<Role> getRoles()
@@ -90,7 +79,7 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            User user = DBManager.Instance.selectUser(userId).Detail;
+            User user = DBManager.Instance.selectUser(userId);
             if (user != null)
             {
                 return user;
@@ -138,9 +127,7 @@ namespace SistemaDePlanillas.Models
 
         public User validateUser(string username, string password)
         {
-            var Result = DBManager.Instance.login(username, password);
-            return Result.Status == 0 ?
-                Result.Detail : null;
+            return DBManager.Instance.login(username, password);
         }
 
     }

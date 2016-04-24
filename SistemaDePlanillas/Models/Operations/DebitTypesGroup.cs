@@ -8,41 +8,34 @@ namespace SistemaDePlanillas.Models.Operations
     public class DebitTypesGroup
     {
 
-        public static Response add_FixedType(User user, string name)
+        public static void add_FixedType(User user, string name)
         {
-            var result = DBManager.Instance.addDebitType(name, user.Location);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.addDebitType(name, user.Location);
         }
 
-        public static Response add_PaymentType(User user, string name, double interestRate, long months)
+        public static void add_PaymentType(User user, string name, double interestRate, long months)
         {
-            var result = DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
         }
 
-        public static Response modify(User user, long id, string name, long months = 0, double interestRate = 0)
+        public static void modify(User user, long id, string name, long months = 0, double interestRate = 0)
         {
-            var result = DBManager.Instance.updateDebitType(id, name, months, interestRate);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.updateDebitType(id, name, months, interestRate);
         }
 
-        public static Response remove(User user, long id)
+        public static void remove(User user, long id)
         {
-            var result = DBManager.Instance.deleteDebitType(id);
-            return Responses.Simple(result.Status);
+            DBManager.Instance.deleteDebitType(id);
         }
 
-
-        public static Response get_FixedTypes(User user)
+        public static object get_FixedTypes(User user)
         {
-            var result = DBManager.Instance.selectFixedDebitTypes(user.Location);
-            return Responses.SimpleWithData(result.Status, result.Detail);
+            return DBManager.Instance.selectFixedDebitTypes(user.Location);
         }
 
-        public static Response get_PaymentTypes(User user)
+        public static object get_PaymentTypes(User user)
         {
-            var result = DBManager.Instance.selectNonFixedDebitTypes(user.Location);
-            return Responses.SimpleWithData(result.Status, result.Detail);
+            return DBManager.Instance.selectNonFixedDebitTypes(user.Location);
         }
 
     }

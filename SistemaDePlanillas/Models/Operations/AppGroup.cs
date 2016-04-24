@@ -9,7 +9,7 @@ namespace SistemaDePlanillas.Models.Operations
     public class AppGroup
     {
 
-        public static Response actions(User user)
+        public static object actions(User user)
         {
             string @namespace = "SistemaDePlanillas.Models.Operations";
 
@@ -25,10 +25,10 @@ namespace SistemaDePlanillas.Models.Operations
                     .Select((m) => m.Name.Replace('_', '/') + getParametersDesc(m.GetParameters()));
                 actions.Add(new { groupName = group.Name.Substring(0,group.Name.Length-5), actions = methods });
             }
-            return Responses.WithData(actions);
+            return actions;
         }
 
-        public static Response actions(User user, string group)
+        public static object actions(User user, string group)
         {
             string @namespace = "SistemaDePlanillas.Models.Operations";
             Type type = Type.GetType(@namespace+"."+group+"Group", false, true);
@@ -38,7 +38,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
             var methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase).Where(m => m.GetParameters().Length > 0 && m.GetParameters()[0].ParameterType.Equals(typeof(User)))
                 .Select((m) => m.Name.Replace('_', '/') + getParametersDesc(m.GetParameters()));
-            return Responses.WithData(methods);
+            return methods;
         }
 
         private static string getParametersDesc(ParameterInfo[] parameters)

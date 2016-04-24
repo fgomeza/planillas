@@ -183,8 +183,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\JonnController.cs" />
-    <Compile Include="Controllers\OperationsApiController.cs" />
+    <Compile Include="Controllers\ActionsController.cs" />
     <Compile Include="Controllers\PartialViewsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AjaxOnlyAttribute.cs" />
@@ -192,6 +191,18 @@
     <Compile Include="Filters\SidebarFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\IActionsEvents.cs" />
+    <Compile Include="Models\App_LocalResoures\DescriptionError.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DescriptionError.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\App_LocalResoures\Errors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
@@ -338,6 +349,16 @@
       <Project>{5b8420ac-057c-4953-bde8-a3786e98b029}</Project>
       <Name>Repository</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Models\App_LocalResoures\DescriptionError.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DescriptionError.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Models\App_LocalResoures\Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

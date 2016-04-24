@@ -9,16 +9,16 @@ using Repository.Entities;
 using System.Collections;
 using DevOne.Security.Cryptography.BCrypt;
 using System.Linq;
+using System.Resources;
+using System.Reflection;
 
 namespace SistemaDePlanillas.Models
 
 {
     public class DBManager : IErrors
     {
-        private Dictionary<string, long> errors;
 
         private static DBManager instance;
-
 
         public static DBManager Instance
         {
@@ -27,24 +27,9 @@ namespace SistemaDePlanillas.Models
                 return instance == null ? (instance = new DBManager()) : instance;
             }
         }
-
-        private long validate(Exception e)
+        
+        public void addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
-            if (e.InnerException != null)
-            {
-                e = e.InnerException;
-                if (e.InnerException != null && e.InnerException is NpgsqlException)
-                {
-                    return 200; // TODO arreglar esto
-                    //return errors[(e.InnerException as NpgsqlException).ConstraintName];
-                }
-            }
-            throw e;
-        }
-
-        public Result<string> addCmsEmployee(string idCard, string CMS, string name, long location, string account)
-        {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -57,14 +42,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
+        public void updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -81,21 +64,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<Employee>> selectAllCmsEmployees(long location)
+        public List<Employee> selectAllCmsEmployees(long location)
         {
-            Result<List<Employee>> result = new Result<List<Employee>>();
-            result.Detail = new List<Employee>();
+            List<Employee> result = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -107,21 +88,20 @@ namespace SistemaDePlanillas.Models
 
                         Employee employee = new Employee()
                         { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls, active = x.active };
-                        result.Detail.Add(employee);
+                        result.Add(employee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Call>> callListByEmployee(long employee, DateTime endDate)
+        public List<Call> callListByEmployee(long employee, DateTime endDate)
         {
-            Result<List<Call>> result = new Result<List<Call>>();
-            result.Detail = new List<Call>();
+            List<Call> result = new List<Call>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -129,21 +109,19 @@ namespace SistemaDePlanillas.Models
                     var calls = repository.Calls.callListbyEmployee(employee, endDate);
                     foreach (var call in calls)
                     {
-                        result.Detail.Add(new Call() { employee = call.employeeId, calls = call.calls, date = call.date, hours = call.time });
+                        result.Add(new Call() { employee = call.employeeId, calls = call.calls, date = call.date, hours = call.time });
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-
-        public Result<string> addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
+        public void addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -156,15 +134,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, double salary)
+        public void updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, double salary)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -181,21 +156,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<Employee>> selectAllNonCmsEmployees(long location)
+        public List<Employee> selectAllNonCmsEmployees(long location)
         {
-            Result<List<Employee>> result = new Result<List<Employee>>();
-            result.Detail = new List<Employee>();
+            List<Employee> result = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -203,22 +176,22 @@ namespace SistemaDePlanillas.Models
                     var employees = repository.Employees.selectNonCMSEmployees(location);
                     foreach (var x in employees)
                     {
-                        Employee employee = new Employee()
-                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary, active = x.active };
-                        result.Detail.Add(employee);
+                        result.Add(new Employee()
+                        {
+                            id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary, active = x.active
+                        });
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> deleteEmployee(long employeeId)
+        public void deleteEmployee(long employeeId)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -231,20 +204,18 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> activateEmployee(long employeeId)
+        public void activateEmployee(long employeeId)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -257,19 +228,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
-        public Result<Employee> selectEmployee(long id)
+
+        public Employee selectEmployee(long id)
         {
-            Result<Employee> result = new Result<Employee>();
+            Employee result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -278,106 +249,105 @@ namespace SistemaDePlanillas.Models
 
                     if (employee != null && employee.active)
                     {
-                        Employee res = new Employee();
-                        res.id = employee.id;
-                        res.idCard = employee.idCard;
-                        res.location = employee.locationId;
-                        res.name = employee.name;
-                        res.cms = employee.cms == null ? false : true;
-                        res.cmsText = employee.cms;
-                        res.account = employee.account;
-                        res.salary = employee.salary;
-                        result.Detail = res;
-                        res.active = true;
-                        res.negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount;
+                        result = new Employee()
+                        {
+                            id = employee.id,
+                            idCard = employee.idCard,
+                            location = employee.locationId,
+                            name = employee.name,
+                            cms = employee.cms == null ? false : true,
+                            cmsText = employee.cms,
+                            account = employee.account,
+                            salary = employee.salary,
+                            active = employee.active,
+                            negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                        };
                     }
                     else
                     {
-                        result.Status = employee != null ? employeeInactive : inexistentEmployee;
+                        validateException(employee != null ? employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
                     }
-
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Employee>> selectAllActiveEmployees(long location)
+        public List<Employee> selectAllActiveEmployees(long location)
         {
-            Result<List<Employee>> result = new Result<List<Employee>>();
+            List<Employee> result = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var employees = repository.Employees.GetAll();
-                    result.Detail = new List<Employee>();
                     foreach (var employee in employees)
                     {
-                        Employee res = new Employee();
-                        res.id = employee.id;
-                        res.idCard = employee.idCard;
-                        res.location = employee.locationId;
-                        res.name = employee.name;
-                        res.cms = employee.cms == null ? false : true;
-                        res.calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now);
-                        res.cmsText = employee.cms;
-                        res.account = employee.account;
-                        res.salary = employee.salary;
-                        res.active = employee.active;
-                        res.negativeAmount = employee.negativeAmount==null?0:(double)employee.negativeAmount;
-                        result.Detail.Add(res);
+                        result.Add(new Employee() {
+                            id = employee.id,
+                            idCard = employee.idCard,
+                            location = employee.locationId,
+                            name = employee.name,
+                            cms = employee.cms == null ? false : true,
+                            calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
+                            cmsText = employee.cms,
+                            account = employee.account,
+                            salary = employee.salary,
+                            active = employee.active,
+                            negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                        });
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Employee>> selectAllEmployees(long location)
+        public List<Employee> selectAllEmployees(long location)
         {
-            Result<List<Employee>> result = new Result<List<Employee>>();
+            List<Employee> result = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var employees = repository.Employees.GetAll();
-                    result.Detail = new List<Employee>();
                     foreach (var employee in employees)
                     {
                         if (employee.active)
                         {
-                            Employee res = new Employee();
-                            res.id = employee.id;
-                            res.idCard = employee.idCard;
-                            res.location = employee.locationId;
-                            res.name = employee.name;
-                            res.cms = employee.cms == null ? false : true;
-                            res.calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now);
-                            res.cmsText = employee.cms;
-                            res.account = employee.account;
-                            res.salary = employee.salary;
-                            res.negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount;
-                            result.Detail.Add(res);
+                            result.Add(new Employee()
+                            {
+                                id = employee.id,
+                                idCard = employee.idCard,
+                                location = employee.locationId,
+                                name = employee.name,
+                                cms = employee.cms == null ? false : true,
+                                calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
+                                cmsText = employee.cms,
+                                account = employee.account,
+                                salary = employee.salary,
+                                active = employee.active,
+                                negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                            });
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> addCalls(List<FileConvertions.CMSRegister> calls)
+        public void addCalls(List<FileConvertions.CMSRegister> calls)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -397,15 +367,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
 
-        public Result<string> addDebit(long employee, string Detail, double amount, long type)
+        public void addDebit(long employee, string Detail, double amount, long type)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -424,13 +392,11 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> updateDebit(long idDebit, string Detail, double amount)
+        public void updateDebit(long idDebit, string Detail, double amount)
         {
             Result<string> result = new Result<string>();
             try
@@ -446,21 +412,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
 
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> deleteDebit(long idDebit)
+        public void deleteDebit(long idDebit)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -473,20 +437,18 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> activateDebit(long idDebit)
+        public void activateDebit(long idDebit)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -499,20 +461,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<Debit> selectDebit(long idDebit)
+        public Debit selectDebit(long idDebit)
         {
-            Result<Debit> result = new Result<Debit>();
+            Debit result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -520,93 +481,90 @@ namespace SistemaDePlanillas.Models
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        Debit res = new Debit();
-                        res.id = debit.id;
-                        res.employee = debit.employeeId;
-                        res.amount = debit.totalAmount;
-                        res.detail = debit.description;
-                        res.type = debit.debitTypeId;
-                        res.typeName = debit.fkdebit_type.name;
-                        result.Detail = res;
+                        result = new Debit()
+                        {
+                            id = debit.id,
+                            employee = debit.employeeId,
+                            amount = debit.totalAmount,
+                            detail = debit.description,
+                            type = debit.debitTypeId,
+                            typeName = debit.fkdebit_type.name
+                        };
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Debit>> selectActiveDebits(long employee)
+        public List<Debit> selectActiveDebits(long employee)
         {
-            Result<List<Debit>> result = new Result<List<Debit>>();
+            List<Debit> result = new List<Debit>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debits = repository.Debits.selectFixDebitsByEmployee(employee);
-                    result.Detail = new List<Debit>();
                     foreach (var debit in debits)
                     {
                         if (debit.active)
                         {
-                            Debit deb = new Debit();
-                            deb.id = debit.id;
-                            deb.amount = debit.totalAmount;
-                            deb.employee = debit.employeeId;
-                            deb.detail = debit.description;
-                            deb.type = debit.debitTypeId;
-                            result.Detail.Add(deb);
+                            result.Add(new Debit()
+                            {
+                                id = debit.id,
+                                amount = debit.totalAmount,
+                                employee = debit.employeeId,
+                                detail = debit.description,
+                                type = debit.debitTypeId
+                            });
                         }
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Debit>> selectDebits(long employee)
+        public List<Debit> selectDebits(long employee)
         {
-            Result<List<Debit>> result = new Result<List<Debit>>();
+            List<Debit> result = new List<Debit>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debits = repository.Debits.selectFixDebitsByEmployee(employee);
-                    result.Detail = new List<Debit>();
                     foreach (var debit in debits)
                     {
-                        if (debit.active)
+                        result.Add(new Debit()
                         {
-                            Debit deb = new Debit();
-                            deb.id = debit.id;
-                            deb.amount = debit.totalAmount;
-                            deb.employee = debit.employeeId;
-                            deb.detail = debit.description;
-                            deb.type = debit.debitTypeId;
-                            result.Detail.Add(deb);
-                        }
+                            id = debit.id,
+                            amount = debit.totalAmount,
+                            employee = debit.employeeId,
+                            detail = debit.description,
+                            type = debit.debitTypeId
+                        });
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long months, long type)
+        public void addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long months, long type)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -629,15 +587,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, long months, double remainingAmount)
+        public void updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, long months, double remainingAmount)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -656,15 +611,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<PaymentDebit> selectPaymentDebit(long idDebit)
+        public PaymentDebit selectPaymentDebit(long idDebit)
         {
-            Result<PaymentDebit> result = new Result<PaymentDebit>();
+            PaymentDebit result = new PaymentDebit();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -672,71 +625,70 @@ namespace SistemaDePlanillas.Models
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        PaymentDebit deb = new PaymentDebit();
-                        deb.id = debit.id;
-                        deb.initialDate = debit.initialDate;
-                        deb.detail = debit.description;
-                        deb.employee = debit.employeeId;
-                        deb.total = debit.totalAmount;
-                        deb.remainingAmount = debit.remainingAmount;
-                        deb.paymentsMade = (long)debit.paidMonths;
-                        deb.missingPayments = (long)debit.remainingMonths;
-                        deb.interestRate = (double)debit.fkdebit_type.interestRate;
-                        deb.type = debit.debitTypeId;
-                        deb.typeName = debit.fkdebit_type.name;
+                        result.id = debit.id;
+                        result.initialDate = debit.initialDate;
+                        result.detail = debit.description;
+                        result.employee = debit.employeeId;
+                        result.total = debit.totalAmount;
+                        result.remainingAmount = debit.remainingAmount;
+                        result.paymentsMade = (long)debit.paidMonths;
+                        result.missingPayments = (long)debit.remainingMonths;
+                        result.interestRate = (double)debit.fkdebit_type.interestRate;
+                        result.type = debit.debitTypeId;
+                        result.typeName = debit.fkdebit_type.name;
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<PaymentDebit>> selectPaymentDebits(long employee)
+        public List<PaymentDebit> selectPaymentDebits(long employee)
         {
-            Result<List<PaymentDebit>> result = new Result<List<PaymentDebit>>();
+            List<PaymentDebit> result = new List<PaymentDebit>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debits = repository.Debits.selectDebitsNonFixByEmployee(employee);
-                    result.Detail = new List<PaymentDebit>();
                     foreach (var debit in debits)
                     {
                         if (debit.active)
                         {
-                            PaymentDebit deb = new PaymentDebit();
-                            deb.id = debit.id;
-                            deb.initialDate = debit.initialDate;
-                            deb.detail = debit.description;
-                            deb.employee = debit.employeeId;
-                            deb.total = debit.totalAmount;
-                            deb.remainingAmount = debit.remainingAmount;
-                            deb.paymentsMade = debit.paidMonths==null?0:(long)debit.paidMonths;
-                            deb.missingPayments = debit.remainingMonths == null?0:(long)debit.remainingMonths;
-                            deb.interestRate = (double)debit.fkdebit_type.interestRate;
-                            deb.type = debit.debitTypeId;
-                            deb.typeName = debit.fkdebit_type.name;
+                            result.Add(new PaymentDebit()
+                            {
+                                id = debit.id,
+                                initialDate = debit.initialDate,
+                                detail = debit.description,
+                                employee = debit.employeeId,
+                                total = debit.totalAmount,
+                                remainingAmount = debit.remainingAmount,
+                                paymentsMade = debit.paidMonths == null ? 0 : (long)debit.paidMonths,
+                                missingPayments = debit.remainingMonths == null ? 0 : (long)debit.remainingMonths,
+                                interestRate = (double)debit.fkdebit_type.interestRate,
+                                type = debit.debitTypeId,
+                                typeName = debit.fkdebit_type.name
+                            });  
                         }
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<String> payDebit(long idDebit, float amount)
+        public void payDebit(long idDebit, float amount)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -757,40 +709,34 @@ namespace SistemaDePlanillas.Models
 
                     repository.Complete();
                 }
-
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<double>> getLastSalaries(long employeeId)
+        public List<double> getLastSalaries(long employeeId)
         {
-            Result<List<double>> result = new Result<List<double>>();
-            result.Detail = new List<double>();
+            List<double> result = new List<double>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var all = (List<SalaryEntity>)repository.Salarys.selectLastSalariesByEmployee(employeeId);
                     foreach (var salary in all)
-                        result.Detail.Add((double)salary.salary);
+                        result.Add((double)salary.salary);
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<string> addExtra(long employee, string Detail, long hours)
+        public void addExtra(long employee, string Detail, long hours)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -808,16 +754,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> updateExtra(long idExtra, string Detail, long hours)
+        public void updateExtra(long idExtra, string Detail, long hours)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -830,24 +772,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
-
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> deleteExtra(long idExtra)
+        public void deleteExtra(long idExtra)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -859,24 +796,21 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
 
-        public Result<Extra> selectExtra(long idExtra)
+        public Extra selectExtra(long idExtra)
         {
-            Result<Extra> result = new Result<Extra>();
+            Extra result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -884,31 +818,30 @@ namespace SistemaDePlanillas.Models
                     var extra = repository.Extras.Get(idExtra);
                     if (extra != null)
                     {
-                        result.Detail.hours = extra.hours;
-                        result.Detail.detail = extra.description;
-                        result.Detail.employee = extra.employeeId;
-                        result.Detail.id = extra.id;
+                        result = new Extra()
+                        {
+                            hours = extra.hours,
+                            detail = extra.description,
+                            employee = extra.employeeId,
+                            id = extra.id
+                        };
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
-
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<List<Extra>> selectExtras(long employee)
+        public List<Extra> selectExtras(long employee)
         {
-            Result<List<Extra>> result = new Result<List<Extra>>();
-            result.Detail = new List<Extra>();
+            List<Extra> result = new List<Extra>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -916,7 +849,7 @@ namespace SistemaDePlanillas.Models
                     var extras = repository.Extras.selectExtrasByEmployee(employee);
                     foreach (var ex in extras)
                     {
-                        result.Detail.Add(new Extra()
+                        result.Add(new Extra()
                         {
                             id = ex.id,
                             detail = ex.description,
@@ -928,16 +861,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<string> addPenalty(long employee, string Detail, long amount, long months, long penaltyTypeId, DateTime date)
+        public void addPenalty(long employee, string Detail, long amount, long months, long penaltyTypeId, DateTime date)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -958,17 +888,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
-
-
-        public Result<string> updatePenalty(long idRecess, long payroll, long penaltyTypeId, string Detail, long amount, DateTime date)
+        
+        public void updatePenalty(long idRecess, long payroll, long penaltyTypeId, string Detail, long amount, DateTime date)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -985,7 +910,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
 
@@ -993,16 +918,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> deletePenalty(long idRecess)
+        public void deletePenalty(long idRecess)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1010,24 +931,22 @@ namespace SistemaDePlanillas.Models
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        //repository.Penalties.Remove(penalty);
                         penalty.active = false;
                         repository.Complete();
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> activatePenalty(long idRecess)
+        public void activatePenalty(long idRecess)
         {
             Result<string> result = new Result<string>();
             try
@@ -1037,26 +956,24 @@ namespace SistemaDePlanillas.Models
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        //repository.Penalties.Remove(penalty);
                         penalty.active = true;
                         repository.Complete();
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<Penalty> selectPenalty(long idRecess)
+        public Penalty selectPenalty(long idRecess)
         {
-            Result<Penalty> result = new Result<Penalty>();
+            Penalty result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1065,10 +982,10 @@ namespace SistemaDePlanillas.Models
 
                     if (penalty != null && penalty.active)
                     {
-                        result.Detail = new Penalty()
+                        result = new Penalty()
                         {
                             id = penalty.Id,
-                            amount = penalty.Amount==null?0:(double)penalty.Amount,
+                            amount = penalty.Amount == null ? 0 : (double)penalty.Amount,
                             date = penalty.Date,
                             detail = penalty.Description,
                             employee = penalty.EmployeeId,
@@ -1079,22 +996,20 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = penalty != null ? penaltyInactive : inexistentPenalty;
+                        validateException(penalty != null ? penaltyInactive : inexistentPenalty);
                     }
-
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Penalty>> selectAllPenalty(long employee, DateTime endDate)
+        public List<Penalty> selectAllPenalty(long employee, DateTime endDate)
         {
-            Result<List<Penalty>> result = new Result<List<Penalty>>();
-            result.Detail = new List<Penalty>();
+            List<Penalty> result = new List<Penalty>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1102,7 +1017,7 @@ namespace SistemaDePlanillas.Models
                     var penalties = repository.Penalties.selectPenaltiesByEmployee(employee, endDate);
                     foreach (var p in penalties)
                     {
-                        result.Detail.Add(new Penalty()
+                        result.Add(new Penalty()
                         {
                             id = p.Id,
                             amount = (double)p.Amount,
@@ -1118,17 +1033,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
-
-
-        public Result<String> payPenalty(long payrollId, long employeeId, DateTime endDate)
+        
+        public void payPenalty(long payrollId, long employeeId, DateTime endDate)
         {
-            Result<String> result = new Result<String>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1139,21 +1050,17 @@ namespace SistemaDePlanillas.Models
                         p.PayRollId = payrollId;
                     }
                     repository.Complete();
-
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
-
         }
 
-        public Result<Dictionary<long, PenaltyType>> selectAllPenaltyTypes(long location)
+        public Dictionary<long, PenaltyType> selectAllPenaltyTypes(long location)
         {
-            Result<Dictionary<long, PenaltyType>> result = new Result<Dictionary<long, PenaltyType>>();
-            result.Detail = new Dictionary<long, PenaltyType>();
+            Dictionary<long, PenaltyType> result = new Dictionary<long, PenaltyType>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1161,107 +1068,98 @@ namespace SistemaDePlanillas.Models
                     var types = repository.PenaltyTypes.getAllbyLocation(location);
                     foreach (var p in types)
                     {
-                        result.Detail.Add(p.Id, new PenaltyType() { id = p.Id, name = p.Name, price = p.Price });
+                        result.Add(p.Id, new PenaltyType() { id = p.Id, name = p.Name, price = p.Price });
                     }
                     repository.Complete();
-
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
-
         }
 
-        public Result<string> addPayroll(DateTime date, long user, string file, long location)
+        public void addPayroll(DateTime date, long user, string file, long location)
         {
-            Result<string> res = new Result<string>();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
         }
 
-        public Result<string> updatePayroll(long idPay, DateTime date, long user, string file)
+        public void updatePayroll(long idPay, DateTime date, long user, string file)
         {
-            Result<string> res = new Result<string>();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
         }
 
-        public Result<string> deletePayroll(long idPay)
+        public void deletePayroll(long idPay)
         {
-            Result<string> res = new Result<string>();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
         }
 
-        public Result<Payroll> selectPayroll(long idPay)
+        public Payroll selectPayroll(long idPay)
         {
-            Result<Payroll> res = new Result<Payroll>();
+            Payroll result = new Payroll();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<List<Payroll>> selectAllPayroll(long idPay)
+        public List<Payroll> selectAllPayroll(long idPay)
         {
-            Result<List<Payroll>> res = new Result<List<Payroll>>();
+            List<Payroll> result = new List<Payroll>();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<List<Payroll>> selectPayroll(DateTime ini, DateTime end)
+        public List<Payroll> selectPayroll(DateTime ini, DateTime end)
         {
-            Result<List<Payroll>> res = new Result<List<Payroll>>();
+            List<Payroll> result = new List<Payroll>();
             try
             {
 
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addLocation(string name, double call_price, long administrator)
+        public void addLocation(string name, double call_price, long administrator)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1277,48 +1175,42 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<Location> getLocation(long id)
+        public Location getLocation(long id)
         {
-            Result<Location> result = new Result<Location>();
+            Location result = new Location();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = repository.Locations.Get(id);
 
-                    if (location != null)
+                    if (location != null && location.active)
                     {
-                        Location location_result = new Location()
-                        {
-                            Name = location.name,
-                            CallPrice = location.callPrice == null ? 0 : (long)location.callPrice,
-                            LastPayroll = location.lastPayrollId,
-                            CurrentPayroll = location.currentPayrollId,
-                            Active = location.active
-                        };
-                        result.Detail = location_result;
+                        result.Name = location.name;
+                        result.CallPrice = location.callPrice == null ? 0 : (long)location.callPrice;
+                        result.LastPayroll = location.lastPayrollId;
+                        result.CurrentPayroll = location.currentPayrollId;
+                        result.Active = location.active;
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(location != null ? locationInactive : inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<Location> activateLocation(long id)
+        public void activateLocation(long id)
         {
-            Result<Location> result = new Result<Location>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1332,20 +1224,18 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = location != null ? locationInactive : inexistentLocation;
+                        validateException(location != null ? locationInactive : inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateAdministrator(long location, long administrator)
+        public void updateAdministrator(long location, long administrator)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1369,14 +1259,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateLocation(long id, string name, double call_price)
+        public void updateLocation(long id, string name, double call_price)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1390,21 +1278,18 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateLocationLastPayroll(long id, long last_payroll)
+        public void updateLocationLastPayroll(long id, long last_payroll)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1417,21 +1302,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateLocationCurrentPayroll(long id, long current_payroll)
+        public void updateLocationCurrentPayroll(long id, long current_payroll)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1444,21 +1327,18 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> deleteLocation(long id)
+        public void deleteLocation(long id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1467,27 +1347,24 @@ namespace SistemaDePlanillas.Models
                     if (location != null && location.active)
                     {
                         location.active = false;
-                        //repository.Locations.Remove(location);
                         repository.Complete();
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<Location>> selectAllLocations()
+        public List<Location> selectAllLocations()
         {
-            Result<List<Location>> result = new Result<List<Location>>();
-            result.Detail = new List<Location>();
+            List<Location> result = new List<Location>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1495,23 +1372,25 @@ namespace SistemaDePlanillas.Models
                     var locations = repository.Locations.GetAll();
                     foreach (var x in locations)
                     {
-                        Location location = new Location()
-                        { Id = x.id, Name = x.name, CallPrice = (double)x.callPrice }; //*
-                        result.Detail.Add(location);
+                        result.Add(new Location()
+                        {
+                            Id = x.id,
+                            Name = x.name,
+                            CallPrice = (double)x.callPrice
+                        }); 
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Location>> selectAllActiveLocations()
+        public List<Location> selectAllActiveLocations()
         {
-            Result<List<Location>> result = new Result<List<Location>>();
-            result.Detail = new List<Location>();
+            List<Location> result = new List<Location>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1519,22 +1398,24 @@ namespace SistemaDePlanillas.Models
                     var locations = repository.Locations.getAllActiveLocations();
                     foreach (var x in locations)
                     {
-                        Location location = new Location()
-                        { Id = x.id, Name = x.name, CallPrice = (double)x.callPrice }; //*
-                        result.Detail.Add(location);
+                        result.Add( new Location()
+                        {
+                            Id = x.id,
+                            Name = x.name,
+                            CallPrice = (double)x.callPrice
+                        }); 
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> addRole(string name, long location, List<string> operations)//**
+        public void addRole(string name, long location, List<string> operations)//**
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1552,18 +1433,16 @@ namespace SistemaDePlanillas.Models
                     }
                     repository.Complete();
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<Role> getRole(long id)
+        public Role getRole(long id)
         {
-            Result<Role> result = new Result<Role>();
+            Role result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1579,24 +1458,23 @@ namespace SistemaDePlanillas.Models
                             list.Add(tuple);
                         }
                         Role role_result = new Role(role.id, role.name, role.locationId, true, list);
-                        result.Detail = role_result;
+                        result = role_result;
                     }
                     else
                     {
-                        result.Status = role != null ? roleInactive : inexistentRole;
+                        validateException(role!=null? roleInactive:inexistentRole);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> updateRole(long id, string name, long location, List<string> operations)
+        public void updateRole(long id, string name, long location, List<string> operations)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1619,19 +1497,17 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> deleteRole(long id)
+        public void deleteRole(long id)
         {
             Result<string> result = new Result<string>();
             try
@@ -1641,27 +1517,24 @@ namespace SistemaDePlanillas.Models
                     RoleEntity role = repository.Roles.Get(id);
                     if (role != null)
                     {
-                        //repository.Roles.Remove(role);
                         role.active = false;
                         repository.Complete();
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> activateRole(long id)
+        public void activateRole(long id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1674,22 +1547,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<Role>> selectAllRoles()
+        public List<Role> selectAllRoles()
         {
-            Result<List<Role>> result = new Result<List<Role>>();
-            result.Detail = new List<Role>();
+            List<Role> result = new List<Role>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1703,21 +1573,20 @@ namespace SistemaDePlanillas.Models
                             Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
                             list.Add(tuple);
                         }
-                        result.Detail.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                        result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Role>> selectAllActiveRoles()
+        public List<Role> selectAllActiveRoles()
         {
-            Result<List<Role>> result = new Result<List<Role>>();
-            result.Detail = new List<Role>();
+            List<Role> result = new List<Role>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1733,19 +1602,19 @@ namespace SistemaDePlanillas.Models
                                 Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
                                 list.Add(tuple);
                             }
-                            result.Detail.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                            result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> addOperation(string name, string description, string url, string group)
+        public void addOperation(string name, string description, string url, string group)
         {
             Result<string> result = new Result<string>();
             try
@@ -1760,42 +1629,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
-        /*
-        public Result<string> updateOperationsToRole(long role_id, List<string> operations)
-        {
-            Result<string> result = new Result<string>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    RoleEntity role = repository.Roles.Get(role_id);
-                    role.operations.Clear();
-                    foreach (var op in operations)
-                    {
-                        OperationEntity operation = repository.Operations.Get(op);                        
-                        if (operation != null && role != null)
-                        {
-                                role.operations.Add(operation);
-                        }                      
-                    }
-                    repository.Complete();
-                }
-            }
-            catch (Exception e)
-            {
-                result.Status = validate(e);
-            }
-            return result;
-        }
-        */
 
-        private Result<Operation> getOperation(string id)
+        private Operation getOperation(string id)
         {
-            Result<Operation> result = new Result<Operation>();
+            Operation result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1803,26 +1643,23 @@ namespace SistemaDePlanillas.Models
                     OperationEntity operation = repository.Operations.Get(id);
                     if (operation != null)
                     {
-                        Operation operation_result = new Operation(operation.Description, operation.Name, operation.GroupId);
-                        result.Detail = operation_result;
+                        result = new Operation(operation.Description, operation.Name, operation.GroupId);
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        private Result<string> deleteOperation(string id)
+        private void deleteOperation(string id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1835,60 +1672,56 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<Operation>> selectAllOperation()
+        public List<Operation> selectAllOperation()
         {
-            Result<List<Operation>> result = new Result<List<Operation>>();
-            result.Detail = new List<Operation>();
+            List<Operation> result = new List<Operation>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.Detail.Add(new Operation(x.Description, x.Name , x.GroupId));
+                        result.Add(new Operation(x.Description, x.Name , x.GroupId));
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<Operation>> selectAllOperationByGroup(String id_group)
+        public List<Operation> selectAllOperationByGroup(String id_group)
         {
-            Result<List<Operation>> result = new Result<List<Operation>>();
-            result.Detail = new List<Operation>();
+            List<Operation> result = new List<Operation>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.Detail.Add(new Operation(x.Description, x.Name , x.GroupId));
+                        result.Add(new Operation(x.Description, x.Name , x.GroupId));
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<string> addOperationGroup(string name, string description, string icon)
+        public void addOperationGroup(string name, string description, string icon)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1901,14 +1734,13 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        private Result<OperationsGroup> getOperationGroup(string id)
+        private OperationsGroup getOperationGroup(string id)
         {
-            Result<OperationsGroup> result = new Result<OperationsGroup>();
+            OperationsGroup result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1920,26 +1752,24 @@ namespace SistemaDePlanillas.Models
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
                             list.Add(new Operation(op.Description, op.Name, op.GroupId));
-                        OperationsGroup group_result = new OperationsGroup(group.Description, group.Name, group.Icon, list);//**
-                        result.Detail = group_result;
+                        result = new OperationsGroup(group.Description, group.Name, group.Icon, list);
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        private Result<string> deleteOperationGroup(string id)
+        private void deleteOperationGroup(string id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1952,22 +1782,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
-
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<OperationsGroup>> selectAllOperationsGroup()
+        public List<OperationsGroup> selectAllOperationsGroup()
         {
-            Result<List<OperationsGroup>> result = new Result<List<OperationsGroup>>();
-            result.Detail = new List<OperationsGroup>();
+            List<OperationsGroup> result = new List<OperationsGroup>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -1979,24 +1806,22 @@ namespace SistemaDePlanillas.Models
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
                             list.Add(new Operation(op.Description, op.Name, op.GroupId));
-                        result.Detail.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
+                        result.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
 
-        public Result<string> addUser(string name, string username, string password, long role, long location, string email)
+        public void addUser(string name, string username, string password, long role, long location, string email)
         {
-            Result<string> result = new Result<string>();
             try
             {
-
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     repository.Users.Add(new UserEntity()
@@ -2009,21 +1834,17 @@ namespace SistemaDePlanillas.Models
                         userName = username.ToLower(),
                         active = true
                     });
-
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateUser(long id, string name, string username, string password, long role, long location, string email)
+        public void updateUser(long id, string name, string username, string password, long role, long location, string email)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2040,24 +1861,19 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                     var rows = repository.Complete();
-
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> deleteUser(long id)
+        public void deleteUser(long id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2065,28 +1881,23 @@ namespace SistemaDePlanillas.Models
                     var user = repository.Users.Get(id);
                     if (user != null)
                     {
-                        //repository.Users.Remove(user);
                         user.active = false;
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<string> activateUser(long id)
+        public void activateUser(long id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2098,23 +1909,20 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
-            return result;
         }
 
-        public Result<User> selectUser(long id)
+        public User selectUser(long id)
         {
-            Result<User> result = new Result<User>();
+            User result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2122,7 +1930,7 @@ namespace SistemaDePlanillas.Models
                     var user = repository.Users.Get(id);
                     if (user != null && user.active == true)
                     {
-                        var newUser = new User()
+                        result = new User()
                         {
                             Id = user.id,
                             Email = user.email,
@@ -2133,28 +1941,23 @@ namespace SistemaDePlanillas.Models
                             Username = user.userName,
                             Active = true
                         };
-                        result.Detail = newUser;
                     }
                     else
                     {
-                        result.Status = user != null ? userInactive : inexistentUser;
+                        validateException(user!=null? userInactive:inexistentUser);
                     }
-
                 }
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<List<User>> selectAllUsers(long location)
+        public List<User> selectAllUsers(long location)
         {
-            Result<List<User>> result = new Result<List<User>>();
-            result.Detail = new List<User>();
+            List<User> result = new List<User>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2162,7 +1965,7 @@ namespace SistemaDePlanillas.Models
                     var users = repository.Users.GetAll();
                     foreach (var ue in users)
                     {
-                        result.Detail.Add(new User()
+                        result.Add(new User()
                         {
                             Id = ue.id,
                             Email = ue.email,
@@ -2178,16 +1981,14 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<List<User>> selectAllActiveUsers(long location)
+        public List<User> selectAllActiveUsers(long location)
         {
-            Result<List<User>> result = new Result<List<User>>();
+            List<User> result = new List<User>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2197,7 +1998,7 @@ namespace SistemaDePlanillas.Models
                     {
                         if (ue.active == true)
                         {
-                            result.Detail.Add(new User()
+                            result.Add(new User()
                             {
                                 Id = ue.id,
                                 Email = ue.email,
@@ -2214,16 +2015,14 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-
-                result.Status = validate(e);
+                validateException(e);
             }
-
             return result;
         }
 
-        public Result<User> login(string username, string password)
+        public User login(string username, string password)
         {
-            Result<User> res = new Result<User>();
+            User result = new User();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2231,26 +2030,24 @@ namespace SistemaDePlanillas.Models
                     var user = repository.Users.login(username.ToLower(), password);
                     if (user != null)
                     {
-                        res.Detail = new User() { Name = user.name, Id = user.id, Email = user.email, Location = user.locationId, Password = user.password, Role = user.roleId, Username = user.userName };
+                        result = new User() { Name = user.name, Id = user.id, Email = user.email, Location = user.locationId, Password = user.password, Role = user.roleId, Username = user.userName };
                     }
                     else
                     {
-                        res.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
-
                 }
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<List<Tuple<long, string>>> selectAllErrors()
+        public List<Tuple<long, string>> selectAllErrors()
         {
-            Result<List<Tuple<long, string>>> res = new Result<List<Tuple<long, string>>>();
-            res.Detail = new List<Tuple<long, string>>();
+            List<Tuple<long, string>> result = new List<Tuple<long, string>>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2258,20 +2055,19 @@ namespace SistemaDePlanillas.Models
                     var errors = repository.Errors.GetAll();
                     foreach (var error in errors)
                     {
-                        res.Detail.Add(new Tuple<long, string>(error.id, error.message));
+                        result.Add(new Tuple<long, string>(error.id, error.message));
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
-            return res;
+            return result;
         }
 
-        public Result<string> addDebitType(string name, long location, long months = 0, double interestRate = 0)
+        public void addDebitType(string name, long location, long months = 0, double interestRate = 0)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2302,14 +2098,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> updateDebitType(long id, string name, long months = 0, double interestRate = 0)
+        public void updateDebitType(long id, string name, long months = 0, double interestRate = 0)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2332,14 +2126,12 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<string> deleteDebitType(long id)
+        public void deleteDebitType(long id)
         {
-            Result<string> result = new Result<string>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -2348,21 +2140,18 @@ namespace SistemaDePlanillas.Models
                     repository.DebitTypes.Remove(type);
                     repository.Complete();
                 }
-
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
-            return result;
         }
 
-        public Result<List<DebitType>> selectFixedDebitTypes(long location)
+        public List<DebitType> selectFixedDebitTypes(long location)
         {
-            Result<List<DebitType>> result = new Result<List<DebitType>>();
+            List<DebitType> result = new List<DebitType>();
             try
             {
-                result.Detail = new List<DebitType>();
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var types = repository.DebitTypes.SelectByLocation(location);
@@ -2370,7 +2159,7 @@ namespace SistemaDePlanillas.Models
                     {
                         if (!type.payment)
                         {
-                            result.Detail.Add(new DebitType()
+                            result.Add(new DebitType()
                             {
                                 id = type.id,
                                 name = type.name,
@@ -2384,17 +2173,16 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<List<DebitType>> selectNonFixedDebitTypes(long location)
+        public List<DebitType> selectNonFixedDebitTypes(long location)
         {
-            Result<List<DebitType>> result = new Result<List<DebitType>>();
+            List<DebitType> result = new List<DebitType>();
             try
             {
-                result.Detail = new List<DebitType>();
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var types = repository.DebitTypes.SelectByLocation(location);
@@ -2402,7 +2190,7 @@ namespace SistemaDePlanillas.Models
                     {
                         if (type.payment)
                         {
-                            result.Detail.Add(new DebitType()
+                            result.Add(new DebitType()
                             {
                                 id = type.id,
                                 name = type.name,
@@ -2417,30 +2205,28 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
 
-        public Result<double> selectSavingByEmployee(long employee)
+        public double selectSavingByEmployee(long employee)
         {
-            Result<double> result = new Result<double>();
+            double result = 0;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var saving = repository.Savings.Get(employee);
-                    result.Detail= saving != null ? (double)saving.amount : 0;
+                    result = saving != null ? (double)saving.amount : 0;
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
-
-
     }
 }
 

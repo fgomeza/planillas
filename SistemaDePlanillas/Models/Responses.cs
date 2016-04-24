@@ -8,7 +8,7 @@ namespace SistemaDePlanillas.Models
 {
     public class Responses
     {
-        private static Response OK = new Response() { status = "OK" };
+        public static Response OK = new Response() { status = "OK" };
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
         public static Response Error(long errorCode)
@@ -21,14 +21,14 @@ namespace SistemaDePlanillas.Models
             return new ErrorResponse() { status = "ERROR", error = -1, detail = e.InnerException.Message!=null?e.InnerException.Message:e.Message };
         }
 
-        public static Response Simple(long status)
-        {
-            return status == 0 ? OK : Error(status);
-        }
 
         public static Response Error(long errorCode, string detail)
         {
             return new ErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
+        }
+        public static Response AplicationError(string errorCode, string detail)
+        {
+            return new AplicationErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
         }
 
         public static Response WithData(object data)
@@ -50,6 +50,12 @@ namespace SistemaDePlanillas.Models
     public class ErrorResponse : Response
     {
         public long error;
+        public string detail;
+    }
+
+    public class AplicationErrorResponse : Response
+    {
+        public string error;
         public string detail;
     }
 

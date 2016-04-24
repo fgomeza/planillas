@@ -62,8 +62,7 @@ namespace SistemaDePlanillas.Controllers
         // GET: Users/Details/5
         public ActionResult Details(long id)
         {
-            Result<User> result = DBManager.Instance.selectUser(id);
-            User User = result.Detail;
+            User User = DBManager.Instance.selectUser(id);
             if (User == null)
             {
                 return HttpNotFound();
@@ -94,8 +93,7 @@ namespace SistemaDePlanillas.Controllers
             try
             {
                 DBManager db = DBManager.Instance;
-                Result<string> result = db.addUser(model.Name, model.Username, model.Password, model.Role, model.Location, model.Email);
-                Console.WriteLine(result.Detail);
+                db.addUser(model.Name, model.Username, model.Password, model.Role, model.Location, model.Email);
 
                 return RedirectToAction("Index");
             }
@@ -145,8 +143,7 @@ namespace SistemaDePlanillas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(long id, FormCollection collection)
         {
-            Result<User> result = DBManager.Instance.selectUser(id);
-            User user = result.Detail;
+            User user = DBManager.Instance.selectUser(id);
             if (user == null)
             {
                 return HttpNotFound();

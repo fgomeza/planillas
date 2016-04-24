@@ -17,22 +17,18 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response add(User user,long employeeId, string detail,long hours)
+        public static void add(User user,long employeeId, string detail,long hours)
         {
-                var result = DBManager.Instance.addExtra(employeeId, detail, hours).Status;
-                return Responses.Simple(result);
+                DBManager.Instance.addExtra(employeeId, detail, hours);
         }
         /// <summary>
         /// Elimina un pago extra
         /// </summary>
         /// <param name="extraId">identificador del pago extra</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response remove(User user,long extraId)
+        public static void remove(User user,long extraId)
         {
-
-                var result = DBManager.Instance.deleteExtra(extraId).Status;
-                return Responses.Simple(result);
-
+                DBManager.Instance.deleteExtra(extraId);
         }
         /// <summary> 
         /// Actualiza la informacio de un pago extra
@@ -41,14 +37,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response modify(User user,long extraId, string detail, long hours)
+        public static void modify(User user,long extraId, string detail, long hours)
         {
-
-                var result = DBManager.Instance.updateExtra(extraId, detail, hours).Status;
-                return Responses.Simple(result);
-
-
-            
+                DBManager.Instance.updateExtra(extraId, detail, hours);
         }
         /// <summary>
         /// Accesa los pagos extra asociados a un empleado
@@ -58,13 +49,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con los cagos extra asociados al empleado
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public static Response get_all(User user,long employeeId)
+        public static object get_all(User user,long employeeId)
         {
-
-                var result = DBManager.Instance.selectExtras(employeeId);
-                return Responses.SimpleWithData(result.Status,result.Detail);
-
-      
+                return DBManager.Instance.selectExtras(employeeId);  
         }
         /// <summary>
         /// Accesa a un pago por su identificador
@@ -74,12 +61,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public static Response get(User user,long extraId)
+        public static object get(User user,long extraId)
         {
-
-                var result = DBManager.Instance.selectExtra(extraId);
-                return Responses.SimpleWithData(result.Status, result.Detail);
-
+            return DBManager.Instance.selectExtra(extraId);
         }
     }
 }
