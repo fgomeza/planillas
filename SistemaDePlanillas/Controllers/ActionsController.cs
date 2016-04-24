@@ -68,38 +68,30 @@ namespace SistemaDePlanillas.Controllers
 
             //Uses reflexion to get the correct method  
             MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
-            if (method == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (method == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             try
             {
-                try
-                {
-                    //call the method
-                    Response response = (Response)method.Invoke(null, parameters);
-                    Logger.Instance.LogAction(response, group, action, args, user, callTime);
-                    return response;
-                }
-                catch (Exception e)
-                {
-                    throw e.InnerException;
-                }
+                //call the method
+                Response response = (Response)method.Invoke(null, parameters);
+                Logger.Instance.LogAction(response, group, action, args, user, callTime);
+                return response;
             }
-            catch (AplicationException e)
+            catch (Exception e) when (e.InnerException is AppException)
             {
-                var response = Responses.AplicationError(e.Code, e.DescriptionError);
+                var ex = e.InnerException as AppException;
+                Response response = Responses.AplicationError(ex.Code, ex.DescriptionError);
                 Logger.Instance.LogAction(response, group, action, args, user, callTime);
                 return response;
             }
             catch (Exception e)
             {
-                Logger.Instance.LogActionError(e, group, action, args, user, callTime);
+                Logger.Instance.LogActionError(e.InnerException, group, action, args, user, callTime);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
-
         }
+
+
 
         private Response doAction(string group, string action, IDictionary<string, object> args)
         {
@@ -126,44 +118,37 @@ namespace SistemaDePlanillas.Controllers
             m.GetParameters().All(p => args.ContainsKey(p.Name)
             ));
             if (method == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
             try
             {
-                try
+                //Builds the parametters array casting to the especific required types if necesary
+                object[] parameters = method.GetParameters().Select(p =>
                 {
-                    //Builds the parametters array casting to the especific required types if necesary
-                    object[] parameters = method.GetParameters().Select(p =>
-                    {
-                        var val = args[p.Name];
-                        return val is IConvertible ? Convert.ChangeType(val, p.ParameterType) : val;
-                    }).ToArray();
+                    var val = args[p.Name];
+                    return val is IConvertible ? Convert.ChangeType(val, p.ParameterType) : val;
+                }).ToArray();
 
-                    //call the method
-                    Response response = (Response)method.Invoke(null, parameters);
-                    Logger.Instance.LogAction(response, group, action, args.Values.ToArray(), user, callTime);
-                    return response;
-                }
-                catch (Exception e) when (e is FormatException || e is InvalidCastException || e is ArgumentException)
-                {
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
-                }
-                catch ( Exception e)
-                {
-                    throw e.InnerException;
-                }
-                
-            }
-            catch (AplicationException e)
-            {
-                var response = Responses.AplicationError(e.Code, e.DescriptionError);
+                //call the method
+                Response response = (Response)method.Invoke(null, parameters);
                 Logger.Instance.LogAction(response, group, action, args.Values.ToArray(), user, callTime);
+                return response;
+            }
+            catch (Exception e) when (e is FormatException || e is InvalidCastException || e is ArgumentException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            catch (Exception e) when (e.InnerException is AppException)
+            {
+                var ex = e.InnerException as AppException;
+                Response response = Responses.AplicationError(ex.Code, ex.DescriptionError);
                 return response;
             }
             catch (Exception e)
             {
-                Logger.Instance.LogActionError(e, group, action, args.Values.ToArray(), user, callTime);
+                Logger.Instance.LogActionError(e.InnerException, group, action, args, user, callTime);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
-            
+
         }
 
     }
