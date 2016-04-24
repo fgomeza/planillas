@@ -266,9 +266,9 @@ INSERT INTO operations VALUES ('debittypes/get', 'Ver', 'debittypes');
 INSERT INTO operations VALUES ('debittypes/remove', 'Eliminar', 'debittypes');
 
 
-INSERT INTO roles VALUES (1, 'ADMIN',1, true);
-INSERT INTO roles VALUES (2, 'payrollER',1, true);
-INSERT INTO roles VALUES (3, 'ADMIN2',2, true);
+INSERT INTO roles VALUES ( 'ADMIN',1, true);
+INSERT INTO roles VALUES ( 'payrollER',1, true);
+INSERT INTO roles VALUES ( 'ADMIN2',2, true);
 
 INSERT INTO users(name,email,username,password,active,role,location) VALUES ( 'Admin', 'admin@mobilize.net', 'admin', '$2a$10$hsWmqrs7Z5kW6RpEJHV/Ve6/OBqZ3tNZMivur9SYZT2OBvIymxU.2', true, 1, 1);
 INSERT INTO users(name,email,username,password,active,role,location) VALUES ( 'Jonnathan Ch', 'jcharpentier@mobilize.net', 'jonnch', '$2a$10$hsWmqrs7Z5kW6RpEJHV/Ve6/OBqZ3tNZMivur9SYZT2OBvIymxU.2', true, 1, 1);
