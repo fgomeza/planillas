@@ -193,6 +193,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\IActionsEvents.cs" />
     <Compile Include="Models\App_LocalResoures\DescriptionError.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

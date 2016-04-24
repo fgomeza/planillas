@@ -12,7 +12,8 @@ namespace SistemaDePlanillas.Controllers
 
     public class ActionsController : ApiController
     {
-        readonly string OperationsNamespace = "SistemaDePlanillas.Models.Operations";
+        private readonly string OperationsNamespace = "SistemaDePlanillas.Models.Operations";
+        private readonly IActionsEventsListener listener = new ActionsEvents();
 
         [Authorize]
         [PermissionCheck]
@@ -42,7 +43,7 @@ namespace SistemaDePlanillas.Controllers
             return doAction(group, operation + "_" + call, args);
         }
 
-        private Response doAction(string group, string action, object[] args)
+        private Response doAction(string group, string operation, object[] args)
         {
             if (args == null) args = new object[0];
             DateTime callTime = DateTime.Now;
@@ -65,35 +66,37 @@ namespace SistemaDePlanillas.Controllers
             Type type = Type.GetType(groupType, false, true);
             if (type == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-
             //Uses reflexion to get the correct method  
-            MethodInfo method = type.GetMethod(action, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
+            MethodInfo method = type.GetMethod(operation, BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase, null, paramsTypes, null);
             if (method == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            //map args as key/value dictionary for listeners pleasure
+            var argsMap = method.GetParameters().Zip(parameters, (k, v)=> new { k, v }).ToDictionary(x => x.k.Name, x => x.v);
 
             try
             {
                 //call the method
                 Response response = (Response)method.Invoke(null, parameters);
-                Logger.Instance.LogAction(response, group, action, args, user, callTime);
+                listener.OnActionComplete(response,user, callTime, group, operation, argsMap);
                 return response;
             }
             catch (Exception e) when (e.InnerException is AppException)
             {
                 var ex = e.InnerException as AppException;
                 Response response = Responses.AplicationError(ex.Code, ex.DescriptionError);
-                Logger.Instance.LogAction(response, group, action, args, user, callTime);
+                listener.OnActionError(response, user, callTime, group, operation, argsMap, ex.Code, ex.DescriptionError);
                 return response;
             }
             catch (Exception e)
             {
-                Logger.Instance.LogActionError(e.InnerException, group, action, args, user, callTime);
+                listener.OnException(user, callTime, group, operation, argsMap, e.InnerException);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
 
 
-        private Response doAction(string group, string action, IDictionary<string, object> args)
+        private Response doAction(string group, string operation, IDictionary<string, object> args)
         {
             if (args == null) args = new Dictionary<string, object>(1);
             DateTime callTime = DateTime.Now;
@@ -113,7 +116,7 @@ namespace SistemaDePlanillas.Controllers
 
             //Uses reflexion to get the firts method that matches the parametters names
             MethodInfo method = type.GetMethods().FirstOrDefault(m =>
-            m.Name == action &&
+            m.Name == operation &&
             m.GetParameters().Length == args.Count &&
             m.GetParameters().All(p => args.ContainsKey(p.Name)
             ));
@@ -130,22 +133,24 @@ namespace SistemaDePlanillas.Controllers
 
                 //call the method
                 Response response = (Response)method.Invoke(null, parameters);
-                Logger.Instance.LogAction(response, group, action, args.Values.ToArray(), user, callTime);
+                listener.OnActionComplete(response, user, callTime, group, operation, args);
                 return response;
             }
             catch (Exception e) when (e is FormatException || e is InvalidCastException || e is ArgumentException)
             {
+                listener.OnBadActionArguments(user, callTime, group, operation, args, method.GetParameters());
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             catch (Exception e) when (e.InnerException is AppException)
             {
                 var ex = e.InnerException as AppException;
                 Response response = Responses.AplicationError(ex.Code, ex.DescriptionError);
+                listener.OnActionError(response, user, callTime, group, operation, args, ex.Code, ex.DescriptionError);
                 return response;
             }
             catch (Exception e)
             {
-                Logger.Instance.LogActionError(e.InnerException, group, action, args, user, callTime);
+                listener.OnException(user, callTime, group, operation, args, e.InnerException);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
