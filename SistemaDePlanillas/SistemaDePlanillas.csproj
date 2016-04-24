@@ -185,7 +185,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JonnController.cs" />
     <Compile Include="Controllers\ModalsController.cs" />
-    <Compile Include="Controllers\OperationsApiController.cs" />
+    <Compile Include="Controllers\ActionsController.cs" />
     <Compile Include="Controllers\PartialViewsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AjaxOnlyAttribute.cs" />

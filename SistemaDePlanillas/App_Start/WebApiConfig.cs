@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using SistemaDePlanillas.Filters;
+using System.Web.Http.Routing;
+using System.Net.Http;
 
 namespace SistemaDePlanillas
 {
@@ -10,13 +12,14 @@ namespace SistemaDePlanillas
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Filters.Add(new PermissionCheckAttribute());
+            //config.Filters.Add(new PermissionCheckAttribute());
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "OperationsApi",
-                routeTemplate: "api/Action/{group}/{operation}/{call}",
-                defaults: new { controller = "OperationsApi", call = RouteParameter.Optional }
+                name: "ActionsApi",
+                routeTemplate: "api/Action/{action}/{group}/{operation}/{call}",
+                defaults: new { controller = "Actions", call = RouteParameter.Optional },
+                constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post)}
             );
             
             config.Routes.MapHttpRoute(

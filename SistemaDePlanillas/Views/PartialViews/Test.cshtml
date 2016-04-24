@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form id="testingForm" class="form-inline">
-
+                
                 <div class="form-group">
                     <input class="form-control" type="text" id="group" placeholder="Grupo" />
                 </div>
@@ -12,12 +12,15 @@
                     <input class="form-control" type="text" id="operation" placeholder="Operación" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" >
                     <input class="form-control" type="text" id="args" placeholder="Parámetros" />
                 </div>
 
                 <button id="testSubmitBttn" class="btn btn-default">Submit</button>
-
+                <br>
+                <div class="checkbox">
+                    <h4><input type="checkbox" value="" id="fromForm"><span class="label label-default">From form</span></h4>
+                </div>
             </form>
         </div>
     </div>
@@ -32,9 +35,19 @@
         var enviar = function () {
             var $container = $("#result")
             $container.html("");
-            testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("[" + $("#args").val() + "]"), function (res) {
-                $container.html(JSON.stringify(res, null, 2))
-            });
+            if ($("#fromForm").is(':checked')) {
+                testingApp.actionFromForm($("#group").val(), $("#operation").val(), JSON.parse("{" + $("#args").val() + "}"), function (res) {
+                    $container.html(JSON.stringify(res, null, 2))
+                });
+            }
+            else {
+                testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("[" + $("#args").val() + "]"), function (res) {
+                    $container.html(JSON.stringify(res, null, 2))
+                });
+            }
+            
+
+
         };
 
         $('#testSubmitBttn').click(function (event) {
