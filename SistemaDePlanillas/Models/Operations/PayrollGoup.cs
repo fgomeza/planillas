@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
-        public static Response password(User user, String password)
+        public static Response password(User user, string password)
         {
             return Responses.WithData(BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt()));
         }
@@ -40,10 +40,8 @@ namespace SistemaDePlanillas.Models.Operations
     
 }
 
-        public static Response calculate(User user, string iDate, string eDate)
+        public static Response calculate(User user, DateTime initialDate, DateTime endDate)
         {
-            DateTime initialDate = DateTime.Parse(iDate);
-            DateTime endDate = DateTime.Parse(eDate);
             var employees = DBManager.Instance.selectAllActiveEmployees(user.Location).Detail;
             double totalPayroll = 0;
             var location = DBManager.Instance.getLocation(user.Location).Detail;
