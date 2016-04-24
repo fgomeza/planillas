@@ -15,9 +15,9 @@ namespace SistemaDePlanillas.Models.Operations
         }
 
 
-        public static Response add(User user, string name, List<string> operations)
+        public static Response add(User user, string name, IEnumerable<object> operations)
         {
-            var result = DBManager.Instance.addRole(name, user.Location, operations);
+            var result = DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
             return Responses.Simple(result.Status);
         }
 

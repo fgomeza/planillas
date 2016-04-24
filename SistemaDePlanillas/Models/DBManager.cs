@@ -9,16 +9,18 @@ using Repository.Entities;
 using System.Collections;
 using DevOne.Security.Cryptography.BCrypt;
 using System.Linq;
+using System.Resources;
+using System.Reflection;
 
 namespace SistemaDePlanillas.Models
 
 {
     public class DBManager : IErrors
     {
-        private Dictionary<string, long> errors;
 
         private static DBManager instance;
 
+      
 
         public static DBManager Instance
         {
@@ -28,19 +30,7 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        private long validate(Exception e)
-        {
-            if (e.InnerException != null)
-            {
-                e = e.InnerException;
-                if (e.InnerException != null && e.InnerException is NpgsqlException)
-                {
-                    return 200; // TODO arreglar esto
-                    //return errors[(e.InnerException as NpgsqlException).ConstraintName];
-                }
-            }
-            throw e;
-        }
+
 
         public Result<string> addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
@@ -57,7 +47,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -81,13 +71,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -113,7 +104,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -135,7 +126,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -156,7 +147,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -181,13 +172,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -211,7 +202,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -231,13 +222,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -257,13 +248,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -293,14 +284,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = employee != null ? employeeInactive : inexistentEmployee;
+                        validateException(employee != null ? employeeInactive : inexistentEmployee);
                     }
 
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -334,7 +325,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -370,7 +361,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -397,7 +388,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -424,7 +415,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -446,14 +437,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
 
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -473,13 +464,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -499,13 +490,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -531,13 +522,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -568,7 +559,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -599,7 +590,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -629,7 +620,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -656,7 +647,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -687,13 +678,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentDebit;
+                        validateException(inexistentDebit);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -729,7 +720,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -761,7 +752,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -782,7 +773,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -809,7 +800,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -830,7 +821,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
 
@@ -839,7 +830,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -859,7 +850,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
@@ -867,7 +858,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -891,7 +882,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
 
                 }
@@ -899,7 +890,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -929,7 +920,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -959,7 +950,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -985,7 +976,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentExtra;
+                        validateException(inexistentExtra);
                     }
                     var rows = repository.Complete();
 
@@ -994,7 +985,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -1016,13 +1007,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1043,13 +1034,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentEmployee;
+                        validateException(inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1079,14 +1070,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = penalty != null ? penaltyInactive : inexistentPenalty;
+                        validateException(penalty != null ? penaltyInactive : inexistentPenalty);
                     }
 
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1119,7 +1110,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -1144,7 +1135,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
 
@@ -1169,7 +1160,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
 
@@ -1184,7 +1175,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1198,7 +1189,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1212,7 +1203,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1226,7 +1217,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1240,7 +1231,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1254,7 +1245,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -1277,7 +1268,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1291,7 +1282,7 @@ namespace SistemaDePlanillas.Models
                 {
                     LocationEntity location = repository.Locations.Get(id);
 
-                    if (location != null)
+                    if (location != null && location.active)
                     {
                         Location location_result = new Location()
                         {
@@ -1305,13 +1296,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(location != null ? locationInactive : inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1332,13 +1323,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = location != null ? locationInactive : inexistentLocation;
+                        validateException(location != null ? locationInactive : inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1369,7 +1360,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1390,14 +1381,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1417,14 +1408,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1444,14 +1435,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1472,14 +1463,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentLocation;
+                        validateException(inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1503,7 +1494,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1527,7 +1518,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1556,7 +1547,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1583,13 +1574,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = role != null ? roleInactive : inexistentRole;
+                        validateException(role!=null? roleInactive:inexistentRole);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1619,14 +1610,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1647,14 +1638,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1674,14 +1665,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentRole;
+                        validateException(inexistentRole);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1709,7 +1700,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1740,7 +1731,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1760,7 +1751,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1787,7 +1778,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1808,14 +1799,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1835,13 +1826,13 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1861,7 +1852,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1881,7 +1872,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1901,7 +1892,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1925,14 +1916,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1952,14 +1943,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentGroup;
+                        validateException(inexistentGroup);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -1985,7 +1976,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (Exception e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2016,7 +2007,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2040,7 +2031,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
                     var rows = repository.Complete();
 
@@ -2049,7 +2040,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2070,7 +2061,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
@@ -2078,7 +2069,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2098,7 +2089,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
@@ -2106,7 +2097,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2137,7 +2128,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        result.Status = user != null ? userInactive : inexistentUser;
+                        validateException(user!=null? userInactive:inexistentUser);
                     }
 
                 }
@@ -2145,7 +2136,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2179,7 +2170,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2215,7 +2206,7 @@ namespace SistemaDePlanillas.Models
             catch (Exception e)
             {
 
-                result.Status = validate(e);
+                validateException(e);
             }
 
             return result;
@@ -2235,14 +2226,14 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        res.Status = inexistentUser;
+                        validateException(inexistentUser);
                     }
 
                 }
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -2264,7 +2255,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                res.Status = validate(e);
+                validateException(e);
             }
             return res;
         }
@@ -2302,7 +2293,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2332,7 +2323,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2352,7 +2343,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2384,7 +2375,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2417,7 +2408,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }
@@ -2435,7 +2426,7 @@ namespace SistemaDePlanillas.Models
             }
             catch (NpgsqlException e)
             {
-                result.Status = validate(e);
+                validateException(e);
             }
             return result;
         }

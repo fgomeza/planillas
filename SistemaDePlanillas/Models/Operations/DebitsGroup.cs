@@ -13,7 +13,6 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
             return Responses.Simple(dataBaseResponse.Status);
-
         }
 
         public static Response add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)

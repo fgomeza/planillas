@@ -30,6 +30,10 @@ namespace SistemaDePlanillas.Models
         {
             return new ErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
         }
+        public static Response AplicationError(string errorCode, string detail)
+        {
+            return new AplicationErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
+        }
 
         public static Response WithData(object data)
         {
@@ -50,6 +54,12 @@ namespace SistemaDePlanillas.Models
     public class ErrorResponse : Response
     {
         public long error;
+        public string detail;
+    }
+
+    public class AplicationErrorResponse : Response
+    {
+        public string error;
         public string detail;
     }
 

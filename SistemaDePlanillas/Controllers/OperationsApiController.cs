@@ -59,11 +59,23 @@ namespace SistemaDePlanillas.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
             try
             {
-                //call the method
-                Response response = (Response)method.Invoke(null, parameters);
+                try
+                {
+                    //call the method
+                    Response response = (Response)method.Invoke(null, parameters);
+                    Logger.Instance.LogAction(response, group, action, args, user, callTime);
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (AplicationException e)
+            {
+                var response = Responses.AplicationError(e.Code,e.DescriptionError);
                 Logger.Instance.LogAction(response, group, action, args, user, callTime);
                 return response;
             }
@@ -72,6 +84,7 @@ namespace SistemaDePlanillas.Controllers
                 Logger.Instance.LogActionError(e, group, action, args, user, callTime);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
+
         }
     }
 }
