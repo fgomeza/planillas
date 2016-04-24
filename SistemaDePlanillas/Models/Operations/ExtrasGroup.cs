@@ -17,22 +17,18 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response add(User user,long employeeId, string detail,long hours)
+        public static void add(User user,long employeeId, string detail,long hours)
         {
                 DBManager.Instance.addExtra(employeeId, detail, hours);
-                return Responses.OK;
         }
         /// <summary>
         /// Elimina un pago extra
         /// </summary>
         /// <param name="extraId">identificador del pago extra</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response remove(User user,long extraId)
+        public static void remove(User user,long extraId)
         {
-
                 DBManager.Instance.deleteExtra(extraId);
-                return Responses.OK;
-
         }
         /// <summary> 
         /// Actualiza la informacio de un pago extra
@@ -41,11 +37,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static Response modify(User user,long extraId, string detail, long hours)
+        public static void modify(User user,long extraId, string detail, long hours)
         {
-
                 DBManager.Instance.updateExtra(extraId, detail, hours);
-                return Responses.OK;
         }
         /// <summary>
         /// Accesa los pagos extra asociados a un empleado
@@ -55,12 +49,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// Lista con los cagos extra asociados al empleado
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public static Response get_all(User user,long employeeId)
+        public static object get_all(User user,long employeeId)
         {
-
-                var result = DBManager.Instance.selectExtras(employeeId);
-                return Responses.WithData(result);
-      
+                return DBManager.Instance.selectExtras(employeeId);  
         }
         /// <summary>
         /// Accesa a un pago por su identificador
@@ -70,12 +61,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// Pago extra asociado al identificador
         /// Estado de la transaccion en formato JSON
         /// </returns>
-        public static Response get(User user,long extraId)
+        public static object get(User user,long extraId)
         {
-
-                var result = DBManager.Instance.selectExtra(extraId);
-                return Responses.WithData(result);
-
+            return DBManager.Instance.selectExtra(extraId);
         }
     }
 }
