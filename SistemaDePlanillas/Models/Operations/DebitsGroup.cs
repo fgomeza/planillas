@@ -8,65 +8,55 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        public static Response add_Fixed(User user, long employee, string detail, double amount, long type)
+        public static void add_Fixed(User user, long employee, string detail, double amount, long type)
         {
             DBManager.Instance.addDebit(employee, detail, amount, type);
-            return Responses.OK; 
         }
 
-        public static Response add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
+        public static void add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
         {
 
             DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
-            return Responses.OK;
         }
 
-        public static Response get_AllFixed(User user, long employee)
+        public static object get_AllFixed(User user, long employee)
         {
-            var dataBaseResponse = DBManager.Instance.selectDebits(employee);
-            return Responses.WithData(dataBaseResponse);
+            return DBManager.Instance.selectDebits(employee);
         }
 
-        public static Response get_AllPayment(User user, long employee)
+        public static object get_AllPayment(User user, long employee)
         {
-            var dataBaseResponse = DBManager.Instance.selectPaymentDebits(employee);
-            return Responses.WithData(dataBaseResponse);
+            return DBManager.Instance.selectPaymentDebits(employee);
         }
 
-        public static Response get_Fixed(User user, long idDebit)
+        public static object get_Fixed(User user, long idDebit)
         {
-            var dataBaseResponse = DBManager.Instance.selectDebit(idDebit);
-            return Responses.WithData(dataBaseResponse);
+            return DBManager.Instance.selectDebit(idDebit);
         }
 
-        public static Response get_Payment(User user, long idDebit)
+        public static object get_Payment(User user, long idDebit)
         {
-            var dataBaseResponse = DBManager.Instance.selectPaymentDebit(idDebit);
-            return Responses.WithData(dataBaseResponse);
+            return DBManager.Instance.selectPaymentDebit(idDebit);  
         }
     
-        public static Response modify_Fixed(User user, long idDebit, string detail, double amount)
+        public static void modify_Fixed(User user, long idDebit, string detail, double amount)
         {
             DBManager.Instance.updateDebit(idDebit, detail, amount);
-            return Responses.OK;
         }
 
-        public static Response modify_Payment(User user, long idDebit, DateTime initialDate, string detail, double total, double interestRate, long months, double remainingAmount)
+        public static void modify_Payment(User user, long idDebit, DateTime initialDate, string detail, double total, double interestRate, long months, double remainingAmount)
         {
             DBManager.Instance.updatePaymentDebit(idDebit, initialDate, detail, total, months, remainingAmount);
-            return Responses.OK;
         }
 
-        public static Response remove_Fixed(User user, long idDebit)
+        public static void remove_Fixed(User user, long idDebit)
         {
             DBManager.Instance.deleteDebit(idDebit);
-            return Responses.OK;
         }
 
-        public static Response remove_Payment(User user, long idDebit)
+        public static void remove_Payment(User user, long idDebit)
         {
             DBManager.Instance.deleteDebit(idDebit);
-            return Responses.OK;
         }
 
     }
