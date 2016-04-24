@@ -94,8 +94,6 @@ namespace SistemaDePlanillas.Controllers
             }
         }
 
-
-
         private Response doAction(string group, string operation, IDictionary<string, object> args)
         {
             if (args == null) args = new Dictionary<string, object>(1);
