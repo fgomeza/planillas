@@ -8,7 +8,6 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-
         public static Response add_Fixed(User user, long employee, string detail, double amount, long type)
         {
             var dataBaseResponse = DBManager.Instance.addDebit(employee, detail, amount, type);
