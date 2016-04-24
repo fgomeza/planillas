@@ -145,7 +145,7 @@ namespace SistemaDePlanillas.Controllers
             }
             catch (Exception e)
             {
-                Logger.Instance.LogActionError(e.InnerException, group, action, args, user, callTime);
+                Logger.Instance.LogActionError(e.InnerException, group, action, args.Values.ToArray(), user, callTime);
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
