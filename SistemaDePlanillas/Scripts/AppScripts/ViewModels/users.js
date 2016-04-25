@@ -102,7 +102,7 @@
 
         self.saveChanges = function (data) {
             var obj = ko.toJS(self.editingObject);
-            var args = { id: obj.id, name: obj.name, username: obj.username, email: obj.email, role: obj.roleId, location: obj.locationId, password: "" };
+            var args = { id: obj.id, name: obj.name, username: obj.username, email: obj.email, role: obj.roleId, location: obj.locationId };
             app.consumeAPI('users', 'modify', args).done(function (data) {
                 var edited = ko.toJS(self.editingObject());
                 self.selectedObject().update(edited);
