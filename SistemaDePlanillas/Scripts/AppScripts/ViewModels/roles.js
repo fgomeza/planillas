@@ -10,10 +10,10 @@
 
         self.roles = ko.observableArray();
 
-        testingApp.consumeAPI('roles', 'get').done(function (response) {
-            var data = response.data;
+        testingApp.consumeAPI('roles', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Role(item); });
             self.roles(mappedData);
+            return data;
         });
 
     }

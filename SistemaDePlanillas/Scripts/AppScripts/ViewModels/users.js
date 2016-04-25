@@ -28,13 +28,11 @@
             this.name(data.name);
             this.username(data.username);
             this.roleId(data.roleId);
-            this.roleName(data.roleName);
             this.locationId(data.locationId);
-            this.locationName(data.locationName);
             this.email(data.email);
 
             this.cache.lastestData = data;
-            this._destroy = !data.active;
+            this._destroy = data.active === false;
         },
         revert: function () {
             this.update(this.cache.lastestData)
@@ -105,54 +103,56 @@
         self.saveChanges = function (data) {
             var obj = ko.toJS(self.editingObject);
             var args = { id: obj.id, name: obj.name, username: obj.username, email: obj.email, role: obj.roleId, location: obj.locationId, password: "" };
-            app.consumeAPI('users', 'modify', args).done(function (response) {
+            app.consumeAPI('users', 'modify', args).done(function (data) {
                 var edited = ko.toJS(self.editingObject());
                 self.selectedObject().update(edited);
-                return response;
+                return data;
             }).fail(function (error) {
                 app.showError(error);
                 return error;
             }).always(function (response) {
-                console.log(response);
                 self.closeForm();
             });
         };
 
         self.delete = function (data) {
             var args = { id: self.editingObject().id() };
-            app.consumeAPI('users', 'remove', args).done(function (response) {
+            app.consumeAPI('users', 'remove', args).done(function (data) {
                 self.users.remove(self.selectedObject);
+                return data;
             }).fail(function (error) {
                 app.showError(error);
                 return error;
             }).always(function (response) {
-                console.log(response);
                 self.closeForm();
             });
         }
 
         self.create = function (data) {
-            var $form = $('#createUserForm');
-            var fields = app.formToJSON($form);
             var obj = ko.toJS(self.newUserObj());
-            var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: obj.roleId};
-            app.consumeAPI('users', 'add', args).done(function (response) {
+            var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: obj.roleId };
+            app.consumeAPI('users', 'add', args).done(function (data) {
                 self.users.push(self.newUserObj());
                 self.newUserObj(new User());
+                return data;
             }).fail(function (error) {
                 app.showError(error);
                 return error;
             }).always(function (response) {
-                console.log(response);
                 $('#createUserModal').modal('hide');
             });
         }
 
-        app.consumeAPI('users', 'get').done(function (response) {
-            var data = response.data;
+        app.consumeAPI('users', 'get').done(function (data) {
             //var mappedData = $.map(data, function (item) { return new User(item); });
             //self.users(mappedData);
-            $.map(data, function (item) { self.users.push(new User(item)); });
+            var i = 0;
+            $.map(data, function (item) {
+                setTimeout(function () {
+                    self.users.push(new User(item));
+                }, i * 10);
+                i++;
+            });
         }).fail(function (error) {
             app.showError(error);
             return error;

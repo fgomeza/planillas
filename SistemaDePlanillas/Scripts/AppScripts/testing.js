@@ -60,12 +60,13 @@
             dataType: 'json',
         };
 
-        console.log('requesting ' + xhr.url + ' args=' + xhr.data);
+        console.log('requesting ' + xhr.url + ' args = ' + xhr.data);
 
         return $.ajax(xhr).then(function (response) {
             var $deferred = $.Deferred(function (deferred) {
+                console.log('ajax ' + xhr.url, response);
                 return (response.status === 'OK') ?
-                    deferred.resolve(response) :
+                    deferred.resolve(response.data) :
                     deferred.reject(response);
             });
             
