@@ -50,6 +50,10 @@
                 context.redirect(defaultRoute);
             });
 
+            this._checkFormSubmission = function (form) {
+                return false;
+            }
+
         });
 
     }

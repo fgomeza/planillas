@@ -15,9 +15,9 @@
 
         self.locations = ko.observableArray();
 
-        testingApp.action('locations', 'get').then(function (response) {
-            response = response.data;
-            var mappedData = $.map(response, function (item) { return new Location(item); });
+        testingApp.consumeAPI('locations', 'get').done(function (response) {
+            var data = response.data;
+            var mappedData = $.map(data, function (item) { return new Location(item); });
             self.locations(mappedData);
         });
 

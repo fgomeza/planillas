@@ -1,5 +1,6 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/testing', 'viewModels/locations', 'viewModels/roles'], function ($, ko, app, locations, roles) {
     function User(data) {
+        var self = this;
         this.id = ko.observable();
         this.name = ko.observable();
         this.username = ko.observable();
@@ -8,9 +9,15 @@
         this.locationId = ko.observable();
         this.locationName = ko.observable();
         this.email = ko.observable();
-        this.active = ko.observable();
+        this.password = ko.observable();
         this.cache = function () { };
 
+        this.roleId.subscribe(function (newValue) {
+            self.roleName(getNameFromId(roles.roles(), newValue));
+        });
+        this.locationId.subscribe(function (newValue) {
+            self.locationName(getNameFromId(locations.locations(), newValue));
+        });
         this.update(data);
     }
 
@@ -25,8 +32,9 @@
             this.locationId(data.locationId);
             this.locationName(data.locationName);
             this.email(data.email);
-            this.active(data.active);
+
             this.cache.lastestData = data;
+            this._destroy = !data.active;
         },
         revert: function () {
             this.update(this.cache.lastestData)
@@ -36,6 +44,13 @@
         }
     });
 
+    var getNameFromId = function (list, id) {
+        var item = ko.utils.arrayFirst(list, function (item) {
+            return item.id() == id;
+        });
+
+        return item ? item.name() : '';
+    };
     function UsersViewModel() {
         var self = this;
 
@@ -43,7 +58,10 @@
         self.isEditMode = ko.observable(false);
         self.selectedObject = ko.observable();
         self.editingObject = ko.observable();
+        self.newUserObj = ko.observable(new User());
         self.selectedRow = null;
+        self.locations = locations.locations;
+        self.roles = roles.roles;
         self.activeUsers = ko.computed(function () {
             return ko.utils.arrayFilter(self.users(), function (user) { return !user._destroy; });
         });
@@ -61,14 +79,6 @@
             closeModalButton: 'Cerrar',
             SaveModalButton: 'Guardar cambios'
         };
-
-        require(['viewModels/locations'], function (vm) {
-            self.locations = vm.locations;
-        });
-
-        require(['viewModels/roles'], function (vm) {
-            self.roles = vm.roles;
-        });
 
         self.edit = function (data, event) {
             self.selectedObject(data);
@@ -93,11 +103,9 @@
         };
 
         self.saveChanges = function (data) {
-            var $form = $('#userEditForm');
-            var fields = app.formToJSON($form);
-            var args = { name: fields.name, username: fields.username, password: "", email: fields.email, role: parseInt(fields.role), location: parseInt(fields.location) };
+            var obj = ko.toJS(self.editingObject);
+            var args = { id: obj.id, name: obj.name, username: obj.username, email: obj.email, role: obj.roleId, location: obj.locationId, password: "" };
             app.consumeAPI('users', 'modify', args).done(function (response) {
-                alert('OK');
                 var edited = ko.toJS(self.editingObject());
                 self.selectedObject().update(edited);
                 return response;
@@ -113,7 +121,7 @@
         self.delete = function (data) {
             var args = { id: self.editingObject().id() };
             app.consumeAPI('users', 'remove', args).done(function (response) {
-                self.selectedObject().active(false);
+                self.users.remove(self.selectedObject);
             }).fail(function (error) {
                 app.showError(error);
                 return error;
@@ -126,11 +134,11 @@
         self.create = function (data) {
             var $form = $('#createUserForm');
             var fields = app.formToJSON($form);
-            var obj = ko.toJS(self.editingObject());
-            console.log(obj); return;
-            var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: parseInt(obj.role)};
+            var obj = ko.toJS(self.newUserObj());
+            var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: obj.roleId};
             app.consumeAPI('users', 'add', args).done(function (response) {
-                console.log(response);
+                self.users.push(self.newUserObj());
+                self.newUserObj(new User());
             }).fail(function (error) {
                 app.showError(error);
                 return error;
@@ -140,13 +148,15 @@
             });
         }
 
-        app.action('users', 'get').then(function (response) {
+        app.consumeAPI('users', 'get').done(function (response) {
             var data = response.data;
-            var mappedData = $.map(data, function (item) { return new User(item); });
-            self.users(mappedData);
+            //var mappedData = $.map(data, function (item) { return new User(item); });
+            //self.users(mappedData);
+            $.map(data, function (item) { self.users.push(new User(item)); });
+        }).fail(function (error) {
+            app.showError(error);
+            return error;
         });
-
-        console.log('inside users vm');
 
     };
 
