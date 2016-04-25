@@ -1843,7 +1843,7 @@ namespace SistemaDePlanillas.Models
             }
         }
 
-        public void updateUser(long id, string name, string username, string password, long role, long location, string email)
+        public void updateUser(long id, string name, string username, long role, long location, string email)
         {
             try
             {
@@ -1854,7 +1854,6 @@ namespace SistemaDePlanillas.Models
                     {
                         user.name = name;
                         user.userName = username;
-                        user.password = password;
                         user.roleId = role;
                         user.locationId = location;
                         user.email = email;
@@ -1863,7 +1862,31 @@ namespace SistemaDePlanillas.Models
                     {
                         validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
-                    var rows = repository.Complete();
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void updatePassword(long id, string password)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var user = repository.Users.Get(id);
+                    if (user != null)
+                    {
+                        password = BCryptHelper.HashPassword(password, BCryptHelper.GenerateSalt());
+                    }
+                    else
+                    {
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                    }
+                    repository.Complete();
                 }
             }
             catch (Exception e)
