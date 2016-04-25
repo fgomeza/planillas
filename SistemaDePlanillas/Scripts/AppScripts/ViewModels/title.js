@@ -4,7 +4,7 @@
     function titleViewModel() {
         var self = this;
         self.partialViewTitle = ko.observable();
-        self.applicationName = ko.observable("Sistema de planillas");
+        self.applicationName = ko.observable();
         self.applicationTitle = ko.computed(function () {
             return self.applicationName() + " - " + self.partialViewTitle();
         });

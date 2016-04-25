@@ -2,9 +2,7 @@
 
 <nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm">
 
-    <a href="@Url.Action("Index", "Home")" class="navmenu-brand">
-        @ViewBag.AppTitle
-    </a>
+    <a href="@Url.Action("Index", "Home")" class="navmenu-brand" data-bind="text: applicationName"></a>
 
     <ul id="navmenu-links" class="nav navmenu-nav">
         @foreach(var subMenu in Model)

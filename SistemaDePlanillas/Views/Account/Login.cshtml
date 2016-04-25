@@ -10,7 +10,7 @@
         require(['bootstrap', 'respond'], function () {
             require(['app/site']);
         });
-        require(['jquery', 'knockout', 'app/titleViewModel'], function ($, ko, vm) {
+        require(['jquery', 'knockout', 'viewModels/title'], function ($, ko, vm) {
             vm.partialViewTitle('Ingreso');
             ko.applyBindings(vm, $('head')[0]);
         });

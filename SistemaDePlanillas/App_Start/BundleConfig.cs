@@ -47,10 +47,11 @@ namespace SistemaDePlanillas
             bundles.Add(new StyleBundle("~/bundles/styles").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
+                      "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
                       "~/Content/dropzone/dropzone.css",
                       "~/Content/site.css"));
 
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

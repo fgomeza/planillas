@@ -234,6 +234,10 @@
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.min.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -244,13 +248,16 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
-    <Content Include="Scripts\AppScripts\debitsViewModel.js" />
-    <Content Include="Scripts\AppScripts\employeesViewModel.js" />
-    <Content Include="Scripts\AppScripts\titleViewModel.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\roles.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\title.js" />
+    <Content Include="Scripts\lib\bootstrap-switch.js" />
+    <Content Include="Scripts\lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\AppScripts\dashboard.js" />
-    <Content Include="Scripts\AppScripts\usersViewModel.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\users.js" />
     <Content Include="Scripts\AppScripts\main.js" />
     <Content Include="Scripts\AppScripts\require-config.js" />
     <Content Include="Scripts\AppScripts\routing.js" />
@@ -303,6 +310,7 @@
     <Content Include="Scripts\lib\sammy-0.7.5.min.js" />
     <Content Include="Scripts\AppScripts\testing.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\locations.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -335,7 +343,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Jonn\" />
-    <Folder Include="Views\Testing\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

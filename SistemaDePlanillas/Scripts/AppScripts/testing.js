@@ -8,16 +8,16 @@
             args = [];
         }
         var xhr = {
-            url: "/api/action/fromCall/" + group + "/" + operation,
-            type: "POST",
+            url: '/api/action/fromCall/' + group + '/' + operation,
+            type: 'POST',
             data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: callback,
             error: function (error) { callback({ status: 'ERROR', error: error.status, detail: error.statusText }); }
         };
-        $.ajax(xhr);
         console.log('requesting ' + xhr.url + ' args=' + xhr.data);
+        return $.ajax(xhr);
     }
 
     testingApp.actionFromForm = function (group, operation, args, callback) {
@@ -26,8 +26,8 @@
             args = {};
         }
         var xhr = {
-            url: "/api/action/fromForm/" + group + "/" + operation,
-            type: "POST",
+            url: '/api/action/fromForm/' + group + '/' + operation,
+            type: 'POST',
             data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -40,8 +40,8 @@
 
     testingApp.actionMethod = function (group, operation, method, args, callback) {
         $.ajax({
-            url: "/api/action/" + group + "/" + operation + "/" + method,
-            type: "POST",
+            url: '/api/action/' + group + '/' + operation + '/' + method,
+            type: 'POST',
             data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -50,22 +50,27 @@
         });
     }
 
-    testingApp.consumeAPI = function (group, operation, args, callback) {
-        if (typeof args === 'function') {
-            callback = args;
-            args = {};
-        }
+    testingApp.consumeAPI = function (group, operation, args) {
+        args = args || {};
         var xhr = {
-            url: "/api/action/" + group + "/" + operation,
-            type: "POST",
-            data: args,
+            url: '/api/action/fromForm/' + group + '/' + operation,
+            type: 'POST',
+            data: JSON.stringify(args),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: callback,
-            error: function (error) { callback({ status: 'ERROR', error: error.status, detail: error.statusText }); }
         };
-        $.ajax(xhr);
+
         console.log('requesting ' + xhr.url + ' args=' + xhr.data);
+
+        return $.ajax(xhr).then(function (response) {
+            var $deferred = $.Deferred(function (deferred) {
+                return (response.status === 'OK') ?
+                    deferred.resolve(response) :
+                    deferred.reject(response);
+            });
+            
+            return $deferred.promise();
+        });
     }
 
     testingApp.formToJSON = function ($formElement) {
@@ -79,6 +84,10 @@
         return $(formID).serializeArray().map(function (current, index, array) {
             return isNaN(current.value) ? current.value : parseFloat(current.value);
         }, []);
+    }
+
+    testingApp.displayError = function () {
+
     }
 
     return testingApp;
