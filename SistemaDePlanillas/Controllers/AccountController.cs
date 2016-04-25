@@ -42,19 +42,18 @@ namespace PlanillasFrontEnd.Controllers
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             model.Username = model.Username.ToLower();
-            User user = SessionManager.Instance.validateUser(model.Username, model.Password);
-            if (ModelState.IsValid && user != null)
+            User user;
+            AppException error;
+            var ok= SessionManager.Instance.validateUser(model.Username, model.Password,out user,out error);
+            if (ModelState.IsValid && ok)
             {
                 SessionManager.Instance.setSessionUser(Response, user, model.RememberMe);
-
                 ViewBag.returnUrl = returnUrl;
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                /*Aquí hace falta una forma de tomar el error que sucedió
-                */
-                ModelState.AddModelError("LoginError", "Usuario o contraseña inválidos");
+                ModelState.AddModelError("LoginError", error.DescriptionError);
                 return View();
             }
 

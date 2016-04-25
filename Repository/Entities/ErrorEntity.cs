@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Entities
-{
+{// eliminar
     [Table("errors")]
     public class ErrorEntity
     {

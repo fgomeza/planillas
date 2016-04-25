@@ -125,9 +125,20 @@ namespace SistemaDePlanillas.Models
             return userFromTicket(ticket);
         }
 
-        public User validateUser(string username, string password)
+        public bool validateUser(string username, string password , out User user, out AppException error)
         {
-            return DBManager.Instance.login(username, password);
+            try
+            {
+                user= DBManager.Instance.login(username, password);
+                error = null;
+                return true;
+            }
+            catch(AppException e)
+            {
+                user = null;
+                error = e;
+                return false;
+            }
         }
 
     }
