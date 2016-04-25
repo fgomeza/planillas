@@ -101,9 +101,9 @@
                 var edited = ko.toJS(self.editingObject());
                 self.selectedObject().update(edited);
                 return response;
-            }).fail(function (response) {
-                alert('ERROR');
-                return response;
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
             }).always(function (response) {
                 console.log(response);
                 self.closeForm();
@@ -111,22 +111,32 @@
         };
 
         self.delete = function (data) {
-            var args = { id: self.editingObject.id };
+            var args = { id: self.editingObject().id() };
             app.consumeAPI('users', 'remove', args).done(function (response) {
-            }).fail(function (response) {
+                self.selectedObject().active(false);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
             }).always(function (response) {
+                console.log(response);
+                self.closeForm();
             });
-
-            self.users.destroy(data);
-            self.cancel();
         }
 
         self.create = function (data) {
             var $form = $('#createUserForm');
             var fields = app.formToJSON($form);
-            var args = [fields.name, fields.username, fields.password, fields.email, parseInt(fields.role)];
-            app.action('users', 'add', args, function (response) {
+            var obj = ko.toJS(self.editingObject());
+            console.log(obj); return;
+            var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: parseInt(obj.role)};
+            app.consumeAPI('users', 'add', args).done(function (response) {
                 console.log(response);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            }).always(function (response) {
+                console.log(response);
+                $('#createUserModal').modal('hide');
             });
         }
 

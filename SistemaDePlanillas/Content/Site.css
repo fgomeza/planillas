@@ -178,7 +178,7 @@ footer {
 }
 
 .highlight {
-    background-color: #f0ff45;
+    background-color: #f0ff45 !important;
 }
 
 /* Scrollbar */

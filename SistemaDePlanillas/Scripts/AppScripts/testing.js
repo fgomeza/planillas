@@ -86,8 +86,13 @@
         }, []);
     }
 
-    testingApp.displayError = function () {
-
+    testingApp.showError = function (error) {
+        var errorText = error.detail || error.status + ': ' + error.statusText;
+        $('#errorText').html(errorText);
+        $('#errorHolder').slideDown();
+        setTimeout(function () {
+            $('#errorHolder').slideUp();
+        }, 10000);
     }
 
     return testingApp;
