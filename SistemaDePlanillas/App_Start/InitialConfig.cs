@@ -13,7 +13,6 @@ namespace SistemaDePlanillas.App_Start
             DBManager dbManager = DBManager.Instance;
             SessionManager sessionManager = SessionManager.Instance;
             ViewManager viewManager = ViewManager.Instance;
-            Errors errores = Errors.Instance;
         }
     }
 }

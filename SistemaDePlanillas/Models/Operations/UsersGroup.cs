@@ -46,9 +46,9 @@ namespace SistemaDePlanillas.Models.Operations
             return result.Select(u => formatUser(u));
         }
 
-        public static void modify(User user, string name, string username, string password, string email, long role, long location)
+        public static void modify(User user, long id, string name, string username, string password, string email, long role, long location)
         {
-            DBManager.Instance.addUser(name, username, password, role, location, email);
+            DBManager.Instance.updateUser(id, name, username, password, role, location, email);
         }
 
         public static void remove(User user, long id)

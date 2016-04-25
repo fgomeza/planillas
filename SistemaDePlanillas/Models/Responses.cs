@@ -8,13 +8,10 @@ namespace SistemaDePlanillas.Models
 {
     public class Responses
     {
+        public static string Ok = "OK";
         public static Response OK = new Response() { status = "OK" };
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
-        public static Response Error(long errorCode)
-        {
-            return new ErrorResponse() {status="ERROR",error=errorCode, detail=Errors.Instance.getDetail(errorCode)};
-        }
 
         public static Response ExceptionError(Exception e)
         {
@@ -36,10 +33,6 @@ namespace SistemaDePlanillas.Models
             return new DataResponse() { status = "OK", data = data };
         }
 
-        public static Response SimpleWithData(long status, object data)
-        {
-            return status == 0 ? WithData(data) : Error(status);
-        }
 
     }
 
@@ -64,48 +57,4 @@ namespace SistemaDePlanillas.Models
         public object data;
     }
 
-    public class Errors
-    {
-        private Dictionary<long, string> details;
-
-        private static Errors instance;
-
-        private Errors()
-        {
-            details = new Dictionary<long, string>();
-            /*
-            var err = DBManager.Instance.selectAllErrors().Detail;
-            foreach (var x in err)
-                details.Add(x.Item1,x.Item2);
-                */
-            details[1] = "inexistentEmployee";
-            details[2] = "inexistentExtra";
-            details[3] = "inexistentUser";
-            details[4] = "inexistentDebit";
-            details[5] = "inexistentLocation";
-            details[6] = "inexistentRole";
-            details[7] = "inexistentOperation";
-            details[8] = "inexistentPenalty";
-            details[9] = "inexistentGroup";
-            details[10] = "employeeInactive";
-            details[11] = "locationInactive";
-            details[12] = "penaltyInactive";
-            details[13] = "roleInactive";
-            details[14] = "userInactive";
-            details[200] = "duplicatedUser"; // TODO: cambiar esto
-        }
-        
-        public static Errors Instance
-        {
-            get
-            {
-                return instance == null ? (instance = new Errors()) : instance;
-            }
-        }
-
-        public string getDetail(long errorCode)
-        {
-            return details.ContainsKey(errorCode) ? details[errorCode] : "Error desconocido";
-        }
-    }
 }
