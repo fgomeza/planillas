@@ -1,5 +1,4 @@
-﻿
-<div>
+﻿<div id="testsSection">
     <div class="panel panel-default">
         <div class="panel-body">
             <form id="testingForm" class="form-inline">
@@ -29,36 +28,3 @@
 <div>
     <pre class="well well-lg" id="result"></pre>
 </div>
-
-<script>
-    require(['jquery', 'app/testing'], function ($, testingApp) {
-        var enviar = function () {
-            var $container = $("#result")
-            $container.html("");
-            if ($("#fromForm").is(':checked')) {
-                testingApp.actionFromForm($("#group").val(), $("#operation").val(), JSON.parse("{" + $("#args").val() + "}"), function (res) {
-                    $container.html(JSON.stringify(res, null, 2))
-                });
-            }
-            else {
-                testingApp.action($("#group").val(), $("#operation").val(), JSON.parse("[" + $("#args").val() + "]"), function (res) {
-                    $container.html(JSON.stringify(res, null, 2))
-                });
-            }
-            
-
-
-        };
-
-        $('#testSubmitBttn').click(function (event) {
-            event.preventDefault();
-            enviar();
-        });
-
-    });
-
-    require(['viewModels/title'], function (title) {
-        title.partialViewTitle('Backdoor');
-    });
-</script>
-

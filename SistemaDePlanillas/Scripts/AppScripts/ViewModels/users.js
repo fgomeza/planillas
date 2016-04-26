@@ -47,7 +47,7 @@
             return item.id() == id;
         });
 
-        return item ? item.name() : '';
+        return item.name();
     };
     function UsersViewModel() {
         var self = this;
@@ -58,8 +58,8 @@
         self.editingObject = ko.observable();
         self.newUserObj = ko.observable(new User());
         self.selectedRow = null;
-        self.locations = locations.locations;
-        self.roles = roles.roles;
+        self.locations = null;
+        self.roles = null;
         self.activeUsers = ko.computed(function () {
             return ko.utils.arrayFilter(self.users(), function (user) { return !user._destroy; });
         });
@@ -118,7 +118,7 @@
         self.delete = function (data) {
             var args = { id: self.editingObject().id() };
             app.consumeAPI('users', 'remove', args).done(function (data) {
-                self.users.remove(self.selectedObject);
+                self.users.destroy(self.selectedObject());
                 return data;
             }).fail(function (error) {
                 app.showError(error);
@@ -143,19 +143,16 @@
             });
         }
 
-        app.consumeAPI('users', 'get').done(function (data) {
-            //var mappedData = $.map(data, function (item) { return new User(item); });
-            //self.users(mappedData);
-            var i = 0;
-            $.map(data, function (item) {
-                setTimeout(function () {
-                    self.users.push(new User(item));
-                }, i * 10);
-                i++;
+        self.loading = $.when(roles.loading, locations.loading).then(function () {
+            self.roles = roles.roles;
+            self.locations = locations.locations;
+            app.consumeAPI('users', 'get').done(function (data) {
+                var mappedData = $.map(data, function (item) { return new User(item); });
+                self.users(mappedData);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
             });
-        }).fail(function (error) {
-            app.showError(error);
-            return error;
         });
 
     };

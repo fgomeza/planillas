@@ -224,14 +224,3 @@
 
     </div>
 </div>
-
-<script>
-    require(['knockout', 'viewModels/employees'], function (ko, viewModel) {
-        var element = document.getElementById('employeesSection');
-        ko.applyBindings(new viewModel(), element);
-    });
-
-    require(['viewModels/title'], function (title) {
-        title.partialViewTitle('Asociados');
-    });
-</script>

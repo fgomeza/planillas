@@ -3,6 +3,7 @@
     paths: {
         'app': '/Scripts/AppScripts',
         'viewModels': '/Scripts/AppScripts/ViewModels',
+        'controllers': '/Scripts/AppScripts/Controllers',
         'jquery': 'jquery-2.2.1.min',
         'knockout': 'knockout-3.4.0',
         'sammy': 'sammy-0.7.5',

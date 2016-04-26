@@ -12,11 +12,16 @@
                 var context = this;
                 context.$element().slideUp(function () {
                     context.$element().html(content);
-                    context.$element().fadeIn(500, function () {
+                    if (callback) {
+                        callback.apply();
+                    }
+                    /*
+                    context.$element().fadeIn(function () {
                         if (callback) {
                             callback.apply();
                         }
                     });
+                    */
                 });
             };
             
@@ -42,7 +47,14 @@
                 var url = '/PartialViews/' + context.params.page;
                 console.log('loading', url);
                 $('html').trigger('click');
-                context.load(url, options(context)).swap();
+                
+                context.load(url, options(context)).swap(function () {
+                    require(['controllers/' + context.params.page], function (controller) {
+                        if (controller && controller.init) {
+                            controller.init.apply();
+                        }
+                    });
+                });
             });
 
 

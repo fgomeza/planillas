@@ -158,13 +158,3 @@
     </div>
 </div>
 
-<script>
-    require(['knockout', 'viewModels/users'], function (ko, viewModel) {
-        var element = document.getElementById('usersSection');
-        ko.applyBindings(viewModel, element);
-    });
-    require(['viewModels/title'], function (title) {
-        title.partialViewTitle('Usuarios');
-    });
-
-</script>

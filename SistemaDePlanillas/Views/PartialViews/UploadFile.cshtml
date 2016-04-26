@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Cargar Archivos";
 
     var bundle = System.Web.Optimization.BundleTable.Bundles.GetBundleFor("~/styles/partials");
@@ -8,7 +6,7 @@
 
 }
 
-<div>
+<div id="uploadSection">
     @using (Html.BeginForm("uploadFile", "Manage", FormMethod.Post, new
     {
         enctype = "multipart/form-data",
@@ -23,15 +21,3 @@
     }
 
 </div>
-
-<script type="text/javascript">
-    require(['dropzone-amd-module'], function (Dropzone) {
-        var uploader = new Dropzone('#uploadDemo', {
-            paramName: "file"
-        });
-    });
-
-    require(['viewModels/title'], function (title) {
-        title.partialViewTitle('Subir archivo');
-    });
-</script>

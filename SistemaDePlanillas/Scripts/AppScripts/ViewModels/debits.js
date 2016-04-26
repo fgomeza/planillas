@@ -1,4 +1,5 @@
 ﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
+    //TODO this file is a copy/paste
     function User(data) {
         console.log(data);
         this.id = ko.observable(data.id);
@@ -70,5 +71,5 @@
 
     };
 
-    return UsersViewModel;
+    return new UsersViewModel();
 });

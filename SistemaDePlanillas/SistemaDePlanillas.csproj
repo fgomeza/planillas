@@ -248,6 +248,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
+    <Content Include="Scripts\AppScripts\Controllers\dashboard.js" />
+    <Content Include="Scripts\AppScripts\Controllers\debits.js" />
+    <Content Include="Scripts\AppScripts\Controllers\employees.js" />
+    <Content Include="Scripts\AppScripts\Controllers\test.js" />
+    <Content Include="Scripts\AppScripts\Controllers\uploadfile.js" />
+    <Content Include="Scripts\AppScripts\Controllers\users.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
     <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
     <Content Include="Scripts\AppScripts\ViewModels\roles.js" />

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
+﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
     function Role(data) {
         var data = data || {};
         this.id = ko.observable(data.id);
@@ -10,10 +10,10 @@
 
         self.roles = ko.observableArray();
 
-        testingApp.consumeAPI('roles', 'get').done(function (data) {
+        self.loading = app.consumeAPI('roles', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Role(item); });
             self.roles(mappedData);
-            return data;
+            return self.roles;
         });
 
     }

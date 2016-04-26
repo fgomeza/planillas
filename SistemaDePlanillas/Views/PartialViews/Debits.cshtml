@@ -183,14 +183,3 @@
 
     </div>
 </div>
-
-<script>
-    require(['knockout', 'viewModels/debits'], function (ko, viewModel) {
-        var element = document.getElementById('debitsSection');
-        ko.applyBindings(new viewModel(), element);
-    });
-
-    require(['viewModels/title'], function (title) {
-        title.partialViewTitle('Debitos');
-    });
-</script>

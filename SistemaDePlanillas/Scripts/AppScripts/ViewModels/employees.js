@@ -66,5 +66,5 @@
 
     };
 
-    return EmployeesViewModel;
+    return new EmployeesViewModel();
 });

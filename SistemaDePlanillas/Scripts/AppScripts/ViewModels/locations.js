@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
+﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
     function Location(data) {
         var data = data || {};
         this.id = ko.observable(data.Id);
@@ -15,10 +15,10 @@
 
         self.locations = ko.observableArray();
 
-        testingApp.consumeAPI('locations', 'get').done(function (data) {
+        self.loading = app.consumeAPI('locations', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Location(item); });
             self.locations(mappedData);
-            return data;
+            return self.locations;
         });
 
     }
