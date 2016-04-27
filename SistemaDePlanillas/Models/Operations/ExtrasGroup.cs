@@ -17,9 +17,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="detail">Motivo del pago</param>
         /// <param name="amount">Cantidad a pagar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
-        public static void add(User user,long employeeId, string detail,long hours)
+        public static Extra add(User user,long employeeId, string detail,long hours)
         {
-                DBManager.Instance.addExtra(employeeId, detail, hours);
+               return DBManager.Instance.addExtra(employeeId, detail, hours);
         }
         /// <summary>
         /// Elimina un pago extra

@@ -8,15 +8,15 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        public static void add_Fixed(User user, long employee, string detail, double amount, long type)
+        public static Debit add_Fixed(User user, long employee, string detail, double amount, long type)
         {
-            DBManager.Instance.addDebit(employee, detail, amount, type);
+            return DBManager.Instance.addDebit(employee, detail, amount, type);
         }
 
-        public static void add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
+        public static PaymentDebit add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long months, long type)
         {
 
-            DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
+            return DBManager.Instance.addPaymentDebit(employee, initialDate, detail, total, months, type);
         }
 
         public static object get_AllFixed(User user, long employee)

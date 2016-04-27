@@ -19,10 +19,11 @@ namespace SistemaDePlanillas.Models.Operations
             return roles.Select(role => new { id = role.id, name = role.name, privileges = role.privileges });
         }
 
-        public static void add(User user, string name, IEnumerable<object> operations)
+        public static long add(User user, string name, IEnumerable<object> operations)
         {
-            DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
+            long roleId = DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
+            return roleId;
         }
 
         public static object get(User user, long id)
