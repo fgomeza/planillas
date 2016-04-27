@@ -21,9 +21,7 @@ namespace Repository.Repositories.Classes
         }
         public UserEntity AddUser(UserEntity entity)
         {
-            _context.Users.Add(entity);
-            var user= _context.Users.Where(u=>u.userName==entity.userName && u.locationId==entity.locationId);
-            return user.First();
+            return _context.Users.Add(entity);
         }
         public UserEntity login(string username,string password)
         {
