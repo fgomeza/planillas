@@ -18,7 +18,8 @@
       "links": [
         {
           "displayName": "Lista de usuarios",
-          "page": "users"
+          "page": "users",
+          "requires": "users/get"
         }
       ]
     },
