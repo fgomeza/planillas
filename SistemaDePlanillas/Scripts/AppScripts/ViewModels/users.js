@@ -132,7 +132,7 @@
             var obj = ko.toJS(self.newUserObj());
             var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: obj.roleId };
             app.consumeAPI('users', 'add', args).done(function (data) {
-                self.users.push(self.newUserObj());
+                self.users.push(new User(data));
                 self.newUserObj(new User());
                 return data;
             }).fail(function (error) {
