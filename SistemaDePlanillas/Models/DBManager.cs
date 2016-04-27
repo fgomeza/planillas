@@ -1836,16 +1836,20 @@ namespace SistemaDePlanillas.Models
                         active = true
                     });
                     repository.Complete();
-                    user= new User()
+                    if (u != null)
                     {
-                        Id = u.id,
-                        Name = u.name,
-                        Username = u.userName,
-                        Role = u.roleId,
-                        Email = u.email,
-                        Location = u.locationId,
-                        Active = u.active
-                    };
+                        user = new User()
+                        {
+                            Id = u.id,
+                            Name = u.name,
+                            Username = u.userName,
+                            Role = u.roleId,
+                            Email = u.email,
+                            Location = u.locationId,
+                            Active = u.active
+                        };
+                    }
+                   
                 }
             }
             catch (Exception e)
