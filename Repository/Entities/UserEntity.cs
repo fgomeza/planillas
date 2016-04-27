@@ -30,7 +30,7 @@ namespace Repository.Entities
         public string password { get; set; }
 
         [Column("active")]
-        public Nullable<bool> active { set; get; }
+        public bool active { set; get; }
 
         [ForeignKey("fkuser_role")]
         [Column("role")]

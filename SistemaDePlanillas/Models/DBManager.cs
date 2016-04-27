@@ -1818,13 +1818,14 @@ namespace SistemaDePlanillas.Models
         }
 
 
-        public void addUser(string name, string username, string password, long role, long location, string email)
+        public User addUser(string name, string username, string password, long role, long location, string email)
         {
+            User user=null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Users.Add(new UserEntity()
+                   var u=repository.Users.AddUser(new UserEntity()
                     {
                         name = name,
                         email = email,
@@ -1835,12 +1836,27 @@ namespace SistemaDePlanillas.Models
                         active = true
                     });
                     repository.Complete();
+                    if (u != null)
+                    {
+                        user = new User()
+                        {
+                            Id = u.id,
+                            Name = u.name,
+                            Username = u.userName,
+                            Role = u.roleId,
+                            Email = u.email,
+                            Location = u.locationId,
+                            Active = u.active
+                        };
+                    }
+                   
                 }
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return user;
         }
 
         public void updateUser(long id, string name, string username, long role, long location, string email)
