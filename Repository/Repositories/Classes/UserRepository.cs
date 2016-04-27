@@ -19,7 +19,12 @@ namespace Repository.Repositories.Classes
             var users = _context.Users.Where(e => e.locationId == locationId);
             return users.ToList();
         }
-
+        public UserEntity AddUser(UserEntity entity)
+        {
+            _context.Users.Add(entity);
+            var user= _context.Users.Where(u=>u.userName==entity.userName && u.locationId==entity.locationId);
+            return user.First();
+        }
         public UserEntity login(string username,string password)
         {
             var res = _context.Users.Where(u => u.userName == username).ToList();

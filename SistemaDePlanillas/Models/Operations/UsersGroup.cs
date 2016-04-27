@@ -8,9 +8,9 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class UsersGroup
     {
-        public static void add(User user, string name, string username, string password, string email, long role)
+        public static User add(User user, string name, string username, string password, string email, long role)
         {
-            DBManager.Instance.addUser(name, username, password, role, user.Location, email);
+            return DBManager.Instance.addUser(name, username, password, role, user.Location, email);
         }
 
         public static object get(User user, long id)
