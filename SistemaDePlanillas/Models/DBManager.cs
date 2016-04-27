@@ -27,23 +27,36 @@ namespace SistemaDePlanillas.Models
                 return instance == null ? (instance = new DBManager()) : instance;
             }
         }
-        
-        public void addCmsEmployee(string idCard, string CMS, string name, long location, string account)
+
+        public Employee addCmsEmployee(string idCard, string CMS, string name, long location, string account)
         {
+            Employee result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     EmployeeEntity employee = new EmployeeEntity()
                     { idCard = idCard, cms = CMS, name = name, locationId = location, active = true, account = account };
-                    repository.Employees.Add(employee);
+                    var x = repository.Employees.Add(employee);
                     repository.Complete();
+                    result = new Employee()
+                    {
+                        id = x.id,
+                        idCard = x.idCard,
+                        name = x.name,
+                        location = x.locationId,
+                        account = x.account,
+                        cms = false,
+                        salary = x.salary,
+                        active = x.active
+                    };
                 }
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
@@ -120,22 +133,35 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
+        public Employee addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
         {
+            Employee result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     EmployeeEntity employee = new EmployeeEntity()
                     { idCard = idCard, name = name, locationId = location, active = true, account = account, salary = salary };
-                    repository.Employees.Add(employee);
+                    var x = repository.Employees.Add(employee);
                     repository.Complete();
+                    result = new Employee()
+                    {
+                        id = x.id,
+                        idCard = x.idCard,
+                        name = x.name,
+                        location = x.locationId,
+                        account = x.account,
+                        cms = false,
+                        salary = x.salary,
+                        active = x.active
+                    };
                 }
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, double salary)
@@ -178,7 +204,14 @@ namespace SistemaDePlanillas.Models
                     {
                         result.Add(new Employee()
                         {
-                            id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = false, salary = x.salary, active = x.active
+                            id = x.id,
+                            idCard = x.idCard,
+                            name = x.name,
+                            location = x.locationId,
+                            account = x.account,
+                            cms = false,
+                            salary = x.salary,
+                            active = x.active
                         });
                     }
                 }
@@ -286,7 +319,8 @@ namespace SistemaDePlanillas.Models
                     var employees = repository.Employees.GetAll();
                     foreach (var employee in employees)
                     {
-                        result.Add(new Employee() {
+                        result.Add(new Employee()
+                        {
                             id = employee.id,
                             idCard = employee.idCard,
                             location = employee.locationId,
@@ -372,13 +406,14 @@ namespace SistemaDePlanillas.Models
         }
 
 
-        public void addDebit(long employee, string Detail, double amount, long type)
+        public Debit addDebit(long employee, string Detail, double amount, long type)
         {
+            Debit result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Debits.Add(new DebitEntity()
+                    var debit=repository.Debits.Add(new DebitEntity()
                     {
                         employeeId = employee,
                         description = Detail,
@@ -388,12 +423,22 @@ namespace SistemaDePlanillas.Models
                         payment = false
                     });
                     repository.Complete();
+                    result = new Debit()
+                    {
+                        id = debit.id,
+                        employee = debit.employeeId,
+                        amount = debit.totalAmount,
+                        detail = debit.description,
+                        type = debit.debitTypeId,
+                        typeName = debit.fkdebit_type.name
+                    };
                 }
             }
             catch (NpgsqlException e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updateDebit(long idDebit, string Detail, double amount)
@@ -563,13 +608,14 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long months, long type)
+        public PaymentDebit addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long months, long type)
         {
+            PaymentDebit result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Debits.Add(new DebitEntity()
+                    var debit = repository.Debits.Add(new DebitEntity()
                     {
                         initialDate = initialDate,
                         description = Detail,
@@ -583,12 +629,26 @@ namespace SistemaDePlanillas.Models
                         payment = true
                     });
                     repository.Complete();
+                    result = new PaymentDebit();
+                    result.id = debit.id;
+                    result.initialDate = debit.initialDate;
+                    result.detail = debit.description;
+                    result.employee = debit.employeeId;
+                    result.total = debit.totalAmount;
+                    result.remainingAmount = debit.remainingAmount;
+                    result.paymentsMade = (long)debit.paidMonths;
+                    result.missingPayments = (long)debit.remainingMonths;
+                    result.interestRate = (double)debit.fkdebit_type.interestRate;
+                    result.type = debit.debitTypeId;
+                    result.typeName = debit.fkdebit_type.name;
                 }
+
             }
             catch (NpgsqlException e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updatePaymentDebit(long idDebit, DateTime initialDate, string Detail, double total, long months, double remainingAmount)
@@ -675,7 +735,7 @@ namespace SistemaDePlanillas.Models
                                 interestRate = (double)debit.fkdebit_type.interestRate,
                                 type = debit.debitTypeId,
                                 typeName = debit.fkdebit_type.name
-                            });  
+                            });
                         }
                     }
                 }
@@ -735,8 +795,9 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addExtra(long employee, string Detail, long hours)
+        public Extra addExtra(long employee, string Detail, long hours)
         {
+            Extra result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -747,15 +808,16 @@ namespace SistemaDePlanillas.Models
                         description = Detail,
                         hours = hours
                     };
-                    repository.Extras.Add(extra);
+                    extra = repository.Extras.Add(extra);
                     var rows = repository.Complete();
-
+                    result = new Extra() { employee = extra.employeeId, detail = extra.description, hours = extra.hours, id = extra.id };
                 }
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updateExtra(long idExtra, string Detail, long hours)
@@ -866,8 +928,9 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addPenalty(long employee, string Detail, long amount, long months, long penaltyTypeId, DateTime date)
+        public Penalty addPenalty(long employee, string Detail, long amount, long months, long penaltyTypeId, DateTime date)
         {
+            Penalty result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
@@ -882,16 +945,28 @@ namespace SistemaDePlanillas.Models
                         PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId),
                         active = true
                     };
-                    repository.Penalties.Add(penalty);
+                    penalty = repository.Penalties.Add(penalty);
                     repository.Complete();
+                    result = new Penalty()
+                    {
+                        id = penalty.Id,
+                        amount = penalty.Amount == null ? 0 : (double)penalty.Amount,
+                        date = penalty.Date,
+                        detail = penalty.Description,
+                        employee = penalty.EmployeeId,
+                        type = penalty.PenaltyTypeId,
+                        typeName = penalty.fkpenalty_type.Name,
+                        penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
+                    };
                 }
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
-        
+
         public void updatePenalty(long idRecess, long payroll, long penaltyTypeId, string Detail, long amount, DateTime date)
         {
             try
@@ -1037,7 +1112,7 @@ namespace SistemaDePlanillas.Models
             }
             return result;
         }
-        
+
         public void payPenalty(long payrollId, long employeeId, DateTime endDate)
         {
             try
@@ -1158,25 +1233,31 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addLocation(string name, double call_price, long administrator)
+        public Location addLocation(string name, double call_price, long administrator)
         {
+            Location result = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = new LocationEntity()
                     { name = name, callPrice = call_price, active = true };
-                    repository.Locations.Add(location);
+                    location = repository.Locations.Add(location);
                     repository.Complete();
-                    var lo = repository.Locations.lastLocation(name);
-                    updateAdministrator(lo.id, administrator);
+                    updateAdministrator(location.id, administrator);
+                    result = new Location();
+                    result.Name = location.name;
+                    result.CallPrice = location.callPrice == null ? 0 : (long)location.callPrice;
+                    result.LastPayroll = location.lastPayrollId;
+                    result.CurrentPayroll = location.currentPayrollId;
+                    result.Active = location.active;
                 }
-
             }
             catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public Location getLocation(long id)
@@ -1377,7 +1458,7 @@ namespace SistemaDePlanillas.Models
                             Id = x.id,
                             Name = x.name,
                             CallPrice = (double)x.callPrice
-                        }); 
+                        });
                     }
                 }
             }
@@ -1398,12 +1479,12 @@ namespace SistemaDePlanillas.Models
                     var locations = repository.Locations.getAllActiveLocations();
                     foreach (var x in locations)
                     {
-                        result.Add( new Location()
+                        result.Add(new Location()
                         {
                             Id = x.id,
                             Name = x.name,
                             CallPrice = (double)x.callPrice
-                        }); 
+                        });
                     }
                 }
             }
@@ -1414,15 +1495,16 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addRole(string name, long location, List<string> operations)//**
+        public long addRole(string name, long location, List<string> operations)//**
         {
+            long roleId = 0;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     RoleEntity role = new RoleEntity()
                     { name = name, locationId = location, active = true };
-                    repository.Roles.Add(role);
+                    roleId = repository.Roles.Add(role).id;
                     foreach (var op in operations)
                     {
                         OperationEntity operation = repository.Operations.Get(op);
@@ -1438,6 +1520,7 @@ namespace SistemaDePlanillas.Models
             {
                 validateException(e);
             }
+            return roleId;
         }
 
         public Role getRole(long id)
@@ -1462,7 +1545,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(role!=null? roleInactive:inexistentRole);
+                        validateException(role != null ? roleInactive : inexistentRole);
                     }
                 }
             }
@@ -1691,7 +1774,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.Add(new Operation(x.Description, x.Name , x.GroupId));
+                        result.Add(new Operation(x.Description, x.Name, x.GroupId));
                 }
             }
             catch (Exception e)
@@ -1710,7 +1793,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.Add(new Operation(x.Description, x.Name , x.GroupId));
+                        result.Add(new Operation(x.Description, x.Name, x.GroupId));
                 }
             }
             catch (Exception e)
@@ -1820,12 +1903,12 @@ namespace SistemaDePlanillas.Models
 
         public User addUser(string name, string username, string password, long role, long location, string email)
         {
-            User user=null;
+            User user = null;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                   var u=repository.Users.AddUser(new UserEntity()
+                    var u = repository.Users.AddUser(new UserEntity()
                     {
                         name = name,
                         email = email,
@@ -1836,20 +1919,16 @@ namespace SistemaDePlanillas.Models
                         active = true
                     });
                     repository.Complete();
-                    if (u != null)
+                    user = new User()
                     {
-                        user = new User()
-                        {
-                            Id = u.id,
-                            Name = u.name,
-                            Username = u.userName,
-                            Role = u.roleId,
-                            Email = u.email,
-                            Location = u.locationId,
-                            Active = u.active
-                        };
-                    }
-                   
+                        Id = u.id,
+                        Name = u.name,
+                        Username = u.userName,
+                        Role = u.roleId,
+                        Email = u.email,
+                        Location = u.locationId,
+                        Active = u.active
+                    };
                 }
             }
             catch (Exception e)
@@ -1983,7 +2062,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(user!=null? userInactive:inexistentUser);
+                        validateException(user != null ? userInactive : inexistentUser);
                     }
                 }
             }

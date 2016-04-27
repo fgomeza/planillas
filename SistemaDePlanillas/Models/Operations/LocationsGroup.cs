@@ -8,9 +8,9 @@ namespace SistemaDePlanillas.Models.Operations
     public class LocationsGroup
     {
         
-        public static void add(User user, string name, double callPrice,long administrator)
+        public static Location add(User user, string name, double callPrice,long administrator)
         {
-            DBManager.Instance.addLocation(name, callPrice,administrator);
+            return DBManager.Instance.addLocation(name, callPrice,administrator);
         }
         
 

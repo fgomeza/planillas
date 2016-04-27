@@ -50,9 +50,9 @@ namespace Repository.Repositories.Classes
             return _context.Set<TEntity>().SingleOrDefault(predicate);
         }
 
-        public void Add(TEntity entity)
+        public TEntity Add(TEntity entity)
         {
-            _context.Set<TEntity>().Add(entity);
+            return _context.Set<TEntity>().Add(entity);
         }
 
         public void AddRange(IEnumerable<TEntity> entities)

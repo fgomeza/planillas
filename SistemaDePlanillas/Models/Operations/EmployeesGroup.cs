@@ -9,16 +9,16 @@ namespace SistemaDePlanillas.Models.Operations
     {
 
         //employees/add/cms (string,string,string,string)
-        public static void add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
+        public static Employee add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
         {
-            DBManager.Instance.addCmsEmployee(idCard, idCMS, name, (int)user.Location, BCRAccount);
+            return DBManager.Instance.addCmsEmployee(idCard, idCMS, name, (int)user.Location, BCRAccount);
         }
 
 
         //employees/add/noncms (string,string,string,decimal)
-        public static void add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
+        public static Employee add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
         {
-            DBManager.Instance.addNonCmsEmployee(idCard, name, (int)user.Location, BCRAccount, (float)salary);
+            return DBManager.Instance.addNonCmsEmployee(idCard, name, (int)user.Location, BCRAccount, (float)salary);
         }
 
 

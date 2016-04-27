@@ -13,7 +13,7 @@ namespace Repository.Repositories.Interfaces
         IEnumerable<TEntity> GetAll();
         IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
 
-        void Add(TEntity entity);
+        TEntity Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
 
         void Remove(TEntity entity);

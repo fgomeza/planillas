@@ -19,9 +19,9 @@ namespace SistemaDePlanillas.Models.Operations
         /// <param name="amount">Monto a descontar</param>
         /// <returns>Estado de la transaccion en formato JSON</returns>
         
-        public static void add(User user, long employee, string detail, long amount, long months, long penalty_type, DateTime date)
+        public static Penalty add(User user, long employee, string detail, long amount, long months, long penalty_type, DateTime date)
         {
-            DBManager.Instance.addPenalty(employee, detail, amount, months, penalty_type, date);
+            return DBManager.Instance.addPenalty(employee, detail, amount, months, penalty_type, date);
         }
 
         
