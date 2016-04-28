@@ -17,14 +17,14 @@ namespace SistemaDePlanillas.Models
                         new ApplicationLink("Super Testing", "test"),
                         new ApplicationLink("Dashboard template", "dashboard")
                     }),
-                    new ApplicationSubMenu("Usuarios", null, new ApplicationLink[] {
-                        new ApplicationLink("Lista de Usuarios", "users"),
-                    }),
-                    new ApplicationSubMenu("Asociados", null, new ApplicationLink[] {
-                        new ApplicationLink("Lista de Asociados", "employees"),
-                    }),
                     new ApplicationSubMenu("Planillas", null, new ApplicationLink[] {
                         new ApplicationLink("Subir un archivo", "uploadfile")
+                    }),
+                    new ApplicationSubMenu("Administración", null, new ApplicationLink[] {
+                        new ApplicationLink("Administrar usuarios", "users"),
+                        new ApplicationLink("Administrar asociados", "employees"),
+                        new ApplicationLink("Administrar deducciones", "debits"),
+                        new ApplicationLink("Administrar roles", "roles")
                     })
                     /*
                     new ApplicationSubMenu("Settings", null, new ApplicationLink[] {

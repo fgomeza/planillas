@@ -11,7 +11,7 @@
                 $containerElement.parent().fadeIn();
             });
 
-            title.partialViewTitle('Usuarios');
+            title.partialViewTitle('Administración de usuarios');
         }
     }
 

@@ -11,7 +11,7 @@
                 $containerElement.parent().fadeIn();
             });
 
-            title.partialViewTitle('Asociados');
+            title.partialViewTitle('Administración de asociados');
         }
     }
 

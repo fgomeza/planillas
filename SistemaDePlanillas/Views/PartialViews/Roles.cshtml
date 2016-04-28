@@ -1,0 +1,26 @@
+﻿<div id="rolesSection">
+    <div data-bind="foreach: roles">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div data-bind="text: name"></div>
+                <div class="list-group" data-bind="foreach: privileges">
+                    <a href="#" class="list-group-item" data-bind="text: group, click: $root.openGroup"></a>
+                    <div class="collapse">
+                        <div class="well well-sm">
+                            <div class="container-fluid" data-bind="foreach: operations">
+                                <div class="row">
+                                    <div class="col-sm-3" data-bind="text: $data"></div>
+                                    <div class="col-sm-3">
+                                        <div class="make-switch switch-small">
+                                            <input type="checkbox" checked="true" data-checkbox="VALUE1" class="alert-status">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

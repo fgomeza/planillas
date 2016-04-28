@@ -1,4 +1,4 @@
-﻿require(['bootstrap', 'respond', 'jasny', 'bootstrap-switch', 'app/site'], function () {
+﻿require(['bootstrap', 'respond', 'jasny', 'switch', 'app/site'], function () {
 
     require(['app/routing'], function (Router) {
         var router = new Router('#page', '#/navigation?page=dashboard');

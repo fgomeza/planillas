@@ -10,11 +10,12 @@
         'bootstrap': 'bootstrap.min',
         'respond': 'respond.min',
         'jasny': 'jasny-bootstrap.min',
+        'switch': 'bootstrap-switch.min'
     },
     shim: {
         'bootstrap': ['jquery'],
         'jasny': ['bootstrap'],
-        'bootstrap-switch': ['bootstrap'],
+        'switch': ['jquery', 'bootstrap'],
         'jquery.validate': ['jquery'],
         'jquery.validate.unobtrusive': ['jquery.validate'],
         'jquery.unobtrusive-ajax': ['jquery'],

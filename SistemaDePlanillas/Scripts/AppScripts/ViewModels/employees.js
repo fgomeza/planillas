@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, jsonHandler) {
+﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
     function Employee(data) {
         this.id = ko.observable(data.id); 
         this.idCard = ko.observable(data.idCard);
@@ -58,10 +58,12 @@
             self.cancel();
         }
 
-        jsonHandler.action('employees', 'get', function (data) {
-            data = data.data;
+        self.loading = app.consumeAPI('employees', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Employee(item); });
             self.employees(mappedData);
+        }).fail(function (error) {
+            app.showError(error);
+            return error;
         });
 
     };

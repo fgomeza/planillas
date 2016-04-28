@@ -45,5 +45,10 @@ namespace SistemaDePlanillas.Controllers
         {
             return PartialView();
         }
+
+        public ActionResult Roles()
+        {
+            return PartialView();
+        }
     }
 }

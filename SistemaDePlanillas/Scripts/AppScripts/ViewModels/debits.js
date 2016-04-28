@@ -1,6 +1,6 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, testingApp) {
-    //TODO this file is a copy/paste
-    function User(data) {
+﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
+    
+    function Debit(data) {
         console.log(data);
         this.id = ko.observable(data.id);
         this.name = ko.observable(data.name);
@@ -63,10 +63,12 @@
             });
         }
 
-        testingApp.action('users', 'get', function (data) {
-            data = data.data;
-            var mappedData = $.map(data, function (item) { return new User(item); });
+        self.loading = app.consumeAPI('debits', 'get').done(function (data) {
+            var mappedData = $.map(data, function (item) { return new Debit(item); });
             self.users(mappedData);
+        }).fail(function (error) {
+            app.showError(error);
+            return error;
         });
 
     };
