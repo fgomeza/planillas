@@ -1908,7 +1908,7 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var u = repository.Users.AddUser(new UserEntity()
+                    var u = repository.Users.Add(new UserEntity()
                     {
                         name = name,
                         email = email,
