@@ -11,9 +11,9 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var roles = DBManager.Instance.selectAllRoles();
             var groups = DBManager.Instance.selectAllOperationsGroup();
-            return roles.Select(role => new { Id = role.id, Name = role.name,
-                Groups =groups.Select(g=>new { Id=g.name , Description= g.desc ,
-                Privileges = g.operations.Select(o=>new {Id=o.Id, Description = o.Description ,
+            return roles.Select(role => new { id = role.id, name = role.name,
+                groups =groups.Select(g=>new { id=g.name , description= g.desc ,
+                privileges = g.operations.Select(o=>new {id=o.Id, description = o.Description ,
                 active = role.privileges.ContainsKey(g.name)&&role.privileges[g.name].Contains(o.Name)} )}) });
         }
 
@@ -22,14 +22,14 @@ namespace SistemaDePlanillas.Models.Operations
             var roles = DBManager.Instance.selectAllActiveRoles();
             var groups = DBManager.Instance.selectAllOperationsGroup();
             return roles.Select(role => new {
-                Id = role.id,
-                Name = role.name,
-                Groups = groups.Select(g => new {
-                    Id = g.name,
-                    Description = g.desc,
-                    Privileges = g.operations.Select(o => new {
-                        Id = o.Id,
-                        Description = o.Description,
+                id = role.id,
+                name = role.name,
+                groups = groups.Select(g => new {
+                    id = g.name,
+                    description = g.desc,
+                    privileges = g.operations.Select(o => new {
+                        id = o.Id,
+                        description = o.Description,
                         active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
                     })
                 })
@@ -48,14 +48,14 @@ namespace SistemaDePlanillas.Models.Operations
             var role = DBManager.Instance.getRole(id);
             var groups = DBManager.Instance.selectAllOperationsGroup();
             return new {
-                Id = role.id,
-                Name = role.name,
-                Groups = groups.Select(g => new {
-                    Id = g.name,
-                    Description = g.desc,
-                    Privileges = g.operations.Select(o => new {
-                        Id = o.Id,
-                        Description = o.Description,
+                id = role.id,
+                name = role.name,
+                groups = groups.Select(g => new {
+                    id = g.name,
+                    description = g.desc,
+                    privileges = g.operations.Select(o => new {
+                        id = o.Id,
+                        description = o.Description,
                         active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
                     })
                 })
