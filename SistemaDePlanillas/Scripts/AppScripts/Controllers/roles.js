@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'viewModels/roles', 'viewModels/title', 'bootstrap', 'switch'], function ($, ko, viewModel, title) {
+﻿define(['jquery', 'knockout', 'viewModels/roles', 'viewModels/title', 'bootstrap', 'toggle'], function ($, ko, viewModel, title) {
 
     function Controller() {
 
@@ -6,15 +6,12 @@
 
             var $containerElement = $('#rolesSection');
 
-            setTimeout(function () {
-                $('.make-switch').bootstrapSwitch('state', true);
-            }, 100);
-
             $.when(viewModel.loading).then(function () {
-                $(document).ready(function () {
+                ko.applyBindings(viewModel, $containerElement[0]);
+
+                $('.make-switch').bootstrapToggle({
                 });
 
-                ko.applyBindings(viewModel, $containerElement[0]);
                 $containerElement.parent().fadeIn();
             });
 

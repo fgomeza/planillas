@@ -16,6 +16,12 @@ namespace SistemaDePlanillas
                         "~/Scripts/lib/knockout-{version}.js",
                         "~/Scripts/lib/sammy-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js/scripts").Include(
+                        "~/Scripts/lib/jquery-{version}.js",
+                        "~/Scripts/lib/bootstrap.js",
+                        "~/Scripts/lib/jasny-bootstrap.js",
+                        "~/Scripts/lib/bootstrap-switch.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/js/modernizr").Include(
                         "~/Scripts/lib/modernizr-*"));
 
@@ -47,7 +53,7 @@ namespace SistemaDePlanillas
             bundles.Add(new StyleBundle("~/bundles/styles").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
-                      "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
+                      "~/Content/bootstrap-toggle.css",
                       "~/Content/dropzone/dropzone.css",
                       "~/Content/site.css"));
 
