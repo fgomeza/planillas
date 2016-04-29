@@ -12,39 +12,49 @@
         ko.applyBindings(vm, $('#topBanner')[0]);
     });
 
-    require(['knockout'], function (ko) {
+    require(['knockout', 'toggle'], function (ko) {
         //wrapper to an observable that requires accept/cancel
-        ko.protectedObservable = function (initialValue) {
-            //private variables
-            var _actualValue = ko.observable(initialValue),
-                _tempValue = initialValue;
+        ko.bindingHandlers.bootstrapToggle = {
+            init: function (element, valueAccessor, allBindingsAccessor) {
 
-            //computed observable that we will return
-            var result = ko.computed({
-                //always return the actual value
-                read: function () {
-                    return _actualValue();
-                },
-                //stored in a temporary spot until commit
-                write: function (newValue) {
-                    _tempValue = newValue;
+                var elem = $(element);
+
+                //initialize bootstrapSwitch
+                elem.bootstrapSwitch();
+
+                // setting initial value
+                $(element).bootstrapSwitch('state', valueAccessor()());
+
+                //handle the field changing
+                $(element).on('switchChange.bootstrapSwitch', function (event, state) {
+                    var observable = valueAccessor();
+                    observable(state);
+                });
+
+                // Adding component options
+                var options = allBindingsAccessor().bootstrapSwitchOptions || {};
+                for (var property in options) {
+                    $(element).bootstrapSwitch(property, ko.utils.unwrapObservable(options[property]));
                 }
-            }).extend({ notify: "always" });
 
-            //if different, commit temp value
-            result.commit = function () {
-                if (_tempValue !== _actualValue()) {
-                    _actualValue(_tempValue);
+                //handle disposal (if KO removes by the template binding)
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                    $(element).bootstrapSwitch('destroy');
+                });
+
+            },
+            //update the control when the view model changes
+            update: function (element, valueAccessor, allBindingsAccessor) {
+                var value = ko.utils.unwrapObservable(valueAccessor());
+
+                // Adding component options
+                var options = allBindingsAccessor().bootstrapSwitchOptions || {};
+                for (var property in options) {
+                    $(element).bootstrapSwitch(property, ko.utils.unwrapObservable(options[property]));
                 }
-            };
 
-            //force subscribers to take original
-            result.reset = function () {
-                _actualValue.valueHasMutated();
-                _tempValue = _actualValue();   //reset temp value
-            };
-
-            return result;
+                $(element).bootstrapSwitch('state', value);
+            }
         };
     });
 });

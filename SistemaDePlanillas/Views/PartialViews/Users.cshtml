@@ -7,34 +7,32 @@
     <div class="row">
         <div class="panel panel-primary" data-bind="visible: activeUsers().length > 0">
             <div class="panel-heading"></div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="usersTable" class="table table-hover">
-                        <thead>
-                            <tr data-bind="with: strings">
-                                <th data-bind="text: name"></th>
-                                <th data-bind="text: username"></th>
-                                <th data-bind="text: role"></th>
-                                <th data-bind="text: location"></th>
-                                <th data-bind="text: email"></th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: users">
-                            <tr>
-                                <td data-bind="text: name"></td>
-                                <td data-bind="text: username"></td>
-                                <td data-bind="text: roleName"></td>
-                                <td data-bind="text: locationName"></td>
-                                <td data-bind="text: email"></td>
-                                <td data-bind="visible: !$parent.isEditMode()">
-                                    <a href="#" data-bind="click: $parent.edit">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table id="usersTable" class="table table-hover">
+                    <thead>
+                        <tr data-bind="with: strings">
+                            <th data-bind="text: name"></th>
+                            <th data-bind="text: username"></th>
+                            <th data-bind="text: role"></th>
+                            <th data-bind="text: location"></th>
+                            <th data-bind="text: email"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: users">
+                        <tr>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: username"></td>
+                            <td data-bind="text: roleName"></td>
+                            <td data-bind="text: locationName"></td>
+                            <td data-bind="text: email"></td>
+                            <td data-bind="visible: !$parent.isEditMode()">
+                                <a href="#" data-bind="click: $parent.edit">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -95,7 +93,7 @@
             </div>
         </div>
     </div>
-    <!--layout background #e7ebee-->
+
     <div class="row">
         <div id="createUserModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
@@ -153,7 +151,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 </div>

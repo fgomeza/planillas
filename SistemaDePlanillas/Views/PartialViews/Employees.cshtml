@@ -5,44 +5,42 @@
         </p>
         <div class="panel panel-primary">
             <div class="panel-heading"></div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="employeesTable" class="table table-hover" data-bind="visible: activeEmployees().length > 0">
-                        <thead>
-                            <tr data-bind="with: strings">
-                                <th data-bind="text: id"></th>
-                                <th data-bind="text: idCard"></th>
-                                <th data-bind="text: name"></th>
-                                <th data-bind="text: location"></th>
-                                <th data-bind="text: account"></th>
-                                <th data-bind="text: cms"></th>
-                                <th data-bind="text: cmsText"></th>
-                                <th data-bind="text: calls"></th>
-                                <th data-bind="text: active"></th>
-                                <th data-bind="text: salary"></th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: employees">
-                            <tr>
-                                <td data-bind="text: id"></td>
-                                <td data-bind="text: idCard"></td>
-                                <td data-bind="text: name"></td>
-                                <td data-bind="text: location"></td>
-                                <td data-bind="text: account"></td>
-                                <td data-bind="text: cms"></td>
-                                <td data-bind="text: cmsText"></td>
-                                <td data-bind="text: calls"></td>
-                                <th data-bind="text: active"></th>
-                                <td data-bind="text: salary"></td>
-                                <td data-bind="visible: !$parent.isEditMode()">
-                                    <a href="#" data-bind="click: $parent.edit">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table id="employeesTable" class="table table-hover" data-bind="visible: activeEmployees().length > 0">
+                    <thead>
+                        <tr data-bind="with: strings">
+                            <th data-bind="text: id"></th>
+                            <th data-bind="text: idCard"></th>
+                            <th data-bind="text: name"></th>
+                            <th data-bind="text: location"></th>
+                            <th data-bind="text: account"></th>
+                            <th data-bind="text: cms"></th>
+                            <th data-bind="text: cmsText"></th>
+                            <th data-bind="text: calls"></th>
+                            <th data-bind="text: active"></th>
+                            <th data-bind="text: salary"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: employees">
+                        <tr>
+                            <td data-bind="text: id"></td>
+                            <td data-bind="text: idCard"></td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: location"></td>
+                            <td data-bind="text: account"></td>
+                            <td data-bind="text: cms"></td>
+                            <td data-bind="text: cmsText"></td>
+                            <td data-bind="text: calls"></td>
+                            <th data-bind="text: active"></th>
+                            <td data-bind="text: salary"></td>
+                            <td data-bind="visible: !$parent.isEditMode()">
+                                <a href="#" data-bind="click: $parent.edit">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
