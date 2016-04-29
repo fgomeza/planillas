@@ -59,12 +59,14 @@
         self.editingObject = ko.observable();
 
         self.openRole = function (data, event) {
-            self.isEditSectionVisible(true);
+            $('.make-switch').bootstrapToggle();
             self.editingObject(data);
+            self.isEditSectionVisible(true);
         }
 
         self.openGroup = function (data, event) {
             var $target = $(event.target);
+
             $target.parent().find('.collapse.in').collapse('hide');
             $target.next().collapse('toggle');
         }

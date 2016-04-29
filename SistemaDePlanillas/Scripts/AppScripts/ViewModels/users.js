@@ -47,7 +47,7 @@
             return item.id() == id;
         });
 
-        return item.name();
+        return item ? item.name() : '';
     };
     function UsersViewModel() {
         var self = this;

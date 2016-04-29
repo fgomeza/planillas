@@ -9,9 +9,6 @@
             $.when(viewModel.loading).then(function () {
                 ko.applyBindings(viewModel, $containerElement[0]);
 
-                $('.make-switch').bootstrapToggle({
-                });
-
                 $containerElement.parent().fadeIn();
             });
 
