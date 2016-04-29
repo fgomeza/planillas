@@ -36,7 +36,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static object get(User user)
         {
-            var result = DBManager.Instance.selectAllUsers(user.Location);
+            var result = DBManager.Instance.selectAllUsers().Where(u=>u.Location==user.Location);
             return result.Select(u => formatUser(u));
         }
 

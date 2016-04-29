@@ -2077,7 +2077,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public List<User> selectAllUsers(long location)
+        public List<User> selectAllUsers()
         {
             List<User> result = new List<User>();
             try
