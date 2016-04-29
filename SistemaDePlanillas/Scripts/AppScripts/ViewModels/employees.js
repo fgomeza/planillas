@@ -1,5 +1,6 @@
 ﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
     function Employee(data) {
+        data = data || {};
         this.id = ko.observable(data.id); 
         this.idCard = ko.observable(data.idCard);
         this.name = ko.observable(data.name);
@@ -11,6 +12,10 @@
         this.active = ko.observable(data.active);
         this.salary = ko.observable(data.salary);
     }
+
+    ko.utils.extend(Employee.prototype, {
+        update: function () { }
+    });
 
     function EmployeesViewModel() {
         var self = this;

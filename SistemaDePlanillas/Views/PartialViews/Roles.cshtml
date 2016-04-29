@@ -1,17 +1,27 @@
-﻿<div id="rolesSection">
-    <div data-bind="foreach: roles">
-        <div class="panel panel-default">
+﻿<div id="rolesSection" class="container-fluid">
+
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <div class="list-group" data-bind="foreach: roles">
+                <a href="#" class="list-group-item" data-bind="text: name, click: $root.openRole"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="roleEditSection" class="panel panel-primary" data-bind="visible: isEditSectionVisible, with: editingObject">
             <div class="panel-body">
                 <div data-bind="text: name"></div>
-                <div class="list-group" data-bind="foreach: privileges">
-                    <a href="#" class="list-group-item" data-bind="text: group, click: $root.openGroup"></a>
+                <div class="list-group" data-bind="foreach: groups">
+                    <a href="#" class="list-group-item" data-bind="text: description, click: $root.openGroup"></a>
                     <div class="collapse">
                         <div class="well well-sm">
-                            <div class="container-fluid" data-bind="foreach: operations">
+                            <div class="container-fluid" data-bind="foreach: privileges">
                                 <div class="row">
-                                    <div class="col-sm-3" data-bind="text: $data"></div>
+                                    <div class="col-sm-3" data-bind="text: description"></div>
                                     <div class="col-sm-3">
-                                        <input type="checkbox" class="make-switch">
+                                        <input type="checkbox" class="make-switch" />
                                     </div>
                                 </div>
                             </div>
@@ -21,4 +31,5 @@
             </div>
         </div>
     </div>
+
 </div>
