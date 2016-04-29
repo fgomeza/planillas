@@ -69,8 +69,8 @@ namespace SistemaDePlanillas.Models
                 var options = new List<Tuple<string, string>>();
                 foreach(string operacion in grupo.Value)
                 {
-                    Operation op = og.operations[operacion];
-                    options.Add(new Tuple<string,string>(op.desc,op.url));
+                    Operation op = og.operations.First(o=>o.Name==operacion);
+                    options.Add(new Tuple<string,string>(op.Description,op.Description)); // Revisar
                 }
                 MenubarConfig menu = new MenubarConfig(og.name, options, og.icon, og.desc);
                 //(og.rightAlign ? rightMenus : leftMenus).Add(menu);

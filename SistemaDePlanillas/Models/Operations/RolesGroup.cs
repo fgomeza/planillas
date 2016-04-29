@@ -10,13 +10,30 @@ namespace SistemaDePlanillas.Models.Operations
         public static object get(User user)
         {
             var roles = DBManager.Instance.selectAllRoles();
-            return roles.Select(role => new { id = role.id, name = role.name, privileges = role.privileges });
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return roles.Select(role => new { Id = role.id, Name = role.name,
+                Groups =groups.Select(g=>new { Id=g.name , Description= g.desc ,
+                Privileges = g.operations.Select(o=>new {Id=o.Id, Description = o.Description ,
+                active = role.privileges.ContainsKey(g.name)&&role.privileges[g.name].Contains(o.Name)} )}) });
         }
 
         public static object get_active(User user)
         {
-            var roles = SessionManager.Instance.getRoles();
-            return roles.Select(role => new { id = role.id, name = role.name, privileges = role.privileges });
+            var roles = DBManager.Instance.selectAllActiveRoles();
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return roles.Select(role => new {
+                Id = role.id,
+                Name = role.name,
+                Groups = groups.Select(g => new {
+                    Id = g.name,
+                    Description = g.desc,
+                    Privileges = g.operations.Select(o => new {
+                        Id = o.Id,
+                        Description = o.Description,
+                        active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
+                    })
+                })
+            });
         }
 
         public static long add(User user, string name, IEnumerable<object> operations)
@@ -28,8 +45,21 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static object get(User user, long id)
         {
-            var role = SessionManager.Instance.getRole(id);
-            return new { id = role.id, name = role.name, privileges = role.privileges };
+            var role = DBManager.Instance.getRole(id);
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return new {
+                Id = role.id,
+                Name = role.name,
+                Groups = groups.Select(g => new {
+                    Id = g.name,
+                    Description = g.desc,
+                    Privileges = g.operations.Select(o => new {
+                        Id = o.Id,
+                        Description = o.Description,
+                        active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
+                    })
+                })
+            };
         }
 
         public static void remove(User user, long id)
