@@ -61,6 +61,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EmployeeeError1.
+        /// </summary>
+        internal static string employeeInactive {
+            get {
+                return ResourceManager.GetString("employeeInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LocationError1.
         /// </summary>
         internal static string fkadministrator_location {
@@ -286,11 +295,92 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DebitError1.
+        /// </summary>
+        internal static string inexistentDebit {
+            get {
+                return ResourceManager.GetString("inexistentDebit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EmployeeError1.
         /// </summary>
         internal static string inexistentEmployee {
             get {
                 return ResourceManager.GetString("inexistentEmployee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExtraError1.
+        /// </summary>
+        internal static string inexistentExtra {
+            get {
+                return ResourceManager.GetString("inexistentExtra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GroupError1.
+        /// </summary>
+        internal static string inexistentGroup {
+            get {
+                return ResourceManager.GetString("inexistentGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocationError1.
+        /// </summary>
+        internal static string inexistentLocation {
+            get {
+                return ResourceManager.GetString("inexistentLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PenaltyError1.
+        /// </summary>
+        internal static string inexistentPenalty {
+            get {
+                return ResourceManager.GetString("inexistentPenalty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RoleError1.
+        /// </summary>
+        internal static string inexistentRole {
+            get {
+                return ResourceManager.GetString("inexistentRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserError1.
+        /// </summary>
+        internal static string inexistentUser {
+            get {
+                return ResourceManager.GetString("inexistentUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocationError1.
+        /// </summary>
+        internal static string locationInactive {
+            get {
+                return ResourceManager.GetString("locationInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PenaltyError1.
+        /// </summary>
+        internal static string penaltyInactive {
+            get {
+                return ResourceManager.GetString("penaltyInactive", resourceCulture);
             }
         }
         
@@ -313,11 +403,29 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RoleError1.
+        /// </summary>
+        internal static string roleInactive {
+            get {
+                return ResourceManager.GetString("roleInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RoleError2.
         /// </summary>
         internal static string RoleOperations_pkey {
             get {
                 return ResourceManager.GetString("RoleOperations_pkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RoleError4.
+        /// </summary>
+        internal static string roleWithUser {
+            get {
+                return ResourceManager.GetString("roleWithUser", resourceCulture);
             }
         }
         
@@ -363,6 +471,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         internal static string ukuser_username {
             get {
                 return ResourceManager.GetString("ukuser_username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserError1.
+        /// </summary>
+        internal static string userInactive {
+            get {
+                return ResourceManager.GetString("userInactive", resourceCulture);
             }
         }
     }

@@ -37,18 +37,6 @@ namespace SistemaDePlanillas.Models
             throw new AppException(code, description);
         }
 
-        public static string employeeInactive = "EmployeeError4";
-        public static string inexistentLocation = "LocationError1";
-        public static string locationInactive = "LocationError2";
-        public static string inexistentPenalty = "PenaltyError1";
-        public static string penaltyInactive = "PenaltyError2";
-        public static string inexistentRole = "RoleError1";
-        public static string roleInactive = "RoleError4";
-        public static string inexistentUser = "UserError1";
-        public static string userInactive = "UserError4";
-        public static string inexistentDebit = "DebitError1";
-        public static string inexistentExtra = "ExtraError1";
-        public static string inexistentGroup = "GroupError1";
         
     }
 

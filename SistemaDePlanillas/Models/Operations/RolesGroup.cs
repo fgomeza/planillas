@@ -7,33 +7,38 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class RolesGroup
     {
-        public static object get(User user)
+        private static object formatRole(Role role , List<OperationsGroup> groups)
         {
-            var roles = DBManager.Instance.selectAllRoles();
-            var groups = DBManager.Instance.selectAllOperationsGroup();
-            return roles.Select(role => new { id = role.id, name = role.name,
-                groups =groups.Select(g=>new { id=g.name , description= g.desc ,
-                privileges = g.operations.Select(o=>new {id=o.Id, description = o.Description ,
-                active = role.privileges.ContainsKey(g.name)&&role.privileges[g.name].Contains(o.Name)} )}) });
-        }
-
-        public static object get_active(User user)
-        {
-            var roles = DBManager.Instance.selectAllActiveRoles();
-            var groups = DBManager.Instance.selectAllOperationsGroup();
-            return roles.Select(role => new {
+            return new
+            {
                 id = role.id,
                 name = role.name,
-                groups = groups.Select(g => new {
+                groups = groups.Select(g => new
+                {
                     id = g.name,
                     description = g.desc,
-                    privileges = g.operations.Select(o => new {
+                    privileges = g.operations.Select(o => new
+                    {
                         id = o.Id,
                         description = o.Description,
                         active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
                     })
                 })
-            });
+            };
+    }
+
+        public static object get(User user)
+        {
+            var roles = DBManager.Instance.selectAllRoles().Where(r=>r.location==user.Location);
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return roles.Select(r=>formatRole(r,groups));
+        }
+
+        public static object get_active(User user)
+        {
+            var roles = DBManager.Instance.selectAllActiveRoles().Where(r => r.location == user.Location);
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return roles.Select(r => formatRole(r, groups));
         }
 
         public static long add(User user, string name, IEnumerable<object> operations)
@@ -47,19 +52,7 @@ namespace SistemaDePlanillas.Models.Operations
         {
             var role = DBManager.Instance.getRole(id);
             var groups = DBManager.Instance.selectAllOperationsGroup();
-            return new {
-                id = role.id,
-                name = role.name,
-                groups = groups.Select(g => new {
-                    id = g.name,
-                    description = g.desc,
-                    privileges = g.operations.Select(o => new {
-                        id = o.Id,
-                        description = o.Description,
-                        active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
-                    })
-                })
-            };
+            return formatRole(role, groups);
         }
 
         public static void remove(User user, long id)
@@ -78,6 +71,23 @@ namespace SistemaDePlanillas.Models.Operations
         {
             DBManager.Instance.updateRole(id, name, user.Location, operations);
             SessionManager.Instance.updateRoles();
+        }
+
+        public static object get_groups(User user)
+        {
+            var groups = DBManager.Instance.selectAllOperationsGroup();
+            return new
+            {
+                groups = groups.Select(g => new {
+                    id = g.name,
+                    description = g.desc,
+                    privileges = g.operations.Select(o => new {
+                        id = o.Id,
+                        description = o.Description,
+                        active = false
+                    })
+                })
+            };
         }
 
     }
