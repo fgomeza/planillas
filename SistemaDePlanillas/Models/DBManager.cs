@@ -1834,7 +1834,7 @@ namespace SistemaDePlanillas.Models
                         var operations = repository.Operations.selectOperationsByGroup(group.Name);
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
-                            list.Add(new Operation(op.Description, op.Name, op.GroupId));
+                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId , op.Description));
                         result = new OperationsGroup(group.Description, group.Name, group.Icon, list);
                     }
                     else

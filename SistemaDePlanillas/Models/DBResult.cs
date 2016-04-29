@@ -142,6 +142,7 @@ namespace SistemaDePlanillas.Models
             this.name = name;
             this.location = location;
             this.active = active;
+
             privileges = new Dictionary<string, HashSet<string>>();
             foreach (var priv in privs)
             {
@@ -161,18 +162,14 @@ namespace SistemaDePlanillas.Models
         public readonly string desc;
         public readonly string name;
         public readonly string icon;
-        public readonly Dictionary<string, Operation> operations;
+        public readonly List<Operation> operations;
 
         public OperationsGroup(string desc, string name, string icon, List<Operation> operations)
         {
             this.desc = desc;
             this.name = name;
             this.icon = "".Equals(icon) ? "" : "glyphicon glyphicon-" + icon;
-            this.operations = new Dictionary<string, Operation>();
-            foreach (Operation op in operations)
-            {
-                this.operations[op.Name] = op;
-            }
+            this.operations = operations;
         }
     }
 
