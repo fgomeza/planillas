@@ -7,7 +7,7 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class RolesGroup
     {
-        private static object formatRole(Role role , List<OperationsGroup> groups)
+        private static object formatRole(Role role, List<OperationsGroup> groups)
         {
             return new
             {
@@ -25,13 +25,13 @@ namespace SistemaDePlanillas.Models.Operations
                     })
                 })
             };
-    }
+        }
 
         public static object get(User user)
         {
-            var roles = DBManager.Instance.selectAllRoles().Where(r=>r.location==user.Location);
+            var roles = DBManager.Instance.selectAllRoles().Where(r => r.location == user.Location);
             var groups = DBManager.Instance.selectAllOperationsGroup();
-            return roles.Select(r=>formatRole(r,groups));
+            return roles.Select(r => formatRole(r, groups));
         }
 
         public static object get_active(User user)
@@ -43,7 +43,7 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static long add(User user, string name, IEnumerable<object> operations)
         {
-            long roleId = DBManager.Instance.addRole(name, user.Location, operations.Select(o=>o.ToString()).ToList());
+            long roleId = DBManager.Instance.addRole(name, user.Location, operations.Select(o => o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
             return roleId;
         }
@@ -78,10 +78,12 @@ namespace SistemaDePlanillas.Models.Operations
             var groups = DBManager.Instance.selectAllOperationsGroup();
             return new
             {
-                groups = groups.Select(g => new {
+                groups = groups.Select(g => new
+                {
                     id = g.name,
                     description = g.desc,
-                    privileges = g.operations.Select(o => new {
+                    privileges = g.operations.Select(o => new
+                    {
                         id = o.Id,
                         description = o.Description,
                         active = false
