@@ -171,22 +171,24 @@ namespace SistemaDePlanillas.Models
             this.operations = new Dictionary<string, Operation>();
             foreach (Operation op in operations)
             {
-                this.operations[op.name] = op;
+                this.operations[op.Name] = op;
             }
         }
     }
 
     public class Operation
     {
-        public readonly string desc;
-        public readonly string url;
-        public readonly string name;
+        public string Id;
+        public  string Name;
+        public  string Description;
+        public string Group;
 
-        public Operation(string desc, string operationName, string groupName)
+        public Operation(string id, string operationName, string groupName, string desc)
         {
-            this.desc = desc;
-            name = operationName;
-            url = "/action/" + groupName + "/" + operationName;
+            Id = id;
+            Name = operationName;
+            Description = desc;
+            Group = groupName;
         }
     }
 }

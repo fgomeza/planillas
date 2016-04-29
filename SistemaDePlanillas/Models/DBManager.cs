@@ -1723,10 +1723,10 @@ namespace SistemaDePlanillas.Models
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    OperationEntity operation = repository.Operations.Get(id);
-                    if (operation != null)
+                    var x = repository.Operations.Get(id);
+                    if (x != null)
                     {
-                        result = new Operation(operation.Description, operation.Name, operation.GroupId);
+                        result = new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description);
                     }
                     else
                     {
@@ -1774,7 +1774,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.Add(new Operation(x.Description, x.Name, x.GroupId));
+                        result.Add(new Operation(x.Name,x.Name.Split('/')[1],x.GroupId,x.Description));
                 }
             }
             catch (Exception e)
@@ -1793,7 +1793,7 @@ namespace SistemaDePlanillas.Models
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.Add(new Operation(x.Description, x.Name, x.GroupId));
+                        result.Add(new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description));
                 }
             }
             catch (Exception e)
@@ -1888,7 +1888,7 @@ namespace SistemaDePlanillas.Models
                         var operations = repository.Operations.selectOperationsByGroup(x.Name);
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
-                            list.Add(new Operation(op.Description, op.Name, op.GroupId));
+                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId, op.Description));
                         result.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
                     }
                 }
