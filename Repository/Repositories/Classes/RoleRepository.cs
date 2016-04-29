@@ -12,5 +12,6 @@ namespace Repository.Repositories.Classes
     public class RoleRepository :Repository<RoleEntity>
     {
         public RoleRepository(AppContext context) : base(context){}
+
     }
 }

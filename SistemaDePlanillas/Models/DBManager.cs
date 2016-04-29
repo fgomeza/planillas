@@ -298,7 +298,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(employee != null ? employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
+                        validateException(employee != null ? App_LocalResoures.Errors.employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
@@ -457,7 +457,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentDebit);
+                        validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
 
                 }
@@ -482,7 +482,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentDebit);
+                        validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
@@ -506,7 +506,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentDebit);
+                        validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
@@ -538,7 +538,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentDebit);
+                        validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
@@ -699,7 +699,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentDebit);
+                        validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
@@ -834,7 +834,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentExtra);
+                        validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
@@ -858,7 +858,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentExtra);
+                        validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
@@ -890,7 +890,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentExtra);
+                        validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                 }
             }
@@ -985,7 +985,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentExtra);
+                        validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
 
@@ -1071,7 +1071,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(penalty != null ? penaltyInactive : inexistentPenalty);
+                        validateException(penalty != null ? App_LocalResoures.Errors.penaltyInactive : App_LocalResoures.Errors.inexistentPenalty);
                     }
                 }
             }
@@ -1279,7 +1279,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(location != null ? locationInactive : inexistentLocation);
+                        validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
@@ -1305,7 +1305,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(location != null ? locationInactive : inexistentLocation);
+                        validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
@@ -1359,7 +1359,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentLocation);
+                        validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
@@ -1383,7 +1383,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentLocation);
+                        validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
 
@@ -1408,7 +1408,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentLocation);
+                        validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
@@ -1432,7 +1432,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentLocation);
+                        validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
 
@@ -1545,7 +1545,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(role != null ? roleInactive : inexistentRole);
+                        validateException(role != null ? App_LocalResoures.Errors.roleInactive : App_LocalResoures.Errors.inexistentRole);
                     }
                 }
             }
@@ -1580,7 +1580,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentRole);
+                        validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                 }
             }
@@ -1600,12 +1600,16 @@ namespace SistemaDePlanillas.Models
                     RoleEntity role = repository.Roles.Get(id);
                     if (role != null)
                     {
-                        role.active = false;
+                        var Users = selectAllActiveUsers(role.locationId);
+                        if (Users.TrueForAll(u => u.Role != role.id))
+                            role.active = false;
+                        else
+                            validateException(App_LocalResoures.Errors.roleWithUser);
                         repository.Complete();
                     }
                     else
                     {
-                        validateException(inexistentRole);
+                        validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                 }
 
@@ -1630,7 +1634,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentRole);
+                        validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                 }
             }
@@ -1730,7 +1734,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentGroup);
+                        validateException(App_LocalResoures.Errors.inexistentGroup);
                     }
                 }
             }
@@ -1755,7 +1759,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentGroup);
+                        validateException(App_LocalResoures.Errors.inexistentGroup);
                     }
                 }
             }
@@ -1839,7 +1843,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentGroup);
+                        validateException(App_LocalResoures.Errors.inexistentGroup);
                     }
                 }
 
@@ -1865,7 +1869,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentGroup);
+                        validateException(App_LocalResoures.Errors.inexistentGroup);
                     }
                 }
             }
@@ -2003,7 +2007,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentUser);
+                        validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
@@ -2027,7 +2031,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentUser);
+                        validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
@@ -2062,7 +2066,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(user != null ? userInactive : inexistentUser);
+                        validateException(user != null ? App_LocalResoures.Errors.userInactive : App_LocalResoures.Errors.inexistentUser);
                     }
                 }
             }
@@ -2152,7 +2156,7 @@ namespace SistemaDePlanillas.Models
                     }
                     else
                     {
-                        validateException(inexistentUser);
+                        validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                 }
             }

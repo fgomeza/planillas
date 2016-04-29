@@ -232,6 +232,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El conjunto de privilegios no se encuentra registrado en el sistema.
+        /// </summary>
+        internal static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El Usuario no se encuentra registrado en el sistema.
         /// </summary>
         internal static string UserError1 {
