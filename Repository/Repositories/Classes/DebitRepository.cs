@@ -19,15 +19,21 @@ namespace Repository.Repositories.Classes
             return debits.ToList();
         }
 
-        public IEnumerable<DebitEntity> selectFixDebitsByEmployee(long employeeId)
+        public IEnumerable<DebitEntity> selectFixedDebitsByEmployee(long employeeId)
         {
-            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.payment == true);
+            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.fkdebit_type.type == "F");
             return debits.ToList();
         }
 
-        public IEnumerable<DebitEntity> selectDebitsNonFixByEmployee(long employeeId)
+        public IEnumerable<DebitEntity> selectPaymentDebitsByEmployee(long employeeId)
         {
-            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.payment == false);
+            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.fkdebit_type.type == "P");
+            return debits.ToList();
+        }
+
+        public IEnumerable<DebitEntity> selectAmortizationDebitsByEmployee(long employeeId)
+        {
+            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.fkdebit_type.type == "A");
             return debits.ToList();
         }
     }

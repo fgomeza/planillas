@@ -18,8 +18,8 @@ namespace Repository.Entities
         [Column("name")]
         public string name { set; get; }
 
-        [Column("months")]
-        public Nullable<long> months { set; get; }
+        [Column("pays")]
+        public Nullable<long> pays { set; get; }
 
         [Column("interest_rate")]
         public Nullable<double> interestRate { set; get; }
@@ -31,7 +31,7 @@ namespace Repository.Entities
 
         public virtual LocationEntity debittype_location { set; get; }
 
-        [Column("payment")]
-        public bool payment { set; get; }
+        [Column("type")]
+        public string type { set; get; }
     }
 }

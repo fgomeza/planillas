@@ -61,6 +61,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DebitError1.
+        /// </summary>
+        internal static string debitInactive {
+            get {
+                return ResourceManager.GetString("debitInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EmployeeeError1.
         /// </summary>
         internal static string employeeInactive {
@@ -376,6 +385,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to negativeAmount.
+        /// </summary>
+        internal static string negativeAmount {
+            get {
+                return ResourceManager.GetString("negativeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PenaltyError1.
         /// </summary>
         internal static string penaltyInactive {
@@ -480,6 +498,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         internal static string userInactive {
             get {
                 return ResourceManager.GetString("userInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to zeroInterestRate.
+        /// </summary>
+        internal static string zeroInterestRate {
+            get {
+                return ResourceManager.GetString("zeroInterestRate", resourceCulture);
             }
         }
     }

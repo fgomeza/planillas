@@ -32,21 +32,18 @@ namespace Repository.Entities
         [Column("remaining_amount")]
         public double remainingAmount { set; get; }
 
-        [Column("remaining_months")]
-        public Nullable<long> remainingMonths { set; get; }
+        [Column("remainingPays")]
+        public Nullable<long> remainingPays { set; get; }
         
 
-        [Column("paid_months")]
-        public Nullable<long> paidMonths { set; get; }
+        [Column("paysMade")]
+        public Nullable<long> paysMade { set; get; }
 
         [Column("type"), ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long debitTypeId { set; get; }
 
         public virtual DebitTypeEntity fkdebit_type { set; get; }
-
-        [Column("payment")]
-        public bool payment { set; get; }
 
         [Column("active")]
         public bool active { set; get; }

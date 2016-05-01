@@ -160,6 +160,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Los datos ingresados producen valores negativos.
+        /// </summary>
+        internal static string negativeAmount {
+            get {
+                return ResourceManager.GetString("negativeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to La planilla no se encuentra registrada en el sistema.
         /// </summary>
         internal static string PayrollError1 {
@@ -273,6 +282,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         internal static string UserError4 {
             get {
                 return ResourceManager.GetString("UserError4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La taza de interes no puede ser cero.
+        /// </summary>
+        internal static string zeroInterestRate {
+            get {
+                return ResourceManager.GetString("zeroInterestRate", resourceCulture);
             }
         }
     }

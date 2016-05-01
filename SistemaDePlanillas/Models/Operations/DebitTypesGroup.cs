@@ -8,19 +8,32 @@ namespace SistemaDePlanillas.Models.Operations
     public class DebitTypesGroup
     {
 
-        public static void add_FixedType(User user, string name)
+        public static void add_Fixed(User user, string name)
         {
-            DBManager.Instance.addDebitType(name, user.Location);
+            DBManager.Instance.addFixedDebitType(name, user.Location);
         }
 
-        public static void add_PaymentType(User user, string name, double interestRate, long months)
+        public static void add_Payment(User user, string name, double interestRate, long pays)
         {
-            DBManager.Instance.addDebitType(name, user.Location, months, interestRate);
+            DBManager.Instance.addPaymentDebitType(name, user.Location, pays, interestRate);
         }
 
-        public static void modify(User user, long id, string name, long months = 0, double interestRate = 0)
+        public static void add_Amortization(User user, string name, double interestRate, long pays)
         {
-            DBManager.Instance.updateDebitType(id, name, months, interestRate);
+            DBManager.Instance.addAmortizationDebitType(name, user.Location, pays, interestRate);
+        }
+
+        public static void modify_Fixed(User user, long id, string name)
+        {
+            DBManager.Instance.updateFixedDebitType(id, name);
+        }
+        public static void modify_Payment(User user, long id, string name, long pays, double interestRate)
+        {
+            DBManager.Instance.updatePaymentDebitType(id, name, interestRate, pays);
+        }
+        public static void modify(User user, long id, string name, long pays, double interestRate )
+        {
+            DBManager.Instance.updateAmortizationDebitType(id, name, interestRate, pays);
         }
 
         public static void remove(User user, long id)
@@ -35,7 +48,12 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static object get_PaymentTypes(User user)
         {
-            return DBManager.Instance.selectNonFixedDebitTypes(user.Location);
+            return DBManager.Instance.selectPaymentDebitTypes(user.Location);
+        }
+
+        public static object get_AmortizationTypes(User user)
+        {
+            return DBManager.Instance.selectAmortizationDebitTypes(user.Location);
         }
 
     }

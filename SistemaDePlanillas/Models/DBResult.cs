@@ -75,12 +75,28 @@ namespace SistemaDePlanillas.Models
         public long type;
         public string typeName;
     }
+
+    public class AmortizationDebit
+    {
+        public long id;
+        public long employee;
+        public string detail;
+        public DateTime initialDate;
+        public double total;
+        public double interestRate;
+        public long paymentsMade;
+        public long missingPayments;
+        public double remainingAmount;
+        public long type;
+        public string typeName;
+    }
+
     public class Extra
     {
         public long id;
         public long employee;
         public string detail;
-        public double hours;
+        public long hours;
     }
 
     public class Penalty
