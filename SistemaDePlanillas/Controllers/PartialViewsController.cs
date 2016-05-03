@@ -50,5 +50,10 @@ namespace SistemaDePlanillas.Controllers
         {
             return PartialView();
         }
+
+        public ActionResult Payrolls()
+        {
+            return PartialView();
+        }
     }
 }

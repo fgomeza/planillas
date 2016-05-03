@@ -18,7 +18,8 @@ namespace SistemaDePlanillas.Models
                         new ApplicationLink("Dashboard template", "dashboard")
                     }),
                     new ApplicationSubMenu("Planillas", null, new ApplicationLink[] {
-                        new ApplicationLink("Subir un archivo", "uploadfile")
+                        new ApplicationLink("Subir un archivo", "uploadfile"),
+                        new ApplicationLink("Cálculo de planillas", "payroll")
                     }),
                     new ApplicationSubMenu("Administración", null, new ApplicationLink[] {
                         new ApplicationLink("Administrar usuarios", "users"),

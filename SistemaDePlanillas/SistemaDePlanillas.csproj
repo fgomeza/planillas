@@ -347,6 +347,7 @@
     <Content Include="Views\PartialViews\UploadFile.cshtml" />
     <Content Include="Views\PartialViews\Debits.cshtml" />
     <Content Include="Views\PartialViews\Roles.cshtml" />
+    <Content Include="Views\PartialViews\Payrolls.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
