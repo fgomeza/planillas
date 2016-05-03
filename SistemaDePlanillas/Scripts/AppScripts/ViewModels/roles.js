@@ -54,14 +54,41 @@
     function ViewModel() {
         var self = this;
 
-        self.roles = ko.observableArray();
-        self.isEditSectionVisible = ko.observable(false);
-        self.editingObject = ko.observable();
+        self.strings = {
+            createRoleLink: "Crear Rol"
+        };
 
-        self.openRole = function (data, event) {
-            $('.make-switch').bootstrapToggle();
+        self.roles = ko.observableArray();
+        self.isFormOpen = ko.observable(false);
+        self.isEditMode = ko.observable(false);
+        self.isCreateMode = ko.observable(false);
+        self.editingObject = ko.observable();
+        self.formTitle = ko.computed(function () {
+            return self.isEditMode() ? 'Editar Rol' : 'Registrar un nuevo rol';
+        });
+
+        self.openForm = function () {
+            self.isFormOpen(true);
+        }
+
+        self.closeForm = function () {
+            self.editingObject();
+            self.isEditMode(false);
+            self.isCreateMode(false);
+            self.isFormOpen(false);
+        }
+
+        self.openCreateForm = function () {
+            self.isEditMode(false);
+            self.editingObject(new Role());
+            self.openForm();
+        }
+
+        self.openEditForm = function (data, event) {
             self.editingObject(data);
-            self.isEditSectionVisible(true);
+            self.isEditMode(true);
+            self.isCreateMode(false);
+            self.openForm();
         }
 
         self.openGroup = function (data, event) {
@@ -70,6 +97,10 @@
             $target.parent().find('.collapse.in').collapse('hide');
             $target.next().collapse('toggle');
         }
+
+        self.submitDelete = function () { }
+        self.submitCreate = function () { }
+        self.submitChanges = function () { }
 
         self.loading = app.consumeAPI('roles', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Role(item); });

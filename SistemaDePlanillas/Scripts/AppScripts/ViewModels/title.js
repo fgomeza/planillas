@@ -6,7 +6,12 @@
         self.partialViewTitle = ko.observable();
         self.applicationName = ko.observable();
         self.applicationTitle = ko.computed(function () {
-            return self.applicationName() + " - " + self.partialViewTitle();
+            if (self.applicationName() && self.partialViewTitle()) {
+                return self.applicationName() + " - " + self.partialViewTitle();
+            }
+            if (self.applicationName() || self.partialViewTitle()) {
+                return self.applicationName() || self.partialViewTitle();
+            }
         });
         shouter.subscribe(function (value) {
             partialViewTitle(value);

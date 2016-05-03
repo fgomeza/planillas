@@ -49,6 +49,7 @@
 
         return item ? item.name() : '';
     };
+
     function UsersViewModel() {
         var self = this;
 
@@ -81,9 +82,9 @@
         self.edit = function (data, event) {
             self.selectedObject(data);
             self.editingObject(new User(ko.toJS(data)));
-            self.isEditMode(true);
             self.selectedRow = $(event.target.closest('tr'));
             self.selectedRow.addClass('highlight');
+            self.isEditMode(true);
             $('body').animate({ scrollTop: $('#usersEditSection').offset().top }, 'slow');
         };
 
@@ -143,18 +144,18 @@
             });
         }
 
-        self.loading = $.when(roles.loading, locations.loading).then(function () {
-            self.roles = roles.roles;
-            self.locations = locations.locations;
-            app.consumeAPI('users', 'get').done(function (data) {
+        self.loading = $.when(roles.loading, locations.loading).
+            then(function () {
+                self.roles = roles.roles;
+                self.locations = locations.locations;
+                return app.consumeAPI('users', 'get');
+            }).done(function (data) {
                 var mappedData = $.map(data, function (item) { return new User(item); });
                 self.users(mappedData);
             }).fail(function (error) {
                 app.showError(error);
                 return error;
             });
-        });
-
     };
 
     return new UsersViewModel();
