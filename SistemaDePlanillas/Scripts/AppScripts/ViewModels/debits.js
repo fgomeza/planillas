@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver'], function ($, ko, app) {
     
     function Debit(data) {
         console.log(data);

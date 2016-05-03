@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'viewModels/roles', 'viewModels/title', 'bootstrap', 'toggle'], function ($, ko, viewModel, title) {
+﻿define(['jquery', 'knockout', 'viewModels/roles', 'viewModels/title', 'bootstrap'], function ($, ko, viewModel, title) {
 
     function Controller() {
 

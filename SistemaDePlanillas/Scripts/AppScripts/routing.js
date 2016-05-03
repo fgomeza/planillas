@@ -1,4 +1,4 @@
-﻿define(['sammy'], function (Sammy) {
+﻿define(['sammy', 'app/driver'], function (Sammy, app) {
     function Router(contentSelector, defaultRoute) {
         return Sammy(contentSelector, function (context) {
 
@@ -48,8 +48,14 @@
                 console.log('loading', url);
                 $('html').trigger('click');
                 
+                var loading = setTimeout(function () {
+                    app.showLoading();
+                }, 1000);
+
                 context.load(url, options(context)).swap(function () {
                     require(['controllers/' + context.params.page], function (controller) {
+                        clearTimeout(loading);
+                        app.hideLoading();
                         if (controller && controller.init) {
                             controller.init.apply();
                         }

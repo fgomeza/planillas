@@ -248,6 +248,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
+    <Content Include="Scripts\AppScripts\Controllers\payroll.js" />
+    <Content Include="Scripts\AppScripts\driver.js" />
     <Content Include="Scripts\AppScripts\Controllers\dashboard.js" />
     <Content Include="Scripts\AppScripts\Controllers\debits.js" />
     <Content Include="Scripts\AppScripts\Controllers\employees.js" />
@@ -263,7 +265,6 @@
     <Content Include="Scripts\lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\lib\ai.0.15.0-build58334.min.js" />
-    <Content Include="Scripts\AppScripts\dashboard.js" />
     <Content Include="Scripts\AppScripts\ViewModels\users.js" />
     <Content Include="Scripts\AppScripts\main.js" />
     <Content Include="Scripts\AppScripts\require-config.js" />
@@ -347,7 +348,7 @@
     <Content Include="Views\PartialViews\UploadFile.cshtml" />
     <Content Include="Views\PartialViews\Debits.cshtml" />
     <Content Include="Views\PartialViews\Roles.cshtml" />
-    <Content Include="Views\PartialViews\Payrolls.cshtml" />
+    <Content Include="Views\PartialViews\Payroll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

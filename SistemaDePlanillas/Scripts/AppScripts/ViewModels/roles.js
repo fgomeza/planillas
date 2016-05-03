@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver'], function ($, ko, app) {
     function Role(data) {
         var data = data || {};
         this.id = ko.observable();

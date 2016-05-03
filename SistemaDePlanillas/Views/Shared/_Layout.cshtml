@@ -35,12 +35,15 @@
         <main id="page">
             @RenderBody()
         </main>
-        <div id="divLoading" hidden ng-show="loading" style="font-size:50px;">
-            <div class="loading">
-                Loading .....
-            </div>
-        </div>
         @RenderSection("scripts", required: false)
     </div>
+
+    <div id="divLoading">
+        <div class="loading">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+            Cargando...
+        </div>
+    </div>
+
 </body>
 </html>

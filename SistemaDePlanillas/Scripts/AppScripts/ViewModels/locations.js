@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver'], function ($, ko, app) {
     function Location(data) {
         var data = data || {};
         this.id = ko.observable(data.Id);

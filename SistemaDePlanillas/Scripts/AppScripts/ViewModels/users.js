@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/testing', 'viewModels/locations', 'viewModels/roles'], function ($, ko, app, locations, roles) {
+﻿define(['jquery', 'knockout', 'app/driver', 'viewModels/locations', 'viewModels/roles'], function ($, ko, app, locations, roles) {
     function User(data) {
         var self = this;
         this.id = ko.observable();
