@@ -6,7 +6,7 @@
     });
 
     require(['jquery', 'knockout', 'viewModels/title'], function ($, ko, vm) {
-        vm.applicationName("Sistema de planillas");
+        vm.applicationName('Sistema de planillas');
         ko.applyBindings(vm, $('head')[0]);
         ko.applyBindings(vm, $('#sidebar')[0]);
         ko.applyBindings(vm, $('#topBanner')[0]);

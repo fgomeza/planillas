@@ -15,13 +15,6 @@
                     if (callback) {
                         callback.apply();
                     }
-                    /*
-                    context.$element().fadeIn(function () {
-                        if (callback) {
-                            callback.apply();
-                        }
-                    });
-                    */
                 });
             };
             
@@ -53,9 +46,9 @@
                 }, 1000);
 
                 context.load(url, options(context)).swap(function () {
+                    clearTimeout(loading);
+                    app.hideLoading();
                     require(['controllers/' + context.params.page], function (controller) {
-                        clearTimeout(loading);
-                        app.hideLoading();
                         if (controller && controller.init) {
                             controller.init.apply();
                         }

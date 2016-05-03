@@ -43,9 +43,13 @@
             var errorText = error.detail || error.status + ': ' + error.statusText;
             $('#errorText').html(errorText);
             $('#errorHolder').slideDown();
-            setTimeout(function () {
+            var timeout = setTimeout(function () {
                 $('#errorHolder').slideUp();
             }, 10000);
+
+            $('#errorholder').on('close.bs.alert', function () {
+                clearTimeout(timeout);
+            });
         }
 
         this.showLoading = function () {
