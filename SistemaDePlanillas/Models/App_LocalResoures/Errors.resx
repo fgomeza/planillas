@@ -258,4 +258,13 @@
   <data name="userInactive" xml:space="preserve">
     <value>UserError1</value>
   </data>
+  <data name="debitInactive" xml:space="preserve">
+    <value>DebitError1</value>
+  </data>
+  <data name="negativeAmount" xml:space="preserve">
+    <value>negativeAmount</value>
+  </data>
+  <data name="zeroInterestRate" xml:space="preserve">
+    <value>zeroInterestRate</value>
+  </data>
 </root>

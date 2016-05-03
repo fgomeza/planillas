@@ -150,6 +150,9 @@
   <data name="LocationError2" xml:space="preserve">
     <value>La Sede se encuentra deshabilitada</value>
   </data>
+  <data name="negativeAmount" xml:space="preserve">
+    <value>Los datos ingresados producen valores negativos</value>
+  </data>
   <data name="PayrollError1" xml:space="preserve">
     <value>La planilla no se encuentra registrada en el sistema</value>
   </data>
@@ -188,5 +191,8 @@
   </data>
   <data name="UserError4" xml:space="preserve">
     <value>El Usuario se encuentra deshabilidato</value>
+  </data>
+  <data name="zeroInterestRate" xml:space="preserve">
+    <value>La taza de interes no puede ser cero</value>
   </data>
 </root>
