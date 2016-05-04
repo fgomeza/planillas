@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace SistemaDePlanillas.Models.Operations
 {
@@ -60,7 +61,11 @@ namespace SistemaDePlanillas.Models.Operations
                     negativeAmount = netSalary>0?0:netSalary
                 });
             }
+           // var javaScriptSerializer = new JavaScriptSerializer();
             var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
+           // var current =DBManager.Instance.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
+          //DBManager.Instance.updateLocationCurrentPayroll(user.Location, current.id);
+
             return Responses.WithData(payroll);
         }
 
