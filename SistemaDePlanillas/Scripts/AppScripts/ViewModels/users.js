@@ -79,7 +79,7 @@
             SaveModalButton: 'Guardar cambios'
         };
 
-        self.edit = function (data, event) {
+        self.openEditForm = function (data, event) {
             self.selectedObject(data);
             self.editingObject(new User(ko.toJS(data)));
             self.selectedRow = $(event.target.closest('tr'));
@@ -97,11 +97,7 @@
             self.selectedRow = null;
         };
 
-        self.cancel = function (data) {
-            self.closeForm();
-        };
-
-        self.saveChanges = function (data) {
+        self.submitChanges = function (data) {
             var obj = ko.toJS(self.editingObject);
             var args = { id: obj.id, name: obj.name, username: obj.username, email: obj.email, role: obj.roleId, location: obj.locationId };
             app.consumeAPI('users', 'modify', args).done(function (data) {
@@ -116,7 +112,7 @@
             });
         };
 
-        self.delete = function (data) {
+        self.submitDelete = function (data) {
             var args = { id: self.editingObject().id() };
             app.consumeAPI('users', 'remove', args).done(function (data) {
                 self.users.destroy(self.selectedObject());
@@ -129,7 +125,7 @@
             });
         }
 
-        self.create = function (data) {
+        self.submitCreate = function (data) {
             var obj = ko.toJS(self.newUserObj());
             var args = { name: obj.name, username: obj.username, password: obj.password, email: obj.email, role: obj.roleId };
             app.consumeAPI('users', 'add', args).done(function (data) {

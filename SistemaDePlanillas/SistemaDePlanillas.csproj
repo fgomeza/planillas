@@ -242,6 +242,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\jasny-bootstrap.css" />
     <Content Include="Content\jasny-bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -289,6 +290,7 @@
     <None Include="Scripts\lib\jquery-1.10.2.intellisense.js" />
     <Content Include="Content\dropzone\basic.css" />
     <Content Include="Content\dropzone\basic.min.css" />
+    <Content Include="Scripts\lib\daterangepicker.js" />
     <Content Include="Scripts\lib\dropzone-amd-module.js" />
     <Content Include="Scripts\lib\dropzone-amd-module.min.js" />
     <Content Include="Content\dropzone\dropzone.css" />
@@ -310,6 +312,8 @@
     <Content Include="Scripts\lib\knockout-3.4.0.js" />
     <Content Include="Scripts\lib\modernizr-2.6.2.js" />
     <Content Include="Scripts\lib\modernizr-2.8.3.js" />
+    <Content Include="Scripts\lib\moment.js" />
+    <Content Include="Scripts\lib\moment.min.js" />
     <Content Include="Scripts\lib\r.js" />
     <Content Include="Scripts\lib\require.js" />
     <Content Include="Scripts\lib\respond.js" />

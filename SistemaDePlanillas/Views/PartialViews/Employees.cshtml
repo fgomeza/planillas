@@ -128,18 +128,18 @@
                             </div>
                         </div>
                     </div>
-
-                    <div id="saveCancelButtonsRegion" class="container-fluid">
-                        <div class="pull-left">
-                            <button type="button" class="btn btn-danger" data-bind="click: submitDelete, visible: isEditMode">Eliminar</button>
-                        </div>
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-bind="click: closeForm">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" data-bind="click: submitCreate, visible: isCreateMode">Guardar cambios</button>
-                            <button type="submit" class="btn btn-success" data-bind="click: submitChanges, visible: isEditMode">Guardar cambios</button>
-                        </div>
-                    </div>
                 </form>
+            </div>
+            <div id="saveCancelButtonsRegion" class="panel-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-danger" data-bind="click: submitDelete, visible: isEditMode">Eliminar</button>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" data-bind="click: closeForm">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: submitCreate, visible: isCreateMode">Guardar cambios</button>
+                    <button type="submit" class="btn btn-success" data-bind="click: submitChanges, visible: isEditMode">Guardar cambios</button>
+                </div>
+                <div class="clearfix"></div>
             </div>
         </div>
     </div>
