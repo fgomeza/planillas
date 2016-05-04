@@ -12,14 +12,13 @@
         'jasny': 'jasny-bootstrap.min',
         'switch': 'bootstrap-switch.min',
         'toggle': 'bootstrap-toggle',
-        'daterange': 'daterangepicker'
     },
     shim: {
         'bootstrap': ['jquery'],
         'jasny': ['bootstrap'],
         'switch': ['jquery', 'bootstrap'],
         'toggle': ['jquery', 'bootstrap'],
-        'daterange': ['moment', 'jquery', 'bootstrap'],
+        'daterangepicker': ['moment', 'jquery', 'bootstrap'],
         'jquery.validate': ['jquery'],
         'jquery.validate.unobtrusive': ['jquery.validate'],
         'jquery.unobtrusive-ajax': ['jquery'],
