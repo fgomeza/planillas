@@ -250,6 +250,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
     <Content Include="Scripts\AppScripts\Controllers\payroll.js" />
+    <Content Include="Scripts\AppScripts\daterangepicker-config.js" />
     <Content Include="Scripts\AppScripts\driver.js" />
     <Content Include="Scripts\AppScripts\Controllers\dashboard.js" />
     <Content Include="Scripts\AppScripts\Controllers\debits.js" />
@@ -260,6 +261,7 @@
     <Content Include="Scripts\AppScripts\Controllers\users.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
     <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\payroll.js" />
     <Content Include="Scripts\AppScripts\ViewModels\roles.js" />
     <Content Include="Scripts\AppScripts\ViewModels\title.js" />
     <Content Include="Scripts\lib\bootstrap-switch.js" />
@@ -269,7 +271,7 @@
     <Content Include="Scripts\AppScripts\ViewModels\users.js" />
     <Content Include="Scripts\AppScripts\main.js" />
     <Content Include="Scripts\AppScripts\require-config.js" />
-    <Content Include="Scripts\AppScripts\routing.js" />
+    <Content Include="Scripts\AppScripts\sammy-config.js" />
     <Content Include="Scripts\AppScripts\site.js" />
     <Content Include="Scripts\lib\bootstrap.js" />
     <Content Include="Scripts\lib\bootstrap.min.js" />
