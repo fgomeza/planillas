@@ -1272,16 +1272,36 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addPayroll(DateTime date, long user, string file, long location)
+        public Payroll addPayroll(DateTime endDate,double callPrice, long user, string json, long location)
         {
+            Payroll result=null;
             try
             {
-
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var payroll = repository.PayRolls.Add(new PayrollEntity()
+                    {
+                        userId= user,
+                        locationId=location,
+                        endDate= endDate,
+                        callPrice= callPrice,
+                        JSON=json
+                    });
+                    repository.Complete();
+                    result= new Payroll()
+                    {
+                        id=payroll.id,
+                        date=payroll.endDate,
+                        json=payroll.JSON,
+                        user=payroll.userId
+                    };
+                }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
+            return result;
         }
 
         public void updatePayroll(long idPay, DateTime date, long user, string file)
@@ -1364,7 +1384,7 @@ namespace SistemaDePlanillas.Models
                     updateAdministrator(location.id, administrator);
                     result = new Location();
                     result.Name = location.name;
-                    result.CallPrice = location.callPrice == null ? 0 : (long)location.callPrice;
+                    result.CallPrice = (long)location.callPrice;
                     result.LastPayroll = location.lastPayrollId;
                     result.CurrentPayroll = location.currentPayrollId;
                     result.Active = location.active;

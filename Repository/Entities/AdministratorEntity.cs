@@ -19,6 +19,5 @@ namespace Repository.Entities
         [Column(Order = 1), Key, ForeignKey("fkadministrator_location")]
         public long location { get; set; }
         public virtual LocationEntity fkadministrator_location { get; set; }
-
     }
 }

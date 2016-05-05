@@ -31,6 +31,10 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long locationId { set; get; }
 
+        [Column("json")]
+        public string JSON { set; get; }
+
         public virtual LocationEntity fkpayroll_location { set; get; }
+
     }
 }
