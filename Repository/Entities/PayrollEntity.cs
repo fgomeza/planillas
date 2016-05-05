@@ -35,5 +35,6 @@ namespace Repository.Entities
         public string JSON { set; get; }
 
         public virtual LocationEntity fkpayroll_location { set; get; }
+
     }
 }
