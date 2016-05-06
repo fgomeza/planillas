@@ -17,21 +17,21 @@ namespace Repository.Entities
 
         [ForeignKey("fkdebitpayment")]
         [Column("debit")]
+        [Index("UKPAYMENT_DEBIT", 1, IsUnique = true)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long debitId { set; get; }
 
-        [Column("DATE")]
+        [Index("UKPAYMENT_DATE", 2, IsUnique = true)]
         public DateTime Date { get; set; }
-        
-        [Column("REMAINING_AMOUNT")]
-        public Nullable<double> RemainingAmount { get; set; }
 
-        [Column("INTEREST_RATE")]
-        public Nullable<double> InterestRare { get; set; }
 
-        [Column("AMMOUNT")]
-        public Nullable<double> Amount { get; set; }
+        public double RemainingAmount { get; set; }
 
+
+        public double InterestRare { get; set; }
+
+
+        public double Amount { get; set; }
 
     }
 }

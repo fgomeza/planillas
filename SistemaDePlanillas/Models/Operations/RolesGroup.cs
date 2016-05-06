@@ -27,6 +27,8 @@ namespace SistemaDePlanillas.Models.Operations
             };
         }
 
+    
+
         public static object get(User user)
         {
             var roles = DBManager.Instance.selectAllRoles().Where(r => r.location == user.Location);

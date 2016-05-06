@@ -35,7 +35,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     EmployeeEntity employee = new EmployeeEntity()
-                    { idCard = idCard, cms = CMS, name = name, locationId = location, active = true, account = account };
+                    { idCard = idCard, cms = CMS, iscms=true, name = name, locationId = location, active = true, account = account };
                     var x = repository.Employees.Add(employee);
                     repository.Complete();
                     result = new Employee()
@@ -140,7 +140,7 @@ namespace SistemaDePlanillas.Models
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     EmployeeEntity employee = new EmployeeEntity()
-                    { idCard = idCard, name = name, locationId = location, active = true, account = account, salary = salary };
+                    { idCard = idCard, name = name,cms=" ", iscms = false, locationId = location, active = true, account = account, salary = salary };
                     var x = repository.Employees.Add(employee);
                     repository.Complete();
                     result = new Employee()
@@ -360,13 +360,13 @@ namespace SistemaDePlanillas.Models
                                 idCard = employee.idCard,
                                 location = employee.locationId,
                                 name = employee.name,
-                                cms = employee.cms == null ? false : true,
-                                calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
+                                cms = employee.iscms,
+                                calls = employee.iscms ? repository.Calls.callsbyEmployee(employee.id, DateTime.Now) : 0,
                                 cmsText = employee.cms,
                                 account = employee.account,
                                 salary = employee.salary,
                                 active = employee.active,
-                                negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                                negativeAmount = employee.negativeAmount
                             });
                         }
                     }
@@ -1067,12 +1067,12 @@ namespace SistemaDePlanillas.Models
                     result = new Penalty()
                     {
                         id = penalty.Id,
-                        amount = penalty.Amount == null ? 0 : (double)penalty.Amount,
+                        amount = penalty.Amount,
                         date = penalty.Date,
                         detail = penalty.Description,
                         employee = penalty.EmployeeId,
                         type = penalty.PenaltyTypeId,
-                        typeName = penalty.fkpenalty_type.Name,
+                        typeName = penalty.fkpenalty_type.name,
                         penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
                     };
                 }
@@ -1182,7 +1182,7 @@ namespace SistemaDePlanillas.Models
                             detail = penalty.Description,
                             employee = penalty.EmployeeId,
                             type = penalty.PenaltyTypeId,
-                            typeName = penalty.fkpenalty_type.Name,
+                            typeName = penalty.fkpenalty_type.name,
                             penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
                         };
                     }
@@ -1217,7 +1217,7 @@ namespace SistemaDePlanillas.Models
                             detail = p.Description,
                             employee = p.EmployeeId,
                             type = p.PenaltyTypeId,
-                            typeName = p.fkpenalty_type.Name,
+                            typeName = p.fkpenalty_type.name,
                             penaltyPrice = p.PenaltyPrice == null ? 0 : (double)p.PenaltyPrice
                         });
                     }
@@ -1260,7 +1260,7 @@ namespace SistemaDePlanillas.Models
                     var types = repository.PenaltyTypes.getAllbyLocation(location);
                     foreach (var p in types)
                     {
-                        result.Add(p.Id, new PenaltyType() { id = p.Id, name = p.Name, price = p.Price });
+                        result.Add(p.Id, new PenaltyType() { id = p.Id, name = p.name, price = p.price });
                     }
                     repository.Complete();
                 }
@@ -2304,26 +2304,6 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public List<Tuple<long, string>> selectAllErrors()
-        {
-            List<Tuple<long, string>> result = new List<Tuple<long, string>>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var errors = repository.Errors.GetAll();
-                    foreach (var error in errors)
-                    {
-                        result.Add(new Tuple<long, string>(error.id, error.message));
-                    }
-                }
-            }
-            catch (NpgsqlException e)
-            {
-                validateException(e);
-            }
-            return result;
-        }
 
         public void addFixedDebitType(string name, long location)
         {

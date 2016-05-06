@@ -25,7 +25,7 @@ namespace Repository.Entities
         public long EmployeeId { get; set; }
         public virtual EmployeeEntity fkpenalty_employee { get; set; }
 
-        [Column("description")]
+
         public string Description { get; set; }
 
         [Column("penalty_type")]
@@ -33,16 +33,16 @@ namespace Repository.Entities
         public long PenaltyTypeId { get; set; }
         public virtual PenaltyTypeEntity fkpenalty_type { get; set; }
 
-        [Column("amount")]
-        public Nullable<long> Amount { get; set; }
 
-        [Column("penalty_price")]
-        public Nullable<double> PenaltyPrice { get; set; }
+        public long Amount { get; set; }
 
-        [Column("date")]
+
+        public double PenaltyPrice { get; set; }
+
+
         public DateTime Date { get; set; }
 
-        [Column("active")]
+
         public bool active { set; get; }
     }
 }

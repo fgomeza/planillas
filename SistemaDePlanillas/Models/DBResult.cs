@@ -116,7 +116,7 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public string name;
-        public Nullable<double> price;
+        public double price;
     }
 
 

@@ -23,7 +23,6 @@ namespace Repository.Context
         public DbSet<DebitEntity> Debits { get; set; }
         public DbSet<DebitTypeEntity> DebitTypes { get; set; }
         public DbSet<EmployeeEntity> Employees { get; set; }
-        public DbSet<ErrorEntity> Errors { get; set; }
         public DbSet<ExtraEntity> Extras { get; set; }
         public DbSet<GroupEntity> Groups { get; set; }
         public DbSet<LocationEntity> Locations { get; set; }

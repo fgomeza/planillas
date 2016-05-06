@@ -17,7 +17,7 @@ namespace Repository.Repositories.Classes
 
         public long callsbyEmployee(long employeeId , DateTime endDate)
         {
-            return _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId==null && e.date <= endDate).Select(e => e.calls).Sum();
+            return _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId==null && e.date <= endDate).Select(e => e.calls).ToList().Sum();
         }
 
         public IEnumerable<CallEntity> callListbyEmployee(long employeeId, DateTime endDate)
