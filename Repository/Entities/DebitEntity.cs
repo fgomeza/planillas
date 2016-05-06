@@ -44,5 +44,6 @@ namespace Repository.Entities
         public virtual DebitTypeEntity fkdebit_type { set; get; }
 
         public bool active { set; get; }
+
     }
 }
