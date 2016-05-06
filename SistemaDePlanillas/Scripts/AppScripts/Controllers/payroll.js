@@ -2,13 +2,6 @@
 
     function Controller() {
 
-        /*
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        }
-        */
-        
-
         this.init = function () {
 
             var $containerElement = $('#payrollSection');
