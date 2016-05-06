@@ -107,6 +107,7 @@ footer {
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 10px;
     background-color: #F5F5F5;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
@@ -128,6 +129,18 @@ footer {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 
 }
+
+/* Sidebar Scrollbar */
+#sidebar::-webkit-scrollbar {
+    background-color: transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
 
 
 
@@ -188,26 +201,15 @@ footer {
     background-color: #f0ff45 !important;
 }
 
-/* Scrollbar */
-#sidebar::-webkit-scrollbar {
-    background-color: transparent;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-}
-
-#sidebar::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
 /* loading */
 #divLoading {  
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
     z-index:9000;
-    background-color:rgba(153, 255, 255, 0.29);
+    background-color:rgba(0, 0, 0, 0.00);
 }
 
 .loading {
@@ -216,8 +218,8 @@ footer {
     top: 60px;
     color:black;
     background-color:#66c168;
-    font-size:24px;
-    padding: 8px 12px 8px 12px;
+    font-size:16px;
+    padding: 8px;
 }
 
 .glyphicon-refresh-animate {
@@ -234,3 +236,13 @@ footer {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+
+.footer {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    text-align:center;
+    margin-left: 260px;
+}
+

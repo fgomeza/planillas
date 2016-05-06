@@ -41,6 +41,10 @@
         this.description = ko.observable();
         this.active = ko.observable();
         this.update(data);
+
+        this.active.subscribe(function (newValue) {
+            console.log(newValue);
+        });
     }
 
     ko.utils.extend(Privilege.prototype, {

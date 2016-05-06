@@ -250,6 +250,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
     <Content Include="Scripts\AppScripts\Controllers\payroll.js" />
+    <Content Include="Scripts\AppScripts\Controllers\welcome.js" />
     <Content Include="Scripts\AppScripts\daterangepicker-config.js" />
     <Content Include="Scripts\AppScripts\driver.js" />
     <Content Include="Scripts\AppScripts\Controllers\dashboard.js" />
@@ -259,6 +260,7 @@
     <Content Include="Scripts\AppScripts\Controllers\test.js" />
     <Content Include="Scripts\AppScripts\Controllers\uploadfile.js" />
     <Content Include="Scripts\AppScripts\Controllers\users.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\contacts.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
     <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
     <Content Include="Scripts\AppScripts\ViewModels\payroll.js" />
@@ -355,6 +357,7 @@
     <Content Include="Views\PartialViews\Debits.cshtml" />
     <Content Include="Views\PartialViews\Roles.cshtml" />
     <Content Include="Views\PartialViews\Payroll.cshtml" />
+    <Content Include="Views\PartialViews\Welcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

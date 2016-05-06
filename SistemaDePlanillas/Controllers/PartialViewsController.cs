@@ -55,5 +55,10 @@ namespace SistemaDePlanillas.Controllers
         {
             return PartialView();
         }
+
+        public ActionResult Welcome()
+        {
+            return PartialView();
+        }
     }
 }
