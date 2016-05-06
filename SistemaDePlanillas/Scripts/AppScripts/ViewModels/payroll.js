@@ -39,6 +39,8 @@
 
 
         self.submitRange = function (start, end, label) {
+            self.rows([]);
+            app.showLoading();
             var dateFormat = 'YYYY-MM-DD';
             var args = { initialDate: start.format(dateFormat), endDate: end.format(dateFormat) };
             app.consumeAPI('Payroll', 'calculate', args).done(function (data) {
@@ -48,6 +50,8 @@
             }).fail(function (error) {
                 console.log('it failed!', error);
                 app.showError(error);
+            }).always(function (data) {
+                app.hideLoading();
             });
         }
 

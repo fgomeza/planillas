@@ -236,3 +236,13 @@ footer {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+
+.footer {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    text-align:center;
+    margin-left: 260px;
+}
+

@@ -13,37 +13,39 @@
 
         <div class="row" data-bind="visible: payrollVisible">
             <div class="panel panel-default">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Asociado</th>
-                            <th colspan="2">Llamadas</th>
-                            <th colspan="2">Extras</th>
-                            <th colspan="2">Penalizaciones</th>
-                            <th>Negativos</th>
-                            <th>Ahorro mensual</th>
-                            <th>Ahorro total</th>
-                            <th>Salario</th>
-                            <th>Salario Neto</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: rows">
-                        <tr>
-                            <td data-bind="text: employee"></td>
-                            <td data-bind="text: calls.count"></td>
-                            <td data-bind="text: calls.total"></td>
-                            <td data-bind="text: extras.count"></td>
-                            <td data-bind="text: extras.total"></td>
-                            <td data-bind="text: penalties.count"></td>
-                            <td data-bind="text: penalties.total"></td>
-                            <td data-bind="text: negativeAmount"></td>
-                            <td data-bind="text: saving.monthlyAmount"></td>
-                            <td data-bind="text: saving.total"></td>
-                            <td data-bind="text: salary"></td>
-                            <td data-bind="text: netSalary"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Asociado</th>
+                                <th colspan="2">Llamadas</th>
+                                <th colspan="2">Extras</th>
+                                <th colspan="2">Penalizaciones</th>
+                                <th>Negativos</th>
+                                <th>Ahorro mensual</th>
+                                <th>Ahorro total</th>
+                                <th>Salario</th>
+                                <th>Salario Neto</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: rows">
+                            <tr>
+                                <td data-bind="text: employee"></td>
+                                <td data-bind="text: calls.count"></td>
+                                <td data-bind="text: calls.total"></td>
+                                <td data-bind="text: extras.count"></td>
+                                <td data-bind="text: extras.total"></td>
+                                <td data-bind="text: penalties.count"></td>
+                                <td data-bind="text: penalties.total"></td>
+                                <td data-bind="text: negativeAmount"></td>
+                                <td data-bind="text: saving.monthlyAmount"></td>
+                                <td data-bind="text: saving.total"></td>
+                                <td data-bind="text: salary"></td>
+                                <td data-bind="text: netSalary"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
