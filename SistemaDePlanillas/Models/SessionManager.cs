@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace SistemaDePlanillas.Models
 
         public void updateRoles()
         {
-            var rolesList = DBManager.Instance.selectAllActiveRoles();
+            var rolesList = DBManager.Instance.roles.selectAllActiveRoles();
             roles = rolesList.ToDictionary(r => r.id);
         }
 
@@ -79,7 +80,7 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            User user = DBManager.Instance.selectUser(userId);
+            User user = DBManager.Instance.users.selectUser(userId);
             if (user != null)
             {
                 return user;
@@ -129,7 +130,7 @@ namespace SistemaDePlanillas.Models
         {
             try
             {
-                user= DBManager.Instance.login(username, password);
+                user= DBManager.Instance.users.login(username, password);
                 error = null;
                 return true;
             }

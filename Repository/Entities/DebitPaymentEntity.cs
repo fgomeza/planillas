@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Entities
 {
-    [Table("DEBIT_PAYMENTS")]
+    [Table("debit_payments")]
     public class DebitPaymentEntity
     {
         [Key]
@@ -20,7 +20,7 @@ namespace Repository.Entities
         [Index("UKPAYMENT_DEBIT", 1, IsUnique = true)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long debitId { set; get; }
-
+        
         [Index("UKPAYMENT_DATE", 2, IsUnique = true)]
         public DateTime Date { get; set; }
 
@@ -28,7 +28,7 @@ namespace Repository.Entities
         public double RemainingAmount { get; set; }
 
 
-        public double InterestRare { get; set; }
+        public double InterestRate { get; set; }
 
 
         public double Amount { get; set; }

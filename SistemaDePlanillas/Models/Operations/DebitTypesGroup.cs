@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,50 +11,50 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static void add_Fixed(User user, string name)
         {
-            DBManager.Instance.addFixedDebitType(name, user.Location);
+            DBManager.Instance.debits.addFixedDebitType(name, user.Location);
         }
 
         public static void add_Payment(User user, string name, double interestRate, long pays)
         {
-            DBManager.Instance.addPaymentDebitType(name, user.Location, pays, interestRate);
+            DBManager.Instance.debits.addPaymentDebitType(name, user.Location, pays, interestRate);
         }
 
         public static void add_Amortization(User user, string name, double interestRate, long pays)
         {
-            DBManager.Instance.addAmortizationDebitType(name, user.Location, pays, interestRate);
+            DBManager.Instance.debits.addAmortizationDebitType(name, user.Location, pays, interestRate);
         }
 
         public static void modify_Fixed(User user, long id, string name)
         {
-            DBManager.Instance.updateFixedDebitType(id, name);
+            DBManager.Instance.debits.updateFixedDebitType(id, name);
         }
         public static void modify_Payment(User user, long id, string name, long pays, double interestRate)
         {
-            DBManager.Instance.updatePaymentDebitType(id, name, interestRate, pays);
+            DBManager.Instance.debits.updatePaymentDebitType(id, name, interestRate, pays);
         }
         public static void modify(User user, long id, string name, long pays, double interestRate )
         {
-            DBManager.Instance.updateAmortizationDebitType(id, name, interestRate, pays);
+            DBManager.Instance.debits.updateAmortizationDebitType(id, name, interestRate, pays);
         }
 
         public static void remove(User user, long id)
         {
-            DBManager.Instance.deleteDebitType(id);
+            DBManager.Instance.debits.deleteDebitType(id);
         }
 
         public static object get_FixedTypes(User user)
         {
-            return DBManager.Instance.selectFixedDebitTypes(user.Location);
+            return DBManager.Instance.debits.selectFixedDebitTypes(user.Location);
         }
 
         public static object get_PaymentTypes(User user)
         {
-            return DBManager.Instance.selectPaymentDebitTypes(user.Location);
+            return DBManager.Instance.debits.selectPaymentDebitTypes(user.Location);
         }
 
         public static object get_AmortizationTypes(User user)
         {
-            return DBManager.Instance.selectAmortizationDebitTypes(user.Location);
+            return DBManager.Instance.debits.selectAmortizationDebitTypes(user.Location);
         }
 
     }

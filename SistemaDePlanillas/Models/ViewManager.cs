@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace SistemaDePlanillas.Models
         private ViewManager()
         {
             groups = new Dictionary<string, OperationsGroup>();
-            var groupsList = DBManager.Instance.selectAllOperationsGroup();
+            var groupsList = DBManager.Instance.groups.selectAllOperationsGroup();
             foreach(var group in groupsList)
             {
                 groups[group.name] = group;
