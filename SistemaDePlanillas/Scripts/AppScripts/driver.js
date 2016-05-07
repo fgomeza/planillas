@@ -60,6 +60,17 @@
             $('#divLoading').hide();
         }
 
+        this.startLoadingTimeout = function (miliseconds) {
+            return setTimeout(function () {
+                showLoading();
+            }, miliseconds);
+        }
+
+        this.stopLoadingTimeout = function (loadingTimeout) {
+            clearTimeout(loadingTimeout);
+            hideLoading();
+        }
+
     }
 
     return new AppHandler();
