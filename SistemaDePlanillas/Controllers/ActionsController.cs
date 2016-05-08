@@ -38,9 +38,9 @@ namespace SistemaDePlanillas.Controllers
 
         [Authorize]
         [PermissionCheck]
-        public Response fromForm(string group, string operation, string call, [FromBody]IDictionary<string, object> args)
+        public Response fromForm(string group, string operation, string call, [FromBody]System.Web.HttpPostedFileBase args)
         {
-            return doAction(group, operation + "_" + call, args);
+            return doAction(group, operation + "_" + call, (IDictionary<string,object>)(object)args);
         }
 
         private Response doAction(string group, string operation, object[] args)

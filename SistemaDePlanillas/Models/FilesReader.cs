@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace SistemaDePlanillas.Models
 {
-    public class FileConvertions
+    public class FilesReader
     {
         public class CMSRegister
         {
@@ -24,6 +25,27 @@ namespace SistemaDePlanillas.Models
             }
         }
 
+        public static List<CMSRegister> readFromCMSFile(Stream file)
+        {
+            List<CMSRegister> list = new List<CMSRegister>();
+            StreamReader reader = new StreamReader(file);
+            for (int i = 0; i < 9; i++)
+            {
+                reader.ReadLine();
+            }
+            while (!reader.EndOfStream)
+            {
+                string[] data = reader.ReadLine().Split('\t');
+                string cmsid = data[0];
+                int calls = Int32.Parse(data[2]);
+                TimeSpan hours = new TimeSpan(0, 0, Int32.Parse(data[11]));
+                DateTime date = DateTime.ParseExact(data[1], "dd/MM/yyyy", CultureInfo.CurrentCulture);
+                list.Add(new CMSRegister(cmsid, calls, hours, date));
+            }
+            return list;
+        }
+
+        /*
         public static List<CMSRegister> readFromCMSFile(Stream file)
         {
             try
@@ -71,5 +93,6 @@ namespace SistemaDePlanillas.Models
                 return null;
             }
         }
+        */
     }
 }

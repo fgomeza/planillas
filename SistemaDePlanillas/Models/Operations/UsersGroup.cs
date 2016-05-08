@@ -62,10 +62,5 @@ namespace SistemaDePlanillas.Models.Operations
             DBManager.Instance.users.deleteUser(id);
         }
 
-        public static object root_get(User user)
-        {
-            var fileStream = new FileStream(@"c:\test.txt", FileMode.Open, FileAccess.Read);
-            return Responses.WithData(FileConvertions.readFromCMSFile(fileStream));
-        }
     }
 }
