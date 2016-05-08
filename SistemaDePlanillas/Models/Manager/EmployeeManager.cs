@@ -402,5 +402,4 @@ namespace SistemaDePlanillas.Models.Manager
         }
     }
 
-
 }
