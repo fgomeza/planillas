@@ -379,7 +379,7 @@ namespace SistemaDePlanillas.Models
             return result;
         }
 
-        public void addCalls(List<FileConvertions.CMSRegister> calls)
+        public void addCalls(List<FilesReader.CMSRegister> calls)
         {
             try
             {

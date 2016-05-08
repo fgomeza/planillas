@@ -182,6 +182,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FileManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ActionsController.cs" />
     <Compile Include="Controllers\PartialViewsController.cs" />
@@ -214,7 +215,7 @@
     <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtrasGroup.cs" />
-    <Compile Include="Models\FileConvertions.cs" />
+    <Compile Include="Models\FilesReader.cs" />
     <Compile Include="Models\Operations\LocationsGroup.cs" />
     <Compile Include="Models\Operations\PayrollGoup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
@@ -358,6 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\FileManage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
