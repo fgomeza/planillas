@@ -1,4 +1,5 @@
 ﻿using SistemaDePlanillas.Models;
+using SistemaDePlanillas.Models.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace SistemaDePlanillas.Controllers
             try
             {
                 var registers = FilesReader.readFromCMSFile(file.InputStream);
-                //DBManager.Instance.addCalls(registers);
+                foreach (var r in registers)
+                    DBManager.Instance.employees.addCall(r.cmsid, r.calls, r.hours, r.date);
                 return Json(registers);
             }
             catch(Exception e)
