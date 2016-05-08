@@ -3,11 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using SistemaDePlanillas.Models;
 
 namespace SistemaDePlanillas.Models.Operations
 {
     public class EmployeesGroup
     {
+
+        //employees/add/call
+        public static void add_Call(User user, FileConvertions.CMSRegister register)
+        {
+            DBManager.Instance.employees.addCall(register.cmsid,register.calls,register.hours,register.date);
+        }
 
         //employees/add/cms (string,string,string,string)
         public static Employee add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)

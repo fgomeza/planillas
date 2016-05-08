@@ -12,7 +12,7 @@ namespace SistemaDePlanillas.Models
         public class CMSRegister
         {
             public string cmsid { get; set; }
-            public int calls { get; set; }
+            public long calls { get; set; }
             public TimeSpan hours { get; set; }
             public DateTime date { get; set; }
             public CMSRegister(string cmsid, int calls, TimeSpan hours, DateTime date)
@@ -46,7 +46,7 @@ namespace SistemaDePlanillas.Models
                 foreach (Match match in Regex.Matches(data, dataPattern))
                 {
                     string cmsid = match.Groups["cmsid"].Value;
-                    int calls = int.Parse(match.Groups["calls"].Value);
+                    long calls = long.Parse(match.Groups["calls"].Value);
                     int hours = 0;
                     if (!employees.ContainsKey(cmsid))
                     {
