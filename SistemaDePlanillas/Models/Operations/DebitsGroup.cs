@@ -16,12 +16,10 @@ namespace SistemaDePlanillas.Models.Operations
 
         public static PaymentDebit add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type)
         {
-
             return DBManager.Instance.debits.addPaymentDebit(employee, initialDate, detail, total, pays, type);
         }
         public static AmortizationDebit add_Amortization(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type)
         {
-
             return DBManager.Instance.debits.addAmortizationDebit(employee, initialDate, detail, total, pays, type);
         }
 
