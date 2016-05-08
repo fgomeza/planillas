@@ -24,5 +24,10 @@ namespace Repository.Repositories.Classes
         {
             return _context.Calls.Where((e) => e.employeeId == employeeId && e.payrollId == null && e.date <= endDate);
         }
+
+        public CallEntity callByEmployeeDate(long employee ,DateTime date)
+        {
+            return _context.Calls.FirstOrDefault(c=>c.employeeId==employee && c.date==date);
+        }
     }
 }

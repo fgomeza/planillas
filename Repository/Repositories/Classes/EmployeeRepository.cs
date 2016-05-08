@@ -34,7 +34,7 @@ namespace Repository.Repositories.Classes
         }
         public EmployeeEntity selectEmployeeByCmsText(string cmsText)
         {
-            var employee = _context.Employees.First((e) => e.cms==cmsText && e.active);
+            var employee = _context.Employees.FirstOrDefault((e) => e.cms==cmsText && e.active);
             return employee;
         }
 

@@ -370,14 +370,28 @@ namespace SistemaDePlanillas.Models.Manager
                     var employee = repository.Employees.selectEmployeeByCmsText(cms);
                     if (employee != null)
                     {
-                        repository.Calls.Add(new CallEntity()
+                        var call = repository.Calls.callByEmployeeDate(employee.id, date);
+                        if (call != null)
                         {
-                            employeeId=employee.id,
-                            calls=calls,
-                            time=hours,
-                            date=date,
-                            payrollId=null
-                        });
+                            call.calls = calls;
+                            call.time = hours;
+                        }
+                        else
+                        {
+                            repository.Calls.Add(new CallEntity()
+                            {
+                                employeeId = employee.id,
+                                calls = calls,
+                                time = hours,
+                                date = date,
+                                payrollId = null
+                            });
+                        }
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }

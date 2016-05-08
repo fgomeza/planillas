@@ -1,4 +1,4 @@
-
+﻿
 INSERT INTO locations(name,"callPrice",active) VALUES ( 'Tibas', 550, true);
 INSERT INTO locations(name,"callPrice",active) VALUES ( 'San Pedro', 400, true);
 
