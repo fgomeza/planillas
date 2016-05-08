@@ -102,6 +102,8 @@ namespace SistemaDePlanillas.Models.Operations
             return Responses.WithData(payroll);
         }
 
+
+
         private static List<object> formatPaymentDebits(List<PaymentDebit> debitsByEmployee)
         {
             return debitsByEmployee.GroupBy(debit => debit.typeName, debit => debit, (name, list) => (object)new
