@@ -19,6 +19,8 @@ namespace Repository.Entities
 
         public string Description { set; get; }
 
+        public bool isPayrollCalculationRelated { set; get; }
+
         [ForeignKey("fkoperation_group")]
         [Column("group_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

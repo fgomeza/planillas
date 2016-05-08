@@ -49,10 +49,10 @@ namespace SistemaDePlanillas.Models.Manager
 
                     if (role != null && role.active == true)
                     {
-                        List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                        List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
                         foreach (var op in role.operations)
                         {
-                            Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
+                            Tuple<string, string,bool> tuple = new Tuple<string, string,bool>(op.GroupId, op.Name.Split('/')[1],op.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
                         Role role_result = new Role(role.id, role.name, role.locationId, true, list);
@@ -190,10 +190,10 @@ namespace SistemaDePlanillas.Models.Manager
                     var roles = repository.Roles.GetAll();
                     foreach (var x in roles)
                     {
-                        List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                        List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
                         foreach (var op in x.operations)
                         {
-                            Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
+                            Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
                         result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
@@ -219,10 +219,10 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         if (x.active == true)
                         {
-                            List<Tuple<string, string>> list = new List<Tuple<string, string>>();
+                            List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
                             foreach (var op in x.operations)
                             {
-                                Tuple<string, string> tuple = new Tuple<string, string>(op.GroupId, op.Name.Split('/')[1]);
+                                Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
                                 list.Add(tuple);
                             }
                             result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));

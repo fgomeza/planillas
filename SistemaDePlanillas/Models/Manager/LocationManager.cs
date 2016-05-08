@@ -18,7 +18,7 @@ namespace SistemaDePlanillas.Models.Manager
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = new LocationEntity()
-                    { name = name, callPrice = call_price, active = true };
+                    { name = name, callPrice = call_price, active = true , isPendingToApprove= false};
                     location = repository.Locations.Add(location);
                     repository.Complete();
                     updateAdministrator(location.id, administrator);
@@ -28,6 +28,7 @@ namespace SistemaDePlanillas.Models.Manager
                     result.LastPayroll = location.lastPayrollId;
                     result.CurrentPayroll = location.currentPayrollId;
                     result.Active = location.active;
+                    result.isPendingToApprove = location.isPendingToApprove;
                 }
             }
             catch (Exception e)
@@ -49,10 +50,11 @@ namespace SistemaDePlanillas.Models.Manager
                     if (location != null && location.active)
                     {
                         result.Name = location.name;
-                        result.CallPrice = location.callPrice == null ? 0 : (long)location.callPrice;
+                        result.CallPrice = location.callPrice;
                         result.LastPayroll = location.lastPayrollId;
                         result.CurrentPayroll = location.currentPayrollId;
                         result.Active = location.active;
+                        result.isPendingToApprove = location.isPendingToApprove;
                     }
                     else
                     {
@@ -171,7 +173,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
         }
 
-        public void updateLocationCurrentPayroll(long id, long current_payroll)
+        public void updateLocationCurrentPayroll(long id, Nullable<long> current_payroll)
         {
             try
             {
@@ -180,7 +182,13 @@ namespace SistemaDePlanillas.Models.Manager
                     LocationEntity location = repository.Locations.Get(id);
                     if (location != null)
                     {
-                        location.lastPayrollId = current_payroll;
+                        if (location.currentPayrollId != null)
+                        {
+                            var current = repository.PayRolls.Get((long)location.currentPayrollId);
+                            repository.PayRolls.Remove(current);
+
+                        }
+                        location.currentPayrollId = current_payroll;
                         repository.Complete();
                     }
                     else
@@ -188,6 +196,31 @@ namespace SistemaDePlanillas.Models.Manager
                         validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void setPendingToApprove(long id, bool approve)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    LocationEntity location = repository.Locations.Get(id);
+                    if (location != null && location.active)
+                    {
+                        location.isPendingToApprove = approve;
+                        repository.Complete();
+                    }
+                    else
+                    {
+                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                    }
+                }
+
             }
             catch (Exception e)
             {

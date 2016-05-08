@@ -22,7 +22,7 @@ namespace SistemaDePlanillas.Models.Operations
                     {
                         id = o.Id,
                         description = o.Description,
-                        active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].Contains(o.Name)
+                        active = role.privileges.ContainsKey(g.name) && role.privileges[g.name].ContainsKey(o.Name)
                     })
                 })
             };

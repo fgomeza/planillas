@@ -213,7 +213,6 @@
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Manager\ExtrasManager.cs" />
     <Compile Include="Models\Manager\LocationManager.cs" />
-    <Compile Include="Models\Manager\Manager.cs" />
     <Compile Include="Models\Manager\OperationsGroupManager.cs" />
     <Compile Include="Models\Manager\OperationsManager.cs" />
     <Compile Include="Models\Manager\PenaltiesManager.cs" />

@@ -36,6 +36,8 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Nullable<long> currentPayrollId { set; get; }
 
+        public bool isPendingToApprove { set; get; }
+
         public virtual PayrollEntity fklocation_currentpayroll { set; get; }
 
 

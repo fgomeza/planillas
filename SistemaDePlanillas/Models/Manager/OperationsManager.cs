@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class OperationsManager : IErrors
     {
-        public void addOperation(string name, string description, string url, string group)
+        public void addOperation(string name, string description, string url, string group, bool isPayrollCalculationRelated)
         {
             Result<string> result = new Result<string>();
             try
@@ -18,7 +18,7 @@ namespace SistemaDePlanillas.Models.Manager
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     OperationEntity operation = new OperationEntity()
-                    { Name = name, Description = description, GroupId = group };
+                    { Name = name, Description = description, GroupId = group , isPayrollCalculationRelated=isPayrollCalculationRelated};
                     repository.Operations.Add(operation);
                     repository.Complete();
                 }
@@ -39,7 +39,7 @@ namespace SistemaDePlanillas.Models.Manager
                     var x = repository.Operations.Get(id);
                     if (x != null)
                     {
-                        result = new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description);
+                        result = new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description,x.isPayrollCalculationRelated);
                     }
                     else
                     {
@@ -87,7 +87,7 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     var os = repository.Operations.GetAll();
                     foreach (var x in os)
-                        result.Add(new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description));
+                        result.Add(new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description,x.isPayrollCalculationRelated));
                 }
             }
             catch (Exception e)
@@ -106,7 +106,7 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     var os = repository.Operations.selectOperationsByGroup(id_group);
                     foreach (var x in os)
-                        result.Add(new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description));
+                        result.Add(new Operation(x.Name, x.Name.Split('/')[1], x.GroupId, x.Description,x.isPayrollCalculationRelated));
                 }
             }
             catch (Exception e)

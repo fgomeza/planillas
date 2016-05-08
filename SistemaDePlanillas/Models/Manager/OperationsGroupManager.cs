@@ -41,7 +41,7 @@ namespace SistemaDePlanillas.Models.Manager
                         var operations = repository.Operations.selectOperationsByGroup(group.Name);
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
-                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId, op.Description));
+                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId, op.Description, op.isPayrollCalculationRelated));
                         result = new OperationsGroup(group.Description, group.Name, group.Icon, list);
                     }
                     else
@@ -95,7 +95,7 @@ namespace SistemaDePlanillas.Models.Manager
                         var operations = repository.Operations.selectOperationsByGroup(x.Name);
                         List<Operation> list = new List<Operation>();
                         foreach (var op in operations)
-                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId, op.Description));
+                            list.Add(new Operation(op.Name, op.Name.Split('/')[1], op.GroupId, op.Description,op.isPayrollCalculationRelated));
                         result.Add(new OperationsGroup(x.Description, x.Name, x.Icon, list));
                     }
                 }

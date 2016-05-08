@@ -63,13 +63,23 @@ namespace SistemaDePlanillas.Models
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
+            var current = DBManager.Instance.locations.getLocation(user.Location).CurrentPayroll;
+            if (current == null)
+                return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
+            else
+                return verifyOperationLocked(user.Role, group.ToLower(), operation.ToLower());
         }
 
-        public bool verifyOperation(long role, string group, string operation)
+        private bool verifyOperation(long role, string group, string operation)
         {
             var privileges = getRole(role).privileges;
-            return privileges.ContainsKey(group) && privileges[group].Contains(operation);
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation);
+        }
+
+        private bool verifyOperationLocked(long role, string group, string operation)
+        {
+            var privileges = getRole(role).privileges;
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation) && privileges[group][operation];
         }
 
         public string getRoleName(User user)

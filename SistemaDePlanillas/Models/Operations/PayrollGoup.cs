@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Net.Mail;
 
 namespace SistemaDePlanillas.Models.Operations
 {
@@ -13,6 +14,37 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
+        public static void calculate_setAsReady(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if (location.CurrentPayroll != null)
+            {
+                DBManager.Instance.locations.setPendingToApprove(user.Location, true);
+                Mail("fgomeza25@gmail.com", "Aprobación de Planillas Coopesuperación",
+                String.Format("Hola! \n El usuario {0} del sistema de planillas de Coopesuperación ha realizado el cálculo de planillas y este esta pendiente de aprobación.\n", user.Name));
+            }   
+
+        }
+
+        public static void calculate_cancel(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if(!location.isPendingToApprove)
+                DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, null);
+        }
+
+        private static void Mail(string to, string subject, string message)
+        {
+            MailMessage mail = new MailMessage(new MailAddress("coopesuperacion@gmx.es", "Sistema de Planillas Coopesuperación"), new MailAddress(to));
+            SmtpClient client = new SmtpClient();
+            client.Port = 587;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new System.Net.NetworkCredential("coopesuperacion@gmx.es", "coopesuperacion");
+            client.Host = "smtp.gmx.es";
+            mail.Subject = subject;
+            mail.Body = message;
+            //client.Send(mail);
+        }
         public static object calculate(User user, DateTime initialDate, DateTime endDate)
         {
             long days = (endDate - initialDate).Days;
@@ -62,10 +94,10 @@ namespace SistemaDePlanillas.Models.Operations
                     negativeAmount = netSalary>0?0:netSalary
                 });
             }
-           // var javaScriptSerializer = new JavaScriptSerializer();
+            var javaScriptSerializer = new JavaScriptSerializer();
             var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
-           // var current =DBManager.Instance.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
-          //DBManager.Instance.updateLocationCurrentPayroll(user.Location, current.id);
+            var current =DBManager.Instance.payrolls.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
+            DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, current.id);
 
             return Responses.WithData(payroll);
         }
