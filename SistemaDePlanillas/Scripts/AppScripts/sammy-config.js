@@ -50,7 +50,7 @@
                     app.hideLoading();
                     require(['controllers/' + context.params.page], function (controller) {
                         if (controller && controller.init) {
-                            controller.init.apply();
+                            controller.init.apply(context.params);
                         }
                     });
                 });
