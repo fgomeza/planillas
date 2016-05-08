@@ -2,6 +2,8 @@
 
     function AppHandler() {
 
+        var self = this;
+
         this.consumeAPI = function (group, operation, args) {
             args = args || {};
             var xhr = {
@@ -62,13 +64,13 @@
 
         this.startLoadingTimeout = function (miliseconds) {
             return setTimeout(function () {
-                showLoading();
+                self.showLoading();
             }, miliseconds);
         }
 
         this.stopLoadingTimeout = function (loadingTimeout) {
             clearTimeout(loadingTimeout);
-            hideLoading();
+            self.hideLoading();
         }
 
     }

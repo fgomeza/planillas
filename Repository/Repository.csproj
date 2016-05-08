@@ -63,7 +63,6 @@
     <Compile Include="Entities\DebitPaymentEntity.cs" />
     <Compile Include="Entities\DebitTypeEntity.cs" />
     <Compile Include="Entities\EmployeeEntity.cs" />
-    <Compile Include="Entities\ErrorEntity.cs" />
     <Compile Include="Entities\ExtraEntity.cs" />
     <Compile Include="Entities\GroupEntity.cs" />
     <Compile Include="Entities\LocationEntity.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="Repositories\Classes\DebitRepository.cs" />
     <Compile Include="Repositories\Classes\DebitTypeRepository.cs" />
     <Compile Include="Repositories\Classes\EmployeeRepository.cs" />
-    <Compile Include="Repositories\Classes\ErrorRepository.cs" />
     <Compile Include="Repositories\Classes\ExtraRepository.cs" />
     <Compile Include="Repositories\Classes\GroupRepository.cs" />
     <Compile Include="Repositories\Classes\LocationRepository.cs" />

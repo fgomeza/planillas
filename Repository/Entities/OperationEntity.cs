@@ -16,17 +16,19 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { set; get; }
 
-        [Column("description")]
+
         public string Description { set; get; }
+
+        public bool isPayrollCalculationRelated { set; get; }
 
         [ForeignKey("fkoperation_group")]
         [Column("group_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string GroupId { set; get; }
 
-        public virtual GroupEntity fkoperation_group { set; get;}
+        public virtual GroupEntity fkoperation_group { set; get; }
 
-        public virtual ICollection<RoleEntity>  Roles { set; get; }
+        public virtual ICollection<RoleEntity> Roles { set; get; }
 
     }
 }

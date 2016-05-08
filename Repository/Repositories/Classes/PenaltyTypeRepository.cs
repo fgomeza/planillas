@@ -15,10 +15,10 @@ namespace Repository.Repositories.Classes
         {
         }
 
-        public Nullable<double> getPriceById(long id)
+        public double getPriceById(long id)
         {
             var penalty = _context.PenaltyTypes.Find(id);
-            return penalty.Price;
+            return penalty.price;
         }
 
         public IEnumerable<PenaltyTypeEntity> getAllbyLocation(long location)
@@ -28,7 +28,7 @@ namespace Repository.Repositories.Classes
 
         public string getTypeName(long id)
         {
-            return _context.PenaltyTypes.First(t => t.Id == id).Name;
+            return _context.PenaltyTypes.First(t => t.Id == id).name;
         }
     }
 }

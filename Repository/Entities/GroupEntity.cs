@@ -15,10 +15,10 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }
 
-        [Column("description")]
+
         public string Description { get; set; }
 
-        [Column("icon")]
+
         public string Icon { get; set; }
 
         //public virtual ICollection<OperationEntity> Operations { set; get; }

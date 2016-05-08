@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace SistemaDePlanillas.Models
 
         public void updateRoles()
         {
-            var rolesList = DBManager.Instance.selectAllActiveRoles();
+            var rolesList = DBManager.Instance.roles.selectAllActiveRoles();
             roles = rolesList.ToDictionary(r => r.id);
         }
 
@@ -62,13 +63,23 @@ namespace SistemaDePlanillas.Models
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
+            var current = DBManager.Instance.locations.getLocation(user.Location).CurrentPayroll;
+            if (current == null)
+                return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
+            else
+                return verifyOperationLocked(user.Role, group.ToLower(), operation.ToLower());
         }
 
-        public bool verifyOperation(long role, string group, string operation)
+        private bool verifyOperation(long role, string group, string operation)
         {
             var privileges = getRole(role).privileges;
-            return privileges.ContainsKey(group) && privileges[group].Contains(operation);
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation);
+        }
+
+        private bool verifyOperationLocked(long role, string group, string operation)
+        {
+            var privileges = getRole(role).privileges;
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation) && privileges[group][operation];
         }
 
         public string getRoleName(User user)
@@ -79,7 +90,7 @@ namespace SistemaDePlanillas.Models
         private User userFromTicket(FormsAuthenticationTicket ticket)
         {
             long userId = long.Parse(ticket.UserData);
-            User user = DBManager.Instance.selectUser(userId);
+            User user = DBManager.Instance.users.selectUser(userId);
             if (user != null)
             {
                 return user;
@@ -129,7 +140,7 @@ namespace SistemaDePlanillas.Models
         {
             try
             {
-                user= DBManager.Instance.login(username, password);
+                user= DBManager.Instance.users.login(username, password);
                 error = null;
                 return true;
             }

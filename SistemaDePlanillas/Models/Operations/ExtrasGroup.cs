@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -19,7 +20,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <returns>Estado de la transaccion en formato JSON</returns>
         public static Extra add(User user,long employeeId, string detail,long hours)
         {
-               return DBManager.Instance.addExtra(employeeId, detail, hours);
+               return DBManager.Instance.extras.addExtra(employeeId, detail, hours);
         }
         /// <summary>
         /// Elimina un pago extra
@@ -28,7 +29,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <returns>Estado de la transaccion en formato JSON</returns>
         public static void remove(User user,long extraId)
         {
-                DBManager.Instance.deleteExtra(extraId);
+                DBManager.Instance.extras.deleteExtra(extraId);
         }
         /// <summary> 
         /// Actualiza la informacio de un pago extra
@@ -39,7 +40,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// <returns>Estado de la transaccion en formato JSON</returns>
         public static void modify(User user,long extraId, string detail, long hours)
         {
-                DBManager.Instance.updateExtra(extraId, detail, hours);
+                DBManager.Instance.extras.updateExtra(extraId, detail, hours);
         }
         /// <summary>
         /// Accesa los pagos extra asociados a un empleado
@@ -51,7 +52,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// </returns>
         public static object get_all(User user,long employeeId)
         {
-                return DBManager.Instance.selectExtras(employeeId);  
+                return DBManager.Instance.extras.selectExtras(employeeId);  
         }
         /// <summary>
         /// Accesa a un pago por su identificador
@@ -63,7 +64,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// </returns>
         public static object get(User user,long extraId)
         {
-            return DBManager.Instance.selectExtra(extraId);
+            return DBManager.Instance.extras.selectExtra(extraId);
         }
     }
 }

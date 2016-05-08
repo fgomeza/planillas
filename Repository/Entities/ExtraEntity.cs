@@ -18,14 +18,14 @@ namespace Repository.Entities
         [ForeignKey("fkextra_employee")]
         [Column("employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long  employeeId { set; get; }
+        public long employeeId { set; get; }
 
         public virtual EmployeeEntity fkextra_employee { set; get; }
 
-        [Column("description")]
+
         public string description { set; get; }
 
-        [Column("hours")]
+
         public long hours { set; get; }
     }
 }

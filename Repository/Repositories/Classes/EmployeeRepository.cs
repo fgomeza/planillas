@@ -17,13 +17,13 @@ namespace Repository.Repositories.Classes
 
         public IEnumerable<EmployeeEntity> selectCMSEmployees(long location)
         {
-            var employees = _context.Employees.Where((e) => e.cms != null && e.locationId==location && e.active);
+            var employees = _context.Employees.Where((e) => e.iscms && e.locationId==location && e.active);
             return employees.ToList();
         }
 
         public IEnumerable<EmployeeEntity> selectNonCMSEmployees(long location)
         {
-            var employees = _context.Employees.Where((e) => e.cms == null && e.locationId == location && e.active);
+            var employees = _context.Employees.Where((e) => !e.iscms && e.locationId == location && e.active);
             return employees.ToList();
         }
 
@@ -34,7 +34,7 @@ namespace Repository.Repositories.Classes
         }
         public EmployeeEntity selectEmployeeByCmsText(string cmsText)
         {
-            var employee = _context.Employees.First((e) => e.cms==cmsText && e.active);
+            var employee = _context.Employees.FirstOrDefault((e) => e.cms==cmsText && e.active);
             return employee;
         }
 

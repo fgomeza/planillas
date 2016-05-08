@@ -1,4 +1,4 @@
-﻿define(['jquery', 'app/testing', 'viewModels/title'], function ($, app, title) {
+﻿define(['jquery', 'app/testing', 'viewModels/title', 'app/driver'], function ($, app, title, driver) {
 
     var enviar = function () {
         var $container = $("#result")
@@ -22,7 +22,9 @@
 
             $('#testSubmitBttn').click(function (event) {
                 event.preventDefault();
+                var timeout = driver.startLoadingTimeout(500);
                 enviar();
+                driver.stopLoadingTimeout(timeout);
             });
 
             $containerElement.parent().fadeIn();

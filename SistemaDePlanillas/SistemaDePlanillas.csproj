@@ -182,6 +182,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FileManageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ActionsController.cs" />
     <Compile Include="Controllers\PartialViewsController.cs" />
@@ -193,6 +194,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\Manager\DBManager.cs" />
+    <Compile Include="Models\Manager\DebitsManager.cs" />
+    <Compile Include="Models\Manager\EmployeeManager.cs" />
     <Compile Include="Models\IActionsEvents.cs" />
     <Compile Include="Models\App_LocalResoures\DescriptionError.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -204,17 +208,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
-    <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\IErrors.cs" />
     <Compile Include="Models\Logger.cs" />
+    <Compile Include="Models\Manager\ExtrasManager.cs" />
+    <Compile Include="Models\Manager\LocationManager.cs" />
+    <Compile Include="Models\Manager\OperationsGroupManager.cs" />
+    <Compile Include="Models\Manager\OperationsManager.cs" />
+    <Compile Include="Models\Manager\PenaltiesManager.cs" />
+    <Compile Include="Models\Manager\PayrollManager.cs" />
+    <Compile Include="Models\Manager\RolesManager.cs" />
+    <Compile Include="Models\Manager\SalaryManager.cs" />
+    <Compile Include="Models\Manager\UsersManager.cs" />
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\Operations\AppGroup.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
     <Compile Include="Models\Operations\DebitTypesGroup.cs" />
     <Compile Include="Models\Operations\EmployeesGroup.cs" />
     <Compile Include="Models\Operations\ExtrasGroup.cs" />
-    <Compile Include="Models\FileConvertions.cs" />
+    <Compile Include="Models\FilesReader.cs" />
     <Compile Include="Models\Operations\LocationsGroup.cs" />
     <Compile Include="Models\Operations\PayrollGoup.cs" />
     <Compile Include="Models\Operations\PenaltyGroup.cs" />
@@ -361,6 +373,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\FileManage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

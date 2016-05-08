@@ -1,9 +1,11 @@
 ﻿using DevOne.Security.Cryptography.BCrypt;
+using SistemaDePlanillas.Models.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Net.Mail;
 
 namespace SistemaDePlanillas.Models.Operations
 {
@@ -12,37 +14,68 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
+        public static void calculate_setAsReady(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if (location.CurrentPayroll != null)
+            {
+                DBManager.Instance.locations.setPendingToApprove(user.Location, true);
+                Mail("fgomeza25@gmail.com", "Aprobación de Planillas Coopesuperación",
+                String.Format("Hola! \n El usuario {0} del sistema de planillas de Coopesuperación ha realizado el cálculo de planillas y este esta pendiente de aprobación.\n", user.Name));
+            }   
+
+        }
+
+        public static void calculate_cancel(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if(!location.isPendingToApprove)
+                DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, null);
+        }
+
+        private static void Mail(string to, string subject, string message)
+        {
+            MailMessage mail = new MailMessage(new MailAddress("coopesuperacion@gmx.es", "Sistema de Planillas Coopesuperación"), new MailAddress(to));
+            SmtpClient client = new SmtpClient();
+            client.Port = 587;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new System.Net.NetworkCredential("coopesuperacion@gmx.es", "coopesuperacion");
+            client.Host = "smtp.gmx.es";
+            mail.Subject = subject;
+            mail.Body = message;
+            //client.Send(mail);
+        }
         public static object calculate(User user, DateTime initialDate, DateTime endDate)
         {
             long days = (endDate - initialDate).Days;
-            var employees = DBManager.Instance.selectAllActiveEmployees(user.Location);
+            var employees = DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
             double totalPayroll = 0;
-            var location = DBManager.Instance.getLocation(user.Location);
+            var location = DBManager.Instance.locations.getLocation(user.Location);
             double callPrice = location.CallPrice;
             List<object> rows = new List<object>();
             foreach (var employee in employees)
             {
-                var calls = DBManager.Instance.callListByEmployee(employee.id, endDate);
+                var calls = DBManager.Instance.employees.callListByEmployee(employee.id, endDate);
                 long callsCount = calls.Sum(c => c.calls);
-                var penaltiesDB = DBManager.Instance.selectAllPenalty(employee.id, endDate);
+                var penaltiesDB = DBManager.Instance.penalties.selectAllPenalty(employee.id, endDate);
                 var penalties = formatPenalties(penaltiesDB);
                 double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
-                var fixedDebitsDB = DBManager.Instance.selectDebits(employee.id);
+                var fixedDebitsDB = DBManager.Instance.debits.selectDebits(employee.id);
                 var fixedDebits = formatFixedDebits(fixedDebitsDB,days);
                 double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
-                var paymentDebitsDB = DBManager.Instance.selectPaymentDebits(employee.id);
+                var paymentDebitsDB = DBManager.Instance.debits.selectPaymentDebits(employee.id);
                 var paymentDebits = formatPaymentDebits(paymentDebitsDB);
                 double totalPaymentDebits = paymentDebitsDB.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
-                var amortizationDebitsDB = DBManager.Instance.selectAmortizationDebits(employee.id);
+                var amortizationDebitsDB = DBManager.Instance.debits.selectAmortizationDebits(employee.id);
                 var amortizationDebits = formatAmortizationDebits(amortizationDebitsDB);
                 double totalAmortizationDebits = amortizationDebitsDB.Sum(d => calculateAmortization(d.total, d.missingPayments + d.paymentsMade, d.interestRate));
                 double grossAmount = (employee.salary / 2) + (callsCount * callPrice);
-                var lastSalaries = DBManager.Instance.getLastSalaries(employee.id);
+                var lastSalaries = DBManager.Instance.salaries.getLastSalaries(employee.id);
                 double extraPrice = (grossAmount + lastSalaries.Sum() / (lastSalaries.Count + 1))/ workHoursByMonth;
-                var extras = DBManager.Instance.selectExtras(employee.id);
+                var extras = DBManager.Instance.extras.selectExtras(employee.id);
                 long extraCount = extras.Sum(e => e.hours);
                 double totalExtras = extras.Sum(e => e.hours)*extraPrice;
-                double saving = DBManager.Instance.selectSavingByEmployee(employee.id);
+                double saving = DBManager.Instance.debits.selectSavingByEmployee(employee.id);
                 double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits -totalAmortizationDebits - totalFixedDebits - employee.negativeAmount;
 
                 totalPayroll += netSalary > 0 ? netSalary : 0;
@@ -61,13 +94,15 @@ namespace SistemaDePlanillas.Models.Operations
                     negativeAmount = netSalary>0?0:netSalary
                 });
             }
-           // var javaScriptSerializer = new JavaScriptSerializer();
+            var javaScriptSerializer = new JavaScriptSerializer();
             var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
-           // var current =DBManager.Instance.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
-          //DBManager.Instance.updateLocationCurrentPayroll(user.Location, current.id);
+            var current =DBManager.Instance.payrolls.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
+            DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, current.id);
 
             return Responses.WithData(payroll);
         }
+
+
 
         private static List<object> formatPaymentDebits(List<PaymentDebit> debitsByEmployee)
         {

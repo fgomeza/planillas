@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Linq;
 
 namespace SistemaDePlanillas.Models
 {
@@ -116,7 +117,7 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public string name;
-        public Nullable<double> price;
+        public double price;
     }
 
 
@@ -142,6 +143,7 @@ namespace SistemaDePlanillas.Models
         public Nullable<long> LastPayroll;
         public Nullable<long> CurrentPayroll;
         public bool Active;
+        public bool isPendingToApprove;
     }
 
     public class Role
@@ -150,24 +152,16 @@ namespace SistemaDePlanillas.Models
         public string name;
         public long location;
         public bool active;
-        public Dictionary<string, HashSet<string>> privileges;
+        public Dictionary<string, Dictionary<string,bool>> privileges;
 
-        public Role(long id, string name, long location, bool active, List<Tuple<string, string>> privs)
+        public Role(long id, string name, long location, bool active, List<Tuple<string,string,bool>> privs)
         {
             this.id = id;
             this.name = name;
             this.location = location;
             this.active = active;
-
-            privileges = new Dictionary<string, HashSet<string>>();
-            foreach (var priv in privs)
-            {
-                if (!privileges.ContainsKey(priv.Item1))
-                {
-                    privileges.Add(priv.Item1, new HashSet<string>());
-                }
-                privileges[priv.Item1].Add(priv.Item2);
-            }
+            this.privileges = 
+                privs.GroupBy(p => p.Item1, p => p, (k, l) => new { key = k, list = l }).ToDictionary(g => g.key, g => g.list.ToDictionary(o => o.Item2, o => o.Item3));
         }
 
     }
@@ -194,14 +188,16 @@ namespace SistemaDePlanillas.Models
         public string Id;
         public  string Name;
         public  string Description;
+        public bool isPayrollCalculationRelated;
         public string Group;
 
-        public Operation(string id, string operationName, string groupName, string desc)
+        public Operation(string id, string operationName, string groupName, string desc, bool isPayrollCalculationRelated)
         {
             Id = id;
             Name = operationName;
             Description = desc;
             Group = groupName;
+            this.isPayrollCalculationRelated = isPayrollCalculationRelated;
         }
     }
 }

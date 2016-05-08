@@ -15,7 +15,6 @@ namespace Repository.Repositories.Classes
         private readonly AppContext _context;
 
         public CallRepository Calls { get; }
-        public ErrorRepository Errors { get; }
         public UserRepository Users { get; }
         public LocationRepository Locations { get; }
         public GroupRepository Groups { get; }
@@ -37,7 +36,6 @@ namespace Repository.Repositories.Classes
         {
             _context = context;
             Calls = new CallRepository(_context);
-            Errors = new ErrorRepository(_context);
             Users = new UserRepository(_context);
             Locations = new LocationRepository(_context);
             Groups = new GroupRepository(_context);

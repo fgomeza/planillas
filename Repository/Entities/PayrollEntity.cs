@@ -15,7 +15,7 @@ namespace Repository.Entities
         [Column("id")]
         public long id { set; get; }
 
-        [Column("end_date")]
+        [Index("UKpayroll_ENDATE", 1, IsUnique = true)]
         public DateTime endDate { set; get; }
 
         [ForeignKey("fkpayroll_user")]
@@ -23,7 +23,7 @@ namespace Repository.Entities
         public long userId { set; get; }
         public virtual UserEntity fkpayroll_user { get; set; }
 
-        [Column("call_price")]
+
         public Nullable<double> callPrice { set; get; }
 
         [ForeignKey("fkpayroll_location")]
@@ -31,10 +31,8 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long locationId { set; get; }
 
-        [Column("json")]
-        public string JSON { set; get; }
-
         public virtual LocationEntity fkpayroll_location { set; get; }
 
+        public string JSON { set; get; }
     }
 }
