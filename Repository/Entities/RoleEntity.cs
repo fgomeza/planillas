@@ -7,18 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Entities
-{   [Table("roles")]
+{
+    [Table("roles")]
     public class RoleEntity
     {
         [Key]
         [Column("id")]
         public long id { set; get; }
 
-        [Column("name")]
+        [Index("UKROLE_NAME", 1, IsUnique = true)]
         public string name { set; get; }
 
-        [Column("active")]
-        public Nullable<bool> active { set; get; }
+
+        public bool active { set; get; }
 
         [ForeignKey("fkrole_location")]
         [Column("location")]

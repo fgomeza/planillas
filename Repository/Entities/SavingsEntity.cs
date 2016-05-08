@@ -11,13 +11,13 @@ namespace Repository.Entities
     [Table("savings")]
     public class SavingsEntity
     {
-        [Column("employee") ,Key,ForeignKey("fksaving")]
+        [Column("employee"), Key, ForeignKey("fksaving")]
         public long employee { get; set; }
 
         public virtual EmployeeEntity fksaving { set; get; }
 
-        [Column("amount")]
-        public Nullable<double> amount { get; set; }
+
+        public double amount { get; set; }
 
     }
 }

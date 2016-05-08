@@ -36,9 +36,9 @@ namespace SistemaDePlanillas.Models
     public class Payroll
     {
         public long id;
-        public NpgsqlTypes.NpgsqlDate date;
+        public DateTime date;
         public long user;
-        public string file;
+        public string json;
     }
 
     public class DebitType
@@ -116,7 +116,7 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public string name;
-        public Nullable<double> price;
+        public double price;
     }
 
 

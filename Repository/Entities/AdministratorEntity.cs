@@ -12,7 +12,7 @@ namespace Repository.Entities
     public class AdministratorEntity
     {
 
-        [Column(Order =0),Key,ForeignKey("fkadministrator_user")]
+        [Column(Order = 0), Key, ForeignKey("fkadministrator_user")]
         public long user_id { get; set; }
         public virtual UserEntity fkadministrator_user { get; set; }
 

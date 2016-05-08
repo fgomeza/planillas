@@ -12,11 +12,11 @@ namespace Repository.Entities
         [Column("id")]
         public long Id { get; set; }
 
-        [Column("name")]
-        public string Name { get; set; }
 
-        [Column("price")]
-        public Nullable<double> Price { get; set; }
+        public string name { get; set; }
+
+
+        public double price { get; set; }
 
         [Column("location"), ForeignKey("fkpenaltytype_location")]
         public long location { get; set; }

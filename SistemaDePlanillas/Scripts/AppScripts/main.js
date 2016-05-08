@@ -1,7 +1,7 @@
 ﻿require(['bootstrap', 'respond', 'jasny', 'app/site'], function () {
 
     require(['app/sammy-config'], function (Router) {
-        var router = new Router('#page', '#/navigation?page=dashboard');
+        var router = new Router('#page', '#/navigation?page=welcome');
         router.run('#/');
     });
 
@@ -32,19 +32,28 @@
                     $element.bootstrapToggle();
 
                     // setting initial value
-                    $element.bootstrapToggle('state', valueAccessor()());
+                    //$element.bootstrapToggle('state', valueAccessor()());
+                    $element.prop('checked', valueAccessor()()).change();
 
                     //handle the field changing
+                    /*
                     $element.on('switchChange.bootstrapToggle', function (event, state) {
+                        var observable = valueAccessor();
+                        observable(state);
+                    });
+                    */
+                    $element.change(function () {
                         var observable = valueAccessor();
                         observable(state);
                     });
 
                     // Adding component options
+                    /*
                     var options = allBindingsAccessor().bootstrapToggleOptions || {};
                     for (var property in options) {
                         $element.bootstrapToggle(property, ko.utils.unwrapObservable(options[property]));
                     }
+                    */
 
                     //handle disposal (if KO removes by the template binding)
                     ko.utils.domNodeDisposal.addDisposeCallback(element, function () {

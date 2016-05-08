@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
-{   [Table("salary")]
+{
+    [Table("salary")]
     public class SalaryEntity
     {
 
@@ -16,25 +17,26 @@ namespace Repository.Entities
         public long Id { get; set; }
 
         [ForeignKey("fksalary_payroll")]
-        [Column("payroll", Order =1)]
+        [Column("payroll", Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Index("UKSALARY_EMPLOYEE", 1, IsUnique = true)]
         public long payrollId { get; set; }
 
         public virtual PayrollEntity fksalary_payroll { set; get; }
 
 
         [ForeignKey("fksalary_employee")]
-        [Column("employee", Order =2)]
+        [Column("employee", Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long employeeId { get; set; }
 
         public virtual EmployeeEntity fksalary_employee { set; get; }
 
-        [Column("net_salary")]
-        public Nullable<double> netSalary { get; set; }
 
-        [Column("salary")]
-        public Nullable<double> salary { get; set; }
+        public double netSalary { get; set; }
+
+
+        public double salary { get; set; }
 
     }
 }

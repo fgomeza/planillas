@@ -15,26 +15,26 @@ namespace Repository.Entities
         [Column("id")]
         public long id { set; get; }
 
-        [Column("name")]
+        [Index("UKLOCATION_NAME", 1, IsUnique = true)]
         public string name { set; get; }
 
-        [Column("call_price")]
-        public Nullable<double> callPrice { set; get; }
 
-        [Column("active")]
+        public double callPrice { set; get; }
+
+
         public bool active { set; get; }
 
         [ForeignKey("fklocation_lastpayroll")]
         [Column("last_payroll")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public System.Nullable<long> lastPayrollId { set; get; }
+        public Nullable<long> lastPayrollId { set; get; }
 
         public virtual PayrollEntity fklocation_lastpayroll { set; get; }
 
         [ForeignKey("fklocation_currentpayroll")]
         [Column("current_payroll")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public System.Nullable<long> currentPayrollId {set;get;}
+        public Nullable<long> currentPayrollId { set; get; }
 
         public virtual PayrollEntity fklocation_currentpayroll { set; get; }
 

@@ -194,6 +194,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\Manager\DBManager.cs" />
+    <Compile Include="Models\Manager\DebitsManager.cs" />
+    <Compile Include="Models\Manager\EmployeeManager.cs" />
     <Compile Include="Models\IActionsEvents.cs" />
     <Compile Include="Models\App_LocalResoures\DescriptionError.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -205,10 +208,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
-    <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\DBResult.cs" />
     <Compile Include="Models\IErrors.cs" />
     <Compile Include="Models\Logger.cs" />
+    <Compile Include="Models\Manager\ExtrasManager.cs" />
+    <Compile Include="Models\Manager\LocationManager.cs" />
+    <Compile Include="Models\Manager\Manager.cs" />
+    <Compile Include="Models\Manager\OperationsGroupManager.cs" />
+    <Compile Include="Models\Manager\OperationsManager.cs" />
+    <Compile Include="Models\Manager\PenaltiesManager.cs" />
+    <Compile Include="Models\Manager\PayrollManager.cs" />
+    <Compile Include="Models\Manager\RolesManager.cs" />
+    <Compile Include="Models\Manager\SalaryManager.cs" />
+    <Compile Include="Models\Manager\UsersManager.cs" />
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\Operations\AppGroup.cs" />
     <Compile Include="Models\Operations\DebitsGroup.cs" />
@@ -251,6 +263,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
     <Content Include="Scripts\AppScripts\Controllers\payroll.js" />
+    <Content Include="Scripts\AppScripts\Controllers\welcome.js" />
     <Content Include="Scripts\AppScripts\daterangepicker-config.js" />
     <Content Include="Scripts\AppScripts\driver.js" />
     <Content Include="Scripts\AppScripts\Controllers\dashboard.js" />
@@ -260,6 +273,7 @@
     <Content Include="Scripts\AppScripts\Controllers\test.js" />
     <Content Include="Scripts\AppScripts\Controllers\uploadfile.js" />
     <Content Include="Scripts\AppScripts\Controllers\users.js" />
+    <Content Include="Scripts\AppScripts\ViewModels\contacts.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
     <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
     <Content Include="Scripts\AppScripts\ViewModels\payroll.js" />
@@ -356,6 +370,7 @@
     <Content Include="Views\PartialViews\Debits.cshtml" />
     <Content Include="Views\PartialViews\Roles.cshtml" />
     <Content Include="Views\PartialViews\Payroll.cshtml" />
+    <Content Include="Views\PartialViews\Welcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

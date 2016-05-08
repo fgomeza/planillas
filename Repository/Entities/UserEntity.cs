@@ -17,19 +17,19 @@ namespace Repository.Entities
         [Column("id")]
         public long id { get; set; }
 
-        [Column("name")]
+
         public string name { get; set; }
 
-        [Column("email")]
+        [Index("UKUSER_EMAIL", 1, IsUnique = true)]
         public string email { get; set; }
 
-        [Column("username")]
+        [Index("UKUSER_USERNAME", 2, IsUnique = true)]
         public string userName { get; set; }
 
-        [Column("password")]
+
         public string password { get; set; }
 
-        [Column("active")]
+
         public bool active { set; get; }
 
         [ForeignKey("fkuser_role")]

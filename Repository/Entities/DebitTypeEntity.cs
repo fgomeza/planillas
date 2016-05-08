@@ -15,14 +15,14 @@ namespace Repository.Entities
         [Column("id")]
         public long id { set; get; }
 
-        [Column("name")]
+
         public string name { set; get; }
 
-        [Column("pays")]
-        public Nullable<long> pays { set; get; }
 
-        [Column("interest_rate")]
-        public Nullable<double> interestRate { set; get; }
+        public long pays { set; get; }
+
+
+        public double interestRate { set; get; }
 
         [ForeignKey("debittype_location")]
         [Column("location")]
@@ -31,7 +31,6 @@ namespace Repository.Entities
 
         public virtual LocationEntity debittype_location { set; get; }
 
-        [Column("type")]
         public string type { set; get; }
     }
 }
