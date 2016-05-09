@@ -30,7 +30,7 @@ namespace SistemaDePlanillas.Models.Manager
                     result = new Payroll()
                     {
                         id = payroll.id,
-                        date = payroll.endDate,
+                        endDate = payroll.endDate,
                         json = payroll.JSON,
                         user = payroll.userId
                     };
@@ -67,18 +67,31 @@ namespace SistemaDePlanillas.Models.Manager
             }
         }
 
-        public Payroll selectPayroll(long idPay)
+        public Payroll selectPayroll(long id)
         {
-            Payroll result = new Payroll();
             try
             {
-
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var payroll = repository.PayRolls.Get(id);
+                    if (payroll == null)
+                    {
+                        validateException(App_LocalResoures.Errors.inexistentPayroll);
+                    }
+                    return new Payroll()
+                    {
+                        id = payroll.id,
+                        endDate = payroll.endDate,
+                        user = payroll.userId,
+                        json = payroll.JSON
+                    };
+                }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
+                return null;
             }
-            return result;
         }
 
         public List<Payroll> selectAllPayroll(long idPay)

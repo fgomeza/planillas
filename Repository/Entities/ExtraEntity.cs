@@ -27,5 +27,11 @@ namespace Repository.Entities
 
 
         public long hours { set; get; }
+
+        [Column("payroll"), ForeignKey("fkextra_payroll")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Nullable<long> payrollId { get; set; }
+
+        public virtual PayrollEntity fkextra_payroll { set; get; }
     }
 }

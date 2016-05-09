@@ -17,7 +17,7 @@
     <AssemblyName>SistemaDePlanillas</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
@@ -194,6 +194,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\Manager\CallManager.cs" />
     <Compile Include="Models\Manager\DBManager.cs" />
     <Compile Include="Models\Manager\DebitsManager.cs" />
     <Compile Include="Models\Manager\EmployeeManager.cs" />
@@ -416,7 +417,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>60177</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/</IISUrl>
+          <IISUrl>http://localhost:60177/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -49,6 +49,7 @@ namespace SistemaDePlanillas.Models.Manager
 
                     if (location != null && location.active)
                     {
+                        result.Id = location.id;
                         result.Name = location.name;
                         result.CallPrice = location.callPrice;
                         result.LastPayroll = location.lastPayrollId;
@@ -148,7 +149,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
         }
 
-        public void updateLocationLastPayroll(long id, long last_payroll)
+        public void updateLocationLastPayroll(long id)
         {
             try
             {
@@ -157,7 +158,9 @@ namespace SistemaDePlanillas.Models.Manager
                     LocationEntity location = repository.Locations.Get(id);
                     if (location != null)
                     {
-                        location.lastPayrollId = last_payroll;
+                        location.lastPayrollId = location.currentPayrollId;
+                        location.currentPayrollId = null;
+                        location.isPendingToApprove = false;
                         repository.Complete();
                     }
                     else

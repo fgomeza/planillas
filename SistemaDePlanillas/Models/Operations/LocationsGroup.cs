@@ -40,9 +40,9 @@ namespace SistemaDePlanillas.Models.Operations
             DBManager.Instance.locations.updateLocation(user.Location, name, call_price);
         }
 
-        public static void modify_Last(User user, long location_id, long last_payroll)
+        public static void modify_Last(User user, long location_id)
         {
-            DBManager.Instance.locations.updateLocationLastPayroll(location_id, last_payroll);
+            DBManager.Instance.locations.updateLocationLastPayroll(location_id);
         } 
 
         public static void modify_Current(User user, string name, long current_payroll,long administrator)

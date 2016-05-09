@@ -37,7 +37,7 @@ namespace SistemaDePlanillas.Models
     public class Payroll
     {
         public long id;
-        public DateTime date;
+        public DateTime endDate;
         public long user;
         public string json;
     }

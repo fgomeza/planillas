@@ -11,19 +11,16 @@ namespace Repository.Entities
     [Table("debit_payments")]
     public class DebitPaymentEntity
     {
-        [Key]
-        [Column("ID")]
-        public long Id { get; set; }
 
-        [ForeignKey("fkdebitpayment")]
-        [Column("debit")]
-        [Index("UKPAYMENT_DEBIT", 1, IsUnique = true)]
+        [Column("DebitId", Order =1), Key ]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long debitId { set; get; }
-        
-        [Index("UKPAYMENT_DATE", 2, IsUnique = true)]
-        public DateTime Date { get; set; }
+        public long DebitId { set; get; }
 
+        [Column("payrollId", Order = 2), Key, ForeignKey("fkpayment_payroll")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Nullable<long> payrollId { get; set; }
+
+        public virtual PayrollEntity fkpayment_payroll { set; get; }
 
         public double RemainingAmount { get; set; }
 
@@ -32,6 +29,8 @@ namespace Repository.Entities
 
 
         public double Amount { get; set; }
+
+       
 
     }
 }

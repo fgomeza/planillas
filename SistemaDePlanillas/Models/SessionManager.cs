@@ -79,7 +79,7 @@ namespace SistemaDePlanillas.Models
         private bool verifyOperationLocked(long role, string group, string operation)
         {
             var privileges = getRole(role).privileges;
-            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation) && privileges[group][operation];
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation) && !privileges[group][operation];
         }
 
         public string getRoleName(User user)

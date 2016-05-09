@@ -142,5 +142,21 @@ namespace SistemaDePlanillas.Models.Manager
             }
             return result;
         }
+
+        public void assignExtrasToPayroll(long payrollId)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    repository.Extras.assignPayroll(payrollId);
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                validateException(e);
+            }
+        }
     }
 }
