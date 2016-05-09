@@ -52,6 +52,17 @@ namespace SistemaDePlanillas.Models.Operations
             client.Send(mail);
         }
 
+        public static void reprove(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if(location.CurrentPayroll==null || !location.isPendingToApprove)
+            {
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
+            }
+            DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location,null);
+            DBManager.Instance.locations.setPendingToApprove(user.Location,false);
+        }
+
         public static void aprove(User user)
         {
             var location = DBManager.Instance.locations.getLocation(user.Location);
@@ -93,16 +104,16 @@ namespace SistemaDePlanillas.Models.Operations
                 amortizationDebits.ForEach(p =>DBManager.Instance.debits.payDebit(p.id, current.id));
             }
             DBManager.Instance.locations.updateLocationLastPayroll(location.Id);
-
         }
 
         public static object calculate(User user, DateTime initialDate, DateTime endDate)
         {
             var location = DBManager.Instance.locations.getLocation(user.Location);
-            if (location.isPendingToApprove)
+            if (location.isPendingToApprove || location.CurrentPayroll != null)
             {
                 IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
             }
+
             long days = (endDate - initialDate).Days;
             var employees = DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
             double totalPayroll = 0;
