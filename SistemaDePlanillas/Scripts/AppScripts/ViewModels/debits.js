@@ -1,77 +1,138 @@
-﻿define(['jquery', 'knockout', 'app/driver'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver', 'simpleGrid'], function ($, ko, app) {
     
-    function Debit(data) {
-        console.log(data);
-        this.id = ko.observable(data.id);
-        this.name = ko.observable(data.name);
-        this.username = ko.observable(data.username);
-        this.role = ko.observable(data.role);
-        this.location = ko.observable(data.location);
-        this.email = ko.observable(data.email);
-        this.active = ko.observable(data.active);
+    function FixedDebit(data) {
+        this.id = ko.observable();
+        this.employeeId = ko.observable();
+        this.detail = ko.observable();
+        this.amount = ko.observable();
+        this.type = ko.observable();
+        this.typeName = ko.observable();
+        this.update(data);
     }
 
-    function UsersViewModel() {
+    ko.utils.extend(FixedDebit.prototype, {
+        update: function (data) {
+            data = data || {};
+            this.id(data.id);
+            this.employeeId(data.employee);
+            this.detail(data.detail);
+            this.amount(data.amount);
+            this.type(data.type);
+            this.typeName(data.typeName);
+        }
+    });
+
+    function EditableObject(data) {
+        data = data || {};
+        var self = this;
+        $.each(data, function (property) {
+            if ($.isArray(property))
+                self[property] = ko.observableArray();
+            else 
+                self[property] = ko.observable();
+        });
+        this.update(data)
+    }
+
+    ko.utils.extend(EditableObject.prototype, {
+        update: function (data) {
+            var self = this;
+            $.each(data, function (propertyName, value) {
+                self[propertyName](value);
+            });
+        }
+    });
+
+    function ViewModel() {
         var self = this;
 
-        self.users = ko.observableArray([]);
-        self.isEditMode = ko.observable(false);
-        self.editingObject = ko.observable();
-        self.activeUsers = ko.computed(function () {
-            return ko.utils.arrayFilter(self.users(), function (user) { return !user._destroy; });
+        self.loading = null;
+
+        self.employeeId = ko.observable();
+        self.fixedDebits = ko.observableArray();
+        self.paymentsDebits = ko.observableArray();
+        self.amortizationDebits = ko.observableArray();
+        self.fixedDebitsVisible = ko.computed(function () {
+            return self.fixedDebits().length > 0;
         });
-        self.labels = {
-            id: 'Id',
-            name: 'Nombre',
-            username: 'Usuario',
-            password: 'Contraseña',
-            role: 'Rol',
-            location: 'Sede',
-            email: 'Correo electrónico',
-            active: 'Activo'
-        };
 
-        self.edit = function (data, event) {
-            console.log(data);
-            self.isEditMode(true);
-            self.editingObject(data);
-            //$(event.target.closest('tr')).addClass('highlight');
-            $('body').animate({ scrollTop: $('#usersEditSection').offset().top }, 'slow');
-        };
+        self.paymentsDebitsVisible = ko.computed(function () {
+            return self.paymentsDebits().length > 0;
+        });
 
-        self.cancel = function (data) {
-            self.isEditMode(false);
-            self.editingObject(null);
-            $('body').animate({ scrollTop: 0 }, 'slow');
-        };
+        self.amortizationDebitsVisible = ko.computed(function () {
+            return self.amortizationDebits().length > 0;
+        });
 
-        self.save = function (data) {
-            self.cancel();
-        };
+        self.employeeId.subscribe(function (newValue) {
+            if (!newValue) return;
 
-        self.delete = function (data) {
-            self.users.destroy(data);
-            self.cancel();
-        }
+            var args = { employee: newValue };
+            self.loading = $.when(
+                getDebits('get/AllFixed', self.fixedDebits, args),
+                getDebits('get/AllPayment', self.paymentsDebits, args),
+                getDebits('get/AllAmortization', self.amortizationDebits, args));
+        });
 
-        self.create = function (data) {
-            $.when($.get('Modals/Template'), $.get('Modals/CreateUser')).done(function (template, createUser) {
-                var elem = $('#createUserModal');
-                elem.html(template[0]);
-                elem.find('.modal-body').html(createUser[0]);
-                elem.find('.modal').modal();
+        function getDebits(operation, observable, args) {
+            return app.consumeAPI('debits', operation, args).done(function (data) {
+                var mappedData = $.map(data, function (item) { return new EditableObject(item); });
+                observable(mappedData);
+                return data;
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
             });
         }
 
-        self.loading = app.consumeAPI('debits', 'get').done(function (data) {
-            var mappedData = $.map(data, function (item) { return new Debit(item); });
-            self.users(mappedData);
-        }).fail(function (error) {
-            app.showError(error);
-            return error;
+        self.fixedData = new ko.simpleGrid.viewModel({
+            data: self.fixedDebits,
+            columns: [
+                { headerText: "id", rowText: "id", isVisible: true },
+                { headerText: "employee", rowText: "employee", isVisible: true },
+                { headerText: "detail", rowText: "detail", isVisible: true },
+                { headerText: "amount", rowText: "amount", isVisible: true },
+                { headerText: "type", rowText: "type", isVisible: true },
+                { headerText: "typeName", rowText: "typeName", isVisible: true },
+            ],
+            pageSize: -1
         });
 
+        self.paymentsData = new ko.simpleGrid.viewModel({
+            data: self.paymentsDebits,
+            columns: [
+                { headerText: "id", rowText: "id", isVisible: true },
+                { headerText: "employee", rowText: "employee", isVisible: true },
+                { headerText: "detail", rowText: "detail", isVisible: true },
+                { headerText: "initialDate", rowText: "initialDate", isVisible: true },
+                { headerText: "total", rowText: "total", isVisible: true },
+                { headerText: "interestRate", rowText: "interestRate", isVisible: true },
+                { headerText: "paymentsMade", rowText: "paymentsMade", isVisible: true },
+                { headerText: "missingPayments", rowText: "missingPayments", isVisible: true },
+                { headerText: "remainingAmount", rowText: "remainingAmount", isVisible: true },
+                { headerText: "type", rowText: "type", isVisible: true },
+                { headerText: "typeName", rowText: "typeName", isVisible: true },
+            ],
+            pageSize: -1
+        });
+        self.amortizationData = new ko.simpleGrid.viewModel({
+            data: self.amortizationDebits,
+            columns: [
+                { headerText: "id", rowText: "id", isVisible: true },
+                { headerText: "employee", rowText: "employee", isVisible: true },
+                { headerText: "detail", rowText: "detail", isVisible: true },
+                { headerText: "initialDate", rowText: "initialDate", isVisible: true },
+                { headerText: "total", rowText: "total", isVisible: true },
+                { headerText: "interestRate", rowText: "interestRate", isVisible: true },
+                { headerText: "paymentsMade", rowText: "paymentsMade", isVisible: true },
+                { headerText: "missingPayments", rowText: "missingPayments", isVisible: true },
+                { headerText: "remainingAmount", rowText: "remainingAmount", isVisible: true },
+                { headerText: "type", rowText: "type", isVisible: true },
+                { headerText: "typeName", rowText: "typeName", isVisible: true },
+            ],
+            pageSize: -1
+        });
     };
 
-    return new UsersViewModel();
+    return new ViewModel();
 });

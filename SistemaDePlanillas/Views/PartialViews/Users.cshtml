@@ -5,9 +5,10 @@
         </p>
     </div>
     <div class="row">
-        <div class="panel panel-default" data-bind="visible: activeUsers().length > 0">
-            <div class="table-responsive">
-                <table id="usersTable" class="table table-hover">
+        <div class="panel panel-default" data-bind="visible: usersVisible">
+            <div class="table-responsive table-scroll" >
+
+                <table id="usersTable" class="table table-striped">
                     <thead>
                         <tr data-bind="with: strings">
                             <th data-bind="text: name"></th>
@@ -32,6 +33,7 @@
                         </tr>
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
@@ -153,7 +155,7 @@
                 </div>
             </div>
         </div>
-
     </div>
+
 </div>
 

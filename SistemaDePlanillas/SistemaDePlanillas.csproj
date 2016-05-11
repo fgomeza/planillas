@@ -273,6 +273,7 @@
     <Content Include="Scripts\AppScripts\Controllers\test.js" />
     <Content Include="Scripts\AppScripts\Controllers\uploadfile.js" />
     <Content Include="Scripts\AppScripts\Controllers\users.js" />
+    <Content Include="Scripts\lib\knockout-DataGrid.js" />
     <Content Include="Scripts\AppScripts\ViewModels\contacts.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />
     <Content Include="Scripts\AppScripts\ViewModels\employees.js" />
@@ -327,6 +328,7 @@
     <Content Include="Scripts\lib\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\lib\knockout-3.4.0.debug.js" />
     <Content Include="Scripts\lib\knockout-3.4.0.js" />
+    <Content Include="Scripts\lib\knockout.simpleGrid.3.0.js" />
     <Content Include="Scripts\lib\modernizr-2.6.2.js" />
     <Content Include="Scripts\lib\modernizr-2.8.3.js" />
     <Content Include="Scripts\lib\moment.js" />

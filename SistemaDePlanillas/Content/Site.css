@@ -210,11 +210,17 @@ footer {
     height:100%;
     z-index:9000;
     background-color:rgba(0, 0, 0, 0.00);
+    vertical-align:middle;
+}
+
+#divLoading:before {
+    vertical-align:middle;
 }
 
 .loading {
     position: fixed;
     left: 50%;
+    transform: translateX(-50%);
     top: 60px;
     color:black;
     background-color:#66c168;
