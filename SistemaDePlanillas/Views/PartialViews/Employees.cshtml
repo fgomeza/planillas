@@ -78,17 +78,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="employeeEditFormLocation" class="col-sm-4 control-label" data-bind="text: $root.strings.location"></label>
+                                    <label for="employeeEditFormAccount" class="col-sm-4 control-label" data-bind="text: $root.strings.account"></label>
                                     <div class="col-sm-8">
-                                        <select id="employeeEditFormLocation" type="text" class="form-control" data-bind="options: $root.locations, optionsText: 'name', optionsValue: 'id', value: locationId" />
+                                        <input id="employeeEditFormAccount" type="text" class="form-control" data-bind="value: account" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="employeeEditFormAccount" class="col-sm-4 control-label" data-bind="text: $root.strings.account"></label>
+                                <div class="form-group" data-bind="visible: $root.isEditMode">
+                                    <label for="employeeEditFormLocation" class="col-sm-4 control-label" data-bind="text: $root.strings.location"></label>
                                     <div class="col-sm-8">
-                                        <input id="employeeEditFormAccount" type="text" class="form-control" data-bind="value: account" />
+                                        <select id="employeeEditFormLocation" type="text" class="form-control" data-bind="options: $root.locations, optionsText: 'name', optionsValue: 'id', value: locationId" />
                                     </div>
                                 </div>
                             </div>
@@ -103,36 +103,18 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" data-bind="visible: cms">
                                     <label for="employeeEditFormcmsText" class="col-sm-4 control-label" data-bind="text: $root.strings.cmsText"></label>
                                     <div class="col-sm-8">
                                         <input id="employeeEditFormcmsText" type="text" class="form-control" data-bind="value: cmsText" />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="employeeEditFormCalls" class="col-sm-4 control-label" data-bind="text: $root.strings.calls"></label>
-                                    <div class="col-sm-8">
-                                        <input id="employeeEditFormCalls" type="number" class="form-control" data-bind="value: calls" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" data-bind="hidden: cms">
                                     <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.strings.salary"></label>
                                     <div class="col-sm-8">
                                         <input id="employeeEditFormSalary" type="number" class="form-control" data-bind="value: salary" />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                            </div>
-                            <div class="col-md-6">
                             </div>
                         </div>
                     </div>
