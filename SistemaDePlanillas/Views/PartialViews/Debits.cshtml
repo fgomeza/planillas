@@ -1,29 +1,31 @@
 ﻿<div id="debitsSection" class="container-fluid">
 
+    <!--
     <div class="row">
         <p>
             <a href="#" data-toggle="modal" data-target="#createUserModal">Crear un débito</a>
         </p>
     </div>
+        -->
 
     <div class="row" data-bind="visible: fixedDebitsVisible">
         <div class="panel panel-default">
             <div class="panel-heading">Débitos fijos</div>
-            <div class="table-responsive" data-bind="simpleGrid: fixedData"></div>
+            <div class="table-responsive table-scroll" data-bind="simpleGrid: fixedData"></div>
         </div>
     </div>
 
     <div class="row" data-bind="visible: paymentsDebitsVisible">
         <div class="panel panel-default">
             <div class="panel-heading">Débitos a pagos</div>
-            <div class="table-responsive" data-bind="simpleGrid: paymentsData"></div>
+            <div class="table-responsive table-scroll" data-bind="simpleGrid: paymentsData"></div>
         </div>
     </div>
 
     <div class="row" data-bind="visible: amortizationDebitsVisible">
         <div class="panel panel-default">
             <div class="panel-heading">Débitos amortizaciones</div>
-            <div class="table-responsive" data-bind="simpleGrid: amortizationData"></div>
+            <div class="table-responsive table-scroll" data-bind="simpleGrid: amortizationData"></div>
         </div>
     </div>
 

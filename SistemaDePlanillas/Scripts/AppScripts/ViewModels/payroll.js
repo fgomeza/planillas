@@ -37,6 +37,18 @@
             self.rows(mappedData);
         }
 
+        self.submitCancel = function () {
+            app.consumeAPI('Payroll', 'calculate/cancel').done(function (data) {
+                self.rows([]);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            });
+        }
+
+        self.submitApprove = function () {
+            self.submitCancel();
+        }
 
         self.submitRange = function (start, end, label) {
             self.rows([]);

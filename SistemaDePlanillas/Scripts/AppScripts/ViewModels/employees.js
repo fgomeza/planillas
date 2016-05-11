@@ -76,7 +76,7 @@
             location: "Sede",
             account: "Cuenta bancaria",
             cms: "cms",
-            cmsText: "cmsText",
+            cmsText: "Id en CMS",
             calls: "Llamadas",
             active: "Activo",
             salary: "Salario",
@@ -118,10 +118,11 @@
 
         self.submitCreate = function () {
             var obj = ko.toJS(self.editingObject());
+            console.log(obj);
             var args, operation = 'add';
-            if (obj.CMS) {
+            if (obj.cms) {
                 operation += '/CMS';
-                args = { idCard: obj.idCard, idCMS: obj.idCMS, name: obj.name, BCRAccount: obj.account };
+                args = { idCard: obj.idCard, idCMS: obj.cmsText, name: obj.name, BCRAccount: obj.account };
             } else {
                 operation += '/nonCMS';
                 args = { idCard: obj.idCard, name: obj.name, BCRAccount: obj.account, salary: obj.salary };
@@ -142,9 +143,9 @@
         self.submitChanges = function (data) {
             var obj = ko.toJS(self.editingObject);
             var args, operation = 'modify';
-            if (obj.CMS) {
+            if (obj.cms) {
                 operation += '/CMS';
-                args = { id: obj.id, idCard: obj.idCard, idCMS: obj.idCMS, name: obj.name, location: obj.locationId, BCRAccount: obj.account };
+                args = { id: obj.id, idCard: obj.idCard, idCMS: obj.cmsText, name: obj.name, location: obj.locationId, BCRAccount: obj.account };
             } else {
                 operation += '/nonCMS';
                 args = { id: obj.id, idCard: obj.idCard, name: obj.name, location: obj.locationId, BCRAccount: obj.account, salary: obj.salary };
