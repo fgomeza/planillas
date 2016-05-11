@@ -53,17 +53,23 @@
     function UsersViewModel() {
         var self = this;
 
+        self.selectedRow = null;
+        self.locations = null;
+        self.roles = null;
+
         self.users = ko.observableArray([]);
         self.isEditMode = ko.observable(false);
         self.selectedObject = ko.observable();
         self.editingObject = ko.observable();
         self.newUserObj = ko.observable(new User());
-        self.selectedRow = null;
-        self.locations = null;
-        self.roles = null;
+
         self.activeUsers = ko.computed(function () {
             return ko.utils.arrayFilter(self.users(), function (user) { return !user._destroy; });
-        });
+        }, this);
+        self.usersVisible = ko.computed(function () {
+            return self.activeUsers().length > 0;
+        }, this);
+
         self.strings = {
             id: 'Id',
             name: 'Nombre',
@@ -138,6 +144,24 @@
             }).always(function (response) {
                 $('#createUserModal').modal('hide');
             });
+        }
+
+        self.usersGrid = new ko.simpleGrid.viewModel({
+            data: self.users,
+            columns: [
+                { headerText: "name", rowText: "name", isVisible:true },
+                { headerText: "username", rowText: "username", isVisible: true },
+                { headerText: "role", rowText: "roleName", isVisible: true },
+                { headerText: "location", rowText: "locationName", isVisible: true },
+                { headerText: "email", rowText: "email", isVisible: true }
+            ],
+            pageSize: -1
+        });
+
+        function editButton() {
+            return "<a href=\"#\" data-bind=\"click: $root.openEditForm\">\
+                        <span class=\"glyphicon glyphicon-pencil\"></span>\
+                    </a>";
         }
 
         self.loading = $.when(roles.loading, locations.loading).

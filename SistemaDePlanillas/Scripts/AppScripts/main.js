@@ -1,4 +1,4 @@
-﻿require(['bootstrap', 'respond', 'jasny', 'app/site'], function () {
+﻿require(['bootstrap', 'respond', 'jasny', 'app/site', 'simpleGrid'], function () {
 
     require(['app/sammy-config'], function (Router) {
         var router = new Router('#page', '#/navigation?page=welcome');

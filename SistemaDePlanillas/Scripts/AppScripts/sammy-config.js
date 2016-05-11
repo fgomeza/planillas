@@ -41,17 +41,17 @@
                 console.log('loading', url);
                 $('html').trigger('click');
                 
-                var loading = setTimeout(function () {
-                    app.showLoading();
-                }, 1000);
+                var loading = app.startLoadingTimeout(1000);
 
                 context.load(url, options(context)).swap(function () {
-                    clearTimeout(loading);
-                    app.hideLoading();
                     require(['controllers/' + context.params.page], function (controller) {
                         if (controller && controller.init) {
-                            controller.init.apply(context.params);
+                            controller.init(context.params);
                         }
+                        app.stopLoadingTimeout(loading);
+                    }, function (error) {
+                        console.log(error);
+                        app.stopLoadingTimeout(loading);
                     });
                 });
             });

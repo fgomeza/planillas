@@ -2,9 +2,12 @@
 
     function Controller() {
 
-        this.init = function () {
+        this.init = function (params) {
 
             var $containerElement = $('#debitsSection');
+
+            params = params || {};
+            viewModel.employeeId(params.employee);
 
             $.when(viewModel.loading).then(function () {
                 ko.applyBindings(viewModel, $containerElement[0]);
