@@ -48,7 +48,6 @@ INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelat
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('roles/activate', 'Activar', 'roles',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/calculate', 'Calcular', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/aprove', 'Aprovar', 'payroll',false);
-INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/aprove', 'Aprovar', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/get', 'Ver', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('debittypes/add', 'Agregar', 'debittypes',true);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('debittypes/modify', 'Modificar', 'debittypes',true);
