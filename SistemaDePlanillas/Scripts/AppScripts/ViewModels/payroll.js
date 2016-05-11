@@ -44,7 +44,6 @@
             var dateFormat = 'YYYY-MM-DD';
             var args = { initialDate: start.format(dateFormat), endDate: end.format(dateFormat) };
             app.consumeAPI('Payroll', 'calculate', args).done(function (data) {
-                data = data.data;
                 renderPayroll(data);
                 return data;
             }).fail(function (error) {

@@ -349,6 +349,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PayrollError1.
+        /// </summary>
+        internal static string inexistentPayroll {
+            get {
+                return ResourceManager.GetString("inexistentPayroll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PenaltyError1.
         /// </summary>
         internal static string inexistentPenalty {
@@ -372,6 +381,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         internal static string inexistentUser {
             get {
                 return ResourceManager.GetString("inexistentUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to invalidProcedure.
+        /// </summary>
+        internal static string invalidProcedure {
+            get {
+                return ResourceManager.GetString("invalidProcedure", resourceCulture);
             }
         }
         

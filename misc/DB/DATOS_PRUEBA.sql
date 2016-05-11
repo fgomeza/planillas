@@ -46,7 +46,8 @@ INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelat
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('roles/get', 'Ver', 'roles',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('roles/remove', 'Eliminar', 'roles',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('roles/activate', 'Activar', 'roles',false);
-INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/calculate', 'Agregar', 'payroll',true);
+INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/calculate', 'Calcular', 'payroll',false);
+INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/aprove', 'Aprovar', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/aprove', 'Aprovar', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('payroll/get', 'Ver', 'payroll',false);
 INSERT INTO operations(name, "Description", group_id, "isPayrollCalculationRelated")  VALUES ('debittypes/add', 'Agregar', 'debittypes',true);
@@ -227,8 +228,6 @@ INSERT INTO Administrators values (2, 1);
 INSERT INTO Administrators values (5, 2);
 select users.id, users.name, locations.name from users, locations, administrators where users.id = administrators.user_id and administrators.location = locations.id;
 
---Payrolls
-INSERT INTO Payrolls("endDate", user_id, "callPrice", location) values ('2016-08-30', 2, 500, 1);
 
 --Calls
 INSERT INTO Calls values (1, '2016-04-01', 20, '6:00', NULL);
@@ -283,16 +282,16 @@ INSERT INTO Penalty_Types(name, price, location)
 	values ('CIBEL', 1000, 1);
 --Penalties
 
-INSERT INTO Penalties(payroll,"Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date", active) 
-	values (1,'Penalty', 3, 1, 4, 500, '2016-04-12', true);
-INSERT INTO Penalties(payroll,"Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date", active) 
-	values (1,'Penalty', 6, 2, 2, 1000, '2016-04-04', true);
-INSERT INTO Penalties(payroll,"Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date", active)  
-	values (1,'Penalty', 4, 1, 3, 500, '2016-04-15', true);
-INSERT INTO Penalties(payroll,"Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date", active) 
-	values (1,'Penalty', 9, 2, 1, 1000, '2016-04-08', true);
-INSERT INTO Penalties(payroll,"Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date", active) 
-	values (1,'Penalty', 2, 2, 7, 1000, '2016-04-07', true);
+INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date") 
+	values ('Penalty', 3, 1, 4, 500, '2016-04-12');
+INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date") 
+	values ('Penalty', 6, 2, 2, 1000, '2016-04-04');
+INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date")  
+	values ('Penalty', 4, 1, 3, 500, '2016-04-15');
+INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date") 
+	values ('Penalty', 9, 2, 1, 1000, '2016-04-08');
+INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyPrice", "Date") 
+	values ('Penalty', 2, 2, 7, 1000, '2016-04-07');
 
 --Extras
 INSERT INTO Extras(employee, description, hours) values (13, 'Sin comentarios', 2);
@@ -355,14 +354,3 @@ INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remain
 INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
 	values('2016-04-01', 'Sin comentarios', 27, 40200, 40200, 12, 0, 3, true);
 
---Debit_Payments
-INSERT INTO Debit_Payments ("debitId", "Date", "RemainingAmount", "InterestRate", "Amount")
-	values(6, '2016-04-05', 20000, 7, 0);
-INSERT INTO Debit_Payments ("debitId", "Date", "RemainingAmount", "InterestRate", "Amount")
-	values(7, '2016-03-05', 7500, 7, 1);
-INSERT INTO Debit_Payments ("debitId", "Date", "RemainingAmount", "InterestRate", "Amount")
-	values(8, '2016-02-05', 17500, 7, 2);
-INSERT INTO Debit_Payments ("debitId", "Date", "RemainingAmount", "InterestRate", "Amount")
-	values(9, '2016-01-05', 30000, 7, 3);
-INSERT INTO Debit_Payments ("debitId", "Date", "RemainingAmount", "InterestRate", "Amount")
-	values(10, '2016-03-05', 12500, 7, 1);

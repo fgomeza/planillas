@@ -194,6 +194,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActionsEvents.cs" />
+    <Compile Include="Models\Manager\CallManager.cs" />
     <Compile Include="Models\Manager\DBManager.cs" />
     <Compile Include="Models\Manager\DebitsManager.cs" />
     <Compile Include="Models\Manager\EmployeeManager.cs" />

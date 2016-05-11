@@ -142,6 +142,15 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No se puede realizar esta operación en el estado actual del sistema.
+        /// </summary>
+        internal static string invalidProcedure {
+            get {
+                return ResourceManager.GetString("invalidProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to La Sede no se encuentra registrada en el sistema.
         /// </summary>
         internal static string LocationError1 {

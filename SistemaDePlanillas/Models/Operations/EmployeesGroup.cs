@@ -13,7 +13,7 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/add/call
         public static void add_Call(User user, string cms, long calls, TimeSpan hours, DateTime date)
         {
-            DBManager.Instance.employees.addCall(cms,calls,hours,date);
+            DBManager.Instance.calls.addCall(cms,calls,hours,date);
         }
 
         //employees/add/cms (string,string,string,string)

@@ -20,6 +20,7 @@ namespace SistemaDePlanillas.Models.Manager
         public RolesManager roles { get; set; }
         public SalaryManager salaries { get; set; }
         public UsersManager users { get; set; }
+        public CallManager calls { get; set; }
 
         private DBManager()
         {
@@ -34,6 +35,7 @@ namespace SistemaDePlanillas.Models.Manager
             roles = new RolesManager();
             salaries = new SalaryManager();
             users = new UsersManager();
+            calls = new CallManager();
         }
 
         public static DBManager Instance

@@ -26,7 +26,7 @@ namespace Repository.Repositories.Classes
         public EmployeeRepository Employees { get; }
         public ExtraRepository Extras { get; }
         public PayRollRepository PayRolls { get; }
-        public SalaryRepository Salarys { get; }
+        public SalaryRepository Salaries { get; }
         public DebitTypeRepository DebitTypes { get; }
         public DebitPaymentRepository DebitPayments { get; }
         public AdministratorRepository Administrators { get; }
@@ -46,7 +46,7 @@ namespace Repository.Repositories.Classes
             Employees = new EmployeeRepository(_context);
             Extras = new ExtraRepository(_context);
             PayRolls = new PayRollRepository(_context);
-            Salarys = new SalaryRepository(_context);
+            Salaries = new SalaryRepository(_context);
             DebitTypes = new DebitTypeRepository(_context);
             Penalties = new PenaltyRepository(_context);
             DebitPayments = new DebitPaymentRepository(_context);

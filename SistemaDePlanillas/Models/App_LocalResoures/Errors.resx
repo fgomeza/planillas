@@ -267,4 +267,10 @@
   <data name="zeroInterestRate" xml:space="preserve">
     <value>zeroInterestRate</value>
   </data>
+  <data name="inexistentPayroll" xml:space="preserve">
+    <value>PayrollError1</value>
+  </data>
+  <data name="invalidProcedure" xml:space="preserve">
+    <value>invalidProcedure</value>
+  </data>
 </root>

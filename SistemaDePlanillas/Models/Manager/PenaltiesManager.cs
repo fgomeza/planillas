@@ -25,7 +25,6 @@ namespace SistemaDePlanillas.Models.Manager
                         EmployeeId = employee,
                         PenaltyTypeId = penaltyTypeId,
                         PenaltyPrice = repository.PenaltyTypes.getPriceById(penaltyTypeId),
-                        active = true
                     };
                     penalty = repository.Penalties.Add(penalty);
                     repository.Complete();
@@ -38,7 +37,7 @@ namespace SistemaDePlanillas.Models.Manager
                         employee = penalty.EmployeeId,
                         type = penalty.PenaltyTypeId,
                         typeName = penalty.fkpenalty_type.name,
-                        penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
+                        penaltyPrice =penalty.PenaltyPrice
                     };
                 }
             }
@@ -58,7 +57,7 @@ namespace SistemaDePlanillas.Models.Manager
                     var penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        penalty.PayRollId = payroll;
+                        penalty.payrollId = payroll;
                         penalty.Description = Detail;
                         penalty.PenaltyTypeId = penaltyTypeId;
                         penalty.Amount = amount;
@@ -88,32 +87,7 @@ namespace SistemaDePlanillas.Models.Manager
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
                     if (penalty != null)
                     {
-                        penalty.active = false;
-                        repository.Complete();
-                    }
-                    else
-                    {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-        }
-
-        public void activatePenalty(long idRecess)
-        {
-            Result<string> result = new Result<string>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    PenaltyEntity penalty = repository.Penalties.Get(idRecess);
-                    if (penalty != null)
-                    {
-                        penalty.active = true;
+                        repository.Penalties.Remove(penalty);
                         repository.Complete();
                     }
                     else
@@ -137,18 +111,18 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     PenaltyEntity penalty = repository.Penalties.Get(idRecess);
 
-                    if (penalty != null && penalty.active)
+                    if (penalty != null)
                     {
                         result = new Penalty()
                         {
                             id = penalty.Id,
-                            amount = penalty.Amount == null ? 0 : (double)penalty.Amount,
+                            amount = penalty.Amount,
                             date = penalty.Date,
                             detail = penalty.Description,
                             employee = penalty.EmployeeId,
                             type = penalty.PenaltyTypeId,
                             typeName = penalty.fkpenalty_type.name,
-                            penaltyPrice = penalty.PenaltyPrice == null ? 0 : (double)penalty.PenaltyPrice
+                            penaltyPrice = penalty.PenaltyPrice
                         };
                     }
                     else
@@ -183,7 +157,7 @@ namespace SistemaDePlanillas.Models.Manager
                             employee = p.EmployeeId,
                             type = p.PenaltyTypeId,
                             typeName = p.fkpenalty_type.name,
-                            penaltyPrice = p.PenaltyPrice == null ? 0 : (double)p.PenaltyPrice
+                            penaltyPrice = p.PenaltyPrice
                         });
                     }
                 }
@@ -195,26 +169,7 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-        public void payPenalty(long payrollId, long employeeId, DateTime endDate)
-        {
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var penalties = repository.Penalties.selectPenaltiesByEmployee(employeeId, endDate);
-                    foreach (PenaltyEntity p in penalties)
-                    {
-                        p.PayRollId = payrollId;
-                    }
-                    repository.Complete();
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-        }
-
+      
         public Dictionary<long, PenaltyType> selectAllPenaltyTypes(long location)
         {
             Dictionary<long, PenaltyType> result = new Dictionary<long, PenaltyType>();
@@ -235,6 +190,22 @@ namespace SistemaDePlanillas.Models.Manager
                 validateException(e);
             }
             return result;
+        }
+
+        public void assignPenaltiesToPayroll(long payrollId, DateTime endDate)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    repository.Penalties.assignPayroll(payrollId, endDate);
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                validateException(e);
+            }
         }
     }
 }

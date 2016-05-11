@@ -361,45 +361,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             return result;
         }
-        public void addCall(String cms, long calls, TimeSpan hours, DateTime date)
-        {
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var employee = repository.Employees.selectEmployeeByCmsText(cms);
-                    if (employee != null)
-                    {
-                        var call = repository.Calls.callByEmployeeDate(employee.id, date);
-                        if (call != null)
-                        {
-                            call.calls = calls;
-                            call.time = hours;
-                        }
-                        else
-                        {
-                            repository.Calls.Add(new CallEntity()
-                            {
-                                employeeId = employee.id,
-                                calls = calls,
-                                time = hours,
-                                date = date,
-                                payrollId = null
-                            });
-                        }
-                        repository.Complete();
-                    }
-                    else
-                    {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-        }
+       
     }
 
 }

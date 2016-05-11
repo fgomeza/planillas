@@ -195,4 +195,7 @@
   <data name="zeroInterestRate" xml:space="preserve">
     <value>La taza de interes no puede ser cero</value>
   </data>
+  <data name="invalidProcedure" xml:space="preserve">
+    <value>No se puede realizar esta operación en el estado actual del sistema</value>
+  </data>
 </root>

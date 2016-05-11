@@ -80,9 +80,5 @@ namespace SistemaDePlanillas.Models.Operations
             return DBManager.Instance.penalties.selectAllPenalty(employee, DateTime.Now);
         }
 
-        public static void pay(User user, long payroll_id, long employee_id ,DateTime endDate)
-        {
-            DBManager.Instance.penalties.payPenalty(payroll_id, employee_id, endDate);
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace SistemaDePlanillas.Models
        // private static ResourceManager Errors = new ResourceManager(Errors.BaseName, Assembly.GetExecutingAssembly());
        // private static ResourceManager DescriptionErrors = new ResourceManager(DescriptionError.ResourceManager., Assembly.GetExecutingAssembly());
 
-        public static AppException validateException(Exception e)
+        public static void validateException(Exception e)
         {
             if (e.InnerException != null)
             {
@@ -31,7 +31,7 @@ namespace SistemaDePlanillas.Models
             throw e;
         }
 
-        public static AppException validateException(string code)
+        public static void validateException(string code)
         {
             string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
             throw new AppException(code, description);

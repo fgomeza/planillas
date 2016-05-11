@@ -29,7 +29,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 try
                 {
-                    DBManager.Instance.employees.addCall(r.cmsid, r.calls, r.hours, r.date);
+                    DBManager.Instance.calls.addCall(r.cmsid, r.calls, r.hours, r.date);
                 }
                 catch (Exception e)
                 {

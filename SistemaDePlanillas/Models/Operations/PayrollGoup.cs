@@ -22,15 +22,21 @@ namespace SistemaDePlanillas.Models.Operations
                 DBManager.Instance.locations.setPendingToApprove(user.Location, true);
                 Mail("fgomeza25@gmail.com", "Aprobación de Planillas Coopesuperación",
                 String.Format("Hola! \n El usuario {0} del sistema de planillas de Coopesuperación ha realizado el cálculo de planillas y este esta pendiente de aprobación.\n", user.Name));
-            }   
+            }
+            else
+            {
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
+            }
 
         }
 
         public static void calculate_cancel(User user)
         {
             var location = DBManager.Instance.locations.getLocation(user.Location);
-            if(!location.isPendingToApprove)
+            if (!location.isPendingToApprove)
                 DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, null);
+            else
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
         }
 
         private static void Mail(string to, string subject, string message)
@@ -43,15 +49,75 @@ namespace SistemaDePlanillas.Models.Operations
             client.Host = "smtp.gmx.es";
             mail.Subject = subject;
             mail.Body = message;
-            //client.Send(mail);
+            client.Send(mail);
         }
+
+        public static void reprove(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if(location.CurrentPayroll==null || !location.isPendingToApprove)
+            {
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
+            }
+            DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location,null);
+            DBManager.Instance.locations.setPendingToApprove(user.Location,false);
+        }
+
+        public static void aprove(User user)
+        {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if (location.CurrentPayroll == null || !location.isPendingToApprove)
+            {
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
+            }
+            var current = DBManager.Instance.payrolls.selectPayroll((long)location.CurrentPayroll);
+            DBManager.Instance.calls.assignCallsToPayroll(current.id, current.endDate);
+            DBManager.Instance.extras.assignExtrasToPayroll(current.id);
+            DBManager.Instance.penalties.assignPenaltiesToPayroll(current.id, current.endDate);
+
+            var employees = DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
+            double callPrice = location.CallPrice;
+            foreach (var employee in employees)
+            {
+                var calls = DBManager.Instance.employees.callListByEmployee(employee.id, current.endDate);
+                double totalCalls = calls.Sum(c => c.calls*callPrice);
+                var penalties = DBManager.Instance.penalties.selectAllPenalty(employee.id, current.endDate);
+                double totalPenalties = penalties.Sum(p => p.amount * p.penaltyPrice);
+                var fixedDebits = DBManager.Instance.debits.selectDebits(employee.id);
+                double totalFixedDebits = fixedDebits.Sum(d => d.amount);
+                var paymentDebits = DBManager.Instance.debits.selectPaymentDebits(employee.id);
+                double totalPaymentDebits = paymentDebits.Sum(d => (d.remainingAmount / d.missingPayments) + d.total * d.interestRate);
+                var amortizationDebits = DBManager.Instance.debits.selectAmortizationDebits(employee.id);
+                double totalAmortizationDebits = amortizationDebits.Sum(d => calculateAmortization(d.total, d.missingPayments + d.paymentsMade, d.interestRate));
+                double grossAmount = (employee.salary / 2) + totalCalls;
+                var lastSalaries = DBManager.Instance.salaries.getLastSalaries(employee.id);
+                double extraPrice = (grossAmount + lastSalaries.Sum() / (lastSalaries.Count + 1)) / workHoursByMonth;
+                var extras = DBManager.Instance.extras.selectExtras(employee.id);
+                double totalExtras = extras.Sum(e => e.hours) * extraPrice;
+                double saving = DBManager.Instance.salaries.selectSavingByEmployee(employee.id);
+                double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalAmortizationDebits - totalFixedDebits - employee.negativeAmount;
+
+                DBManager.Instance.salaries.assignSalaryToPayroll(employee.id, current.id, grossAmount, netSalary);
+
+                paymentDebits.ForEach(p =>DBManager.Instance.debits.payDebit(p.id, current.id));
+
+                amortizationDebits.ForEach(p =>DBManager.Instance.debits.payDebit(p.id, current.id));
+            }
+            DBManager.Instance.locations.updateLocationLastPayroll(location.Id);
+        }
+
         public static object calculate(User user, DateTime initialDate, DateTime endDate)
         {
+            var location = DBManager.Instance.locations.getLocation(user.Location);
+            if (location.isPendingToApprove || location.CurrentPayroll != null)
+            {
+                IErrors.validateException(App_LocalResoures.Errors.invalidProcedure);
+            }
+
             long days = (endDate - initialDate).Days;
             var employees = DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
             double totalPayroll = 0;
-            var location = DBManager.Instance.locations.getLocation(user.Location);
-            double callPrice = location.CallPrice;
+           double callPrice = location.CallPrice;
             List<object> rows = new List<object>();
             foreach (var employee in employees)
             {
@@ -61,7 +127,7 @@ namespace SistemaDePlanillas.Models.Operations
                 var penalties = formatPenalties(penaltiesDB);
                 double totalPenalties = penaltiesDB.Sum(p => p.amount * p.penaltyPrice);
                 var fixedDebitsDB = DBManager.Instance.debits.selectDebits(employee.id);
-                var fixedDebits = formatFixedDebits(fixedDebitsDB,days);
+                var fixedDebits = formatFixedDebits(fixedDebitsDB, days);
                 double totalFixedDebits = fixedDebitsDB.Sum(d => d.amount);
                 var paymentDebitsDB = DBManager.Instance.debits.selectPaymentDebits(employee.id);
                 var paymentDebits = formatPaymentDebits(paymentDebitsDB);
@@ -71,12 +137,12 @@ namespace SistemaDePlanillas.Models.Operations
                 double totalAmortizationDebits = amortizationDebitsDB.Sum(d => calculateAmortization(d.total, d.missingPayments + d.paymentsMade, d.interestRate));
                 double grossAmount = (employee.salary / 2) + (callsCount * callPrice);
                 var lastSalaries = DBManager.Instance.salaries.getLastSalaries(employee.id);
-                double extraPrice = (grossAmount + lastSalaries.Sum() / (lastSalaries.Count + 1))/ workHoursByMonth;
+                double extraPrice = (grossAmount + lastSalaries.Sum() / (lastSalaries.Count + 1)) / workHoursByMonth;
                 var extras = DBManager.Instance.extras.selectExtras(employee.id);
                 long extraCount = extras.Sum(e => e.hours);
-                double totalExtras = extras.Sum(e => e.hours)*extraPrice;
-                double saving = DBManager.Instance.debits.selectSavingByEmployee(employee.id);
-                double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits -totalAmortizationDebits - totalFixedDebits - employee.negativeAmount;
+                double totalExtras = extras.Sum(e => e.hours) * extraPrice;
+                double saving = DBManager.Instance.salaries.selectSavingByEmployee(employee.id);
+                double netSalary = grossAmount + totalExtras - grossAmount * location.Capitalization - totalPenalties - totalPaymentDebits - totalAmortizationDebits - totalFixedDebits - employee.negativeAmount;
 
                 totalPayroll += netSalary > 0 ? netSalary : 0;
                 rows.Add(new
@@ -84,22 +150,21 @@ namespace SistemaDePlanillas.Models.Operations
                     employee = employee.name,
                     calls = new { count = callsCount, total = callsCount * callPrice, list = calls },
                     penalties = new { count = penaltiesDB.Sum(p => p.amount), total = totalPenalties, list = penalties },
-                    extras = new { count=extraCount ,total = totalExtras, list = extras },
+                    extras = new { count = extraCount, total = totalExtras, list = extras },
                     fixedDebits = fixedDebits,
                     paymentDebits = paymentDebits,
                     amortizationDebits = amortizationDebits,
                     salary = grossAmount,
                     saving = new { monthlyAmount = grossAmount * location.Capitalization, total = saving + grossAmount * location.Capitalization },
                     netSalary = netSalary,
-                    negativeAmount = netSalary>0?0:netSalary
+                    negativeAmount = netSalary > 0 ? 0 : netSalary
                 });
             }
             var javaScriptSerializer = new JavaScriptSerializer();
             var payroll = new { initialDate = initialDate, endDate = endDate, totalPayroll = totalPayroll, employees = rows };
-            var current =DBManager.Instance.payrolls.addPayroll(endDate,callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
+            var current = DBManager.Instance.payrolls.addPayroll(endDate, callPrice, user.Id, javaScriptSerializer.Serialize(payroll), user.Location);
             DBManager.Instance.locations.updateLocationCurrentPayroll(user.Location, current.id);
-
-            return Responses.WithData(payroll);
+            return payroll;
         }
 
 
@@ -121,7 +186,7 @@ namespace SistemaDePlanillas.Models.Operations
             {
                 typeName = name,
                 count = list.Count(),
-                total = list.Sum(d=>calculateAmortization(d.total,d.missingPayments+d.paymentsMade,d.interestRate)),
+                total = list.Sum(d => calculateAmortization(d.total, d.missingPayments + d.paymentsMade, d.interestRate)),
                 list = list
             }).ToList();
         }
@@ -149,11 +214,11 @@ namespace SistemaDePlanillas.Models.Operations
             }).ToList();
         }
 
-        private static double calculateAmortization(double total, long months, double interestRate)
+        public static double calculateAmortization(double total, long pays, double interestRate)
         {
 
             //A = 1-(1+taza)^-plazos
-            long p = months * -1;
+            long p = pays * -1;
             double b = (1 + interestRate);
             double A = (1 - Math.Pow(b, p)) / interestRate;
 

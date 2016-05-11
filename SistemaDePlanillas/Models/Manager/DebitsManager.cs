@@ -365,8 +365,7 @@ namespace SistemaDePlanillas.Models.Manager
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     repository.DebitPayments.Add(new DebitPaymentEntity()
                     {
-                        debitId = idDebit,
-                        Date = DateTime.Now,
+                        DebitId = idDebit,
                         Amount = amount,
                         RemainingAmount = debit.remainingAmount - amount
                     });
@@ -499,265 +498,296 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-    
 
-    public void addFixedDebitType(string name, long location)
-    {
-        try
+
+        public void addFixedDebitType(string name, long location)
         {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+            try
             {
-                repository.DebitTypes.Add(new DebitTypeEntity()
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    name = name,
-                    locationId = location,
-                    interestRate = 0,
-                    type = "F"
-                });
-
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void addPaymentDebitType(string name, long location, long pays, double interestRate)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                repository.DebitTypes.Add(new DebitTypeEntity()
-                {
-                    name = name,
-                    locationId = location,
-                    pays = pays,
-                    interestRate = interestRate,
-                    type = "P"
-                });
-
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void addAmortizationDebitType(string name, long location, long pays, double interestRate)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                if (interestRate == 0)
-                    validateException(App_LocalResoures.Errors.zeroInterestRate);
-                repository.DebitTypes.Add(new DebitTypeEntity()
-                {
-                    name = name,
-                    locationId = location,
-                    pays = pays,
-                    interestRate = interestRate,
-                    type = "A"
-                });
-
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void updateFixedDebitType(long id, string name)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                DebitTypeEntity type = repository.DebitTypes.Get(id);
-                type.name = name;
-
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void updatePaymentDebitType(long id, string name, double interestRate, long pays)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                DebitTypeEntity type = repository.DebitTypes.Get(id);
-                type.name = name;
-                type.interestRate = interestRate;
-                type.pays = pays;
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void updateAmortizationDebitType(long id, string name, double interestRate, long pays)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                DebitTypeEntity type = repository.DebitTypes.Get(id);
-                type.name = name;
-                type.interestRate = interestRate;
-                type.pays = pays;
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public void deleteDebitType(long id)
-    {
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                DebitTypeEntity type = repository.DebitTypes.Get(id);
-                repository.DebitTypes.Remove(type);
-                repository.Complete();
-            }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-    }
-
-    public List<DebitType> selectFixedDebitTypes(long location)
-    {
-        List<DebitType> result = new List<DebitType>();
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-            {
-                var types = repository.DebitTypes.SelectByLocation(location);
-                foreach (var type in types)
-                {
-                    if (type.type == "F")
+                    repository.DebitTypes.Add(new DebitTypeEntity()
                     {
-                        result.Add(new DebitType()
+                        name = name,
+                        locationId = location,
+                        interestRate = 0,
+                        type = "F"
+                    });
+
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void addPaymentDebitType(string name, long location, long pays, double interestRate)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    repository.DebitTypes.Add(new DebitTypeEntity()
+                    {
+                        name = name,
+                        locationId = location,
+                        pays = pays,
+                        interestRate = interestRate,
+                        type = "P"
+                    });
+
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void addAmortizationDebitType(string name, long location, long pays, double interestRate)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    if (interestRate == 0)
+                        validateException(App_LocalResoures.Errors.zeroInterestRate);
+                    repository.DebitTypes.Add(new DebitTypeEntity()
+                    {
+                        name = name,
+                        locationId = location,
+                        pays = pays,
+                        interestRate = interestRate,
+                        type = "A"
+                    });
+
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void updateFixedDebitType(long id, string name)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    type.name = name;
+
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void updatePaymentDebitType(long id, string name, double interestRate, long pays)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    type.name = name;
+                    type.interestRate = interestRate;
+                    type.pays = pays;
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void updateAmortizationDebitType(long id, string name, double interestRate, long pays)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    type.name = name;
+                    type.interestRate = interestRate;
+                    type.pays = pays;
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void deleteDebitType(long id)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    repository.DebitTypes.Remove(type);
+                    repository.Complete();
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                validateException(e);
+            }
+        }
+
+        public List<DebitType> selectFixedDebitTypes(long location)
+        {
+            List<DebitType> result = new List<DebitType>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var types = repository.DebitTypes.SelectByLocation(location);
+                    foreach (var type in types)
+                    {
+                        if (type.type == "F")
                         {
-                            id = type.id,
-                            name = type.name,
-                            location = type.locationId,
-                            interestRate = type.interestRate,
-                            payment = false
-                        });
+                            result.Add(new DebitType()
+                            {
+                                id = type.id,
+                                name = type.name,
+                                location = type.locationId,
+                                interestRate = type.interestRate,
+                                payment = false
+                            });
+                        }
                     }
                 }
             }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-        return result;
-    }
-
-    public List<DebitType> selectPaymentDebitTypes(long location)
-    {
-        List<DebitType> result = new List<DebitType>();
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+            catch (NpgsqlException e)
             {
-                var types = repository.DebitTypes.SelectByLocation(location);
-                foreach (var type in types)
+                validateException(e);
+            }
+            return result;
+        }
+
+        public List<DebitType> selectPaymentDebitTypes(long location)
+        {
+            List<DebitType> result = new List<DebitType>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    if (type.type == "P")
+                    var types = repository.DebitTypes.SelectByLocation(location);
+                    foreach (var type in types)
                     {
-                        result.Add(new DebitType()
+                        if (type.type == "P")
                         {
-                            id = type.id,
-                            name = type.name,
-                            location = type.locationId,
-                            months = type.pays,
-                            interestRate = type.interestRate,
-                            payment = true
-                        });
+                            result.Add(new DebitType()
+                            {
+                                id = type.id,
+                                name = type.name,
+                                location = type.locationId,
+                                months = type.pays,
+                                interestRate = type.interestRate,
+                                payment = true
+                            });
+                        }
                     }
                 }
             }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-        return result;
-    }
-
-    public List<DebitType> selectAmortizationDebitTypes(long location)
-    {
-        List<DebitType> result = new List<DebitType>();
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+            catch (NpgsqlException e)
             {
-                var types = repository.DebitTypes.SelectByLocation(location);
-                foreach (var type in types)
+                validateException(e);
+            }
+            return result;
+        }
+
+        public List<DebitType> selectAmortizationDebitTypes(long location)
+        {
+            List<DebitType> result = new List<DebitType>();
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    if (type.type == "A")
+                    var types = repository.DebitTypes.SelectByLocation(location);
+                    foreach (var type in types)
                     {
-                        result.Add(new DebitType()
+                        if (type.type == "A")
                         {
-                            id = type.id,
-                            name = type.name,
-                            location = type.locationId,
-                            months = type.pays,
-                            interestRate = type.interestRate,
-                            payment = true
-                        });
+                            result.Add(new DebitType()
+                            {
+                                id = type.id,
+                                name = type.name,
+                                location = type.locationId,
+                                months = type.pays,
+                                interestRate = type.interestRate,
+                                payment = true
+                            });
+                        }
                     }
                 }
             }
-        }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-        return result;
-    }
-
-    public double selectSavingByEmployee(long employee)
-    {
-        double result = 0;
-        try
-        {
-            using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+            catch (NpgsqlException e)
             {
-                var saving = repository.Savings.Get(employee);
-                result = saving != null ? (double)saving.amount : 0;
+                validateException(e);
+            }
+            return result;
+        }
+
+        public void payDebit(long debitId,long payroll)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    var debit = repository.Debits.Get(debitId);
+                    if(debit.fkdebit_type.type == "P")
+                    {
+                        double pay = (debit.remainingAmount / debit.remainingPays);
+                        debit.remainingAmount -= pay;
+                        debit.remainingPays -= 1;
+                        debit.paysMade += 1;
+                        repository.DebitPayments.Add(new DebitPaymentEntity()
+                        {
+                            DebitId = debit.id,
+                            payrollId= payroll,
+                            Amount= pay+ debit.totalAmount + debit.totalAmount * debit.fkdebit_type.interestRate,
+                            InterestRate = debit.fkdebit_type.interestRate,
+                            RemainingAmount= debit.remainingAmount
+                        });
+                    }
+                    else if (debit.fkdebit_type.type == "A")
+                    {
+                        double amortization = Models.Operations.PayrollGroup.calculateAmortization(debit.totalAmount, debit.remainingPays + debit.paysMade, debit.fkdebit_type.interestRate);
+                        double pay = debit.totalAmount / (debit.remainingPays + debit.paysMade);
+
+                        debit.remainingAmount -= pay;
+                        debit.remainingPays -= 1;
+                        debit.paysMade += 1;
+                        repository.DebitPayments.Add(new DebitPaymentEntity()
+                        {
+                            DebitId = debit.id,
+                            payrollId = payroll,
+                            Amount = amortization,
+                            InterestRate = debit.fkdebit_type.interestRate,
+                            RemainingAmount = debit.remainingAmount
+                        });
+                    }
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                validateException(e);
             }
         }
-        catch (NpgsqlException e)
-        {
-            validateException(e);
-        }
-        return result;
+
     }
-}
 }

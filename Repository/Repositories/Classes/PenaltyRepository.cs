@@ -14,7 +14,12 @@ namespace Repository.Repositories.Classes
 
         public IEnumerable<PenaltyEntity> selectPenaltiesByEmployee(long employee, DateTime endDate)
         {
-            return _context.Penalties.Where((p)=>p.EmployeeId==employee && p.PayRollId == null && p.Date<=endDate).ToList();
+            return _context.Penalties.Where((p)=>p.EmployeeId==employee && p.payrollId == null && p.Date<=endDate ).ToList();
+        }
+
+        public void assignPayroll(long payroll, DateTime endDate)
+        {
+            _context.Penalties.Where(c => c.payrollId == null && c.Date <= endDate).ToList().ForEach(c => c.payrollId = payroll);
         }
     }
 }

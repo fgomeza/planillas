@@ -15,9 +15,9 @@ namespace Repository.Entities
         [Column("id")]
         public long Id { get; set; }
 
-        [Column("payroll")]
+        [Column("payrollId")]
         [ForeignKey("fkpenalty_payroll")]
-        public Nullable<long> PayRollId { get; set; }
+        public Nullable<long> payrollId { get; set; }
         public virtual PayrollEntity fkpenalty_payroll { get; set; }
 
         [Column("employee")]
@@ -42,7 +42,5 @@ namespace Repository.Entities
 
         public DateTime Date { get; set; }
 
-
-        public bool active { set; get; }
     }
 }
