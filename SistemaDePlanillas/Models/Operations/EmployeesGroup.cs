@@ -19,21 +19,21 @@ namespace SistemaDePlanillas.Models.Operations
         //employees/add/cms (string,string,string,string)
         public static Employee add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
         {
-            return DBManager.Instance.employees.addCmsEmployee(idCard, idCMS, name, (int)user.Location, BCRAccount);
+            return DBManager.Instance.employees.addCmsEmployee(idCard, idCMS, name, user.Location, BCRAccount);
         }
 
 
         //employees/add/noncms (string,string,string,decimal)
         public static Employee add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
         {
-            return DBManager.Instance.employees.addNonCmsEmployee(idCard, name, (int)user.Location, BCRAccount, (float)salary);
+            return DBManager.Instance.employees.addNonCmsEmployee(idCard, name, user.Location, BCRAccount, (float)salary);
         }
 
 
-        //employees/modify/noncms (number, string,string,string,number,string)
+        //employees/modify/cms (number, string,string,string,number,string)
         public static void modify_CMS(User user, long id, string idCard, string idCMS, string name, long location, string BCRAccount)
         {
-            DBManager.Instance.employees.updateCmsEmployeee((int)id, idCard, idCMS, name, (int)location, BCRAccount);
+            DBManager.Instance.employees.updateCmsEmployeee(id, idCard, idCMS, name, location, BCRAccount);
         }
 
         //employees/modify/noncms (number, string,string,number,string,decimal)
