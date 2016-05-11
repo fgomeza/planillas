@@ -28,7 +28,8 @@ namespace SistemaDePlanillas.Models.Manager
                         name = x.name,
                         location = x.locationId,
                         account = x.account,
-                        cms = false,
+                        cms = true,
+                        cmsText= CMS,
                         salary = x.salary,
                         active = x.active
                     };
