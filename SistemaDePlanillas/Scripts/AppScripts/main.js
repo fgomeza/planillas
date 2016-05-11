@@ -44,6 +44,7 @@
                     */
                     $element.change(function () {
                         var observable = valueAccessor();
+                        var state = $element.prop('checked');
                         observable(state);
                     });
 

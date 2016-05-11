@@ -102,9 +102,9 @@
             $target.next().collapse('toggle');
         }
 
-        self.submitDelete = function () { }
-        self.submitCreate = function () { }
-        self.submitChanges = function () { }
+        self.submitDelete = function () { self.closeForm(); }
+        self.submitCreate = function () { self.closeForm(); }
+        self.submitChanges = function () { self.closeForm(); }
 
         self.loading = app.consumeAPI('roles', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Role(item); });
