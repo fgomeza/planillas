@@ -21,6 +21,9 @@ namespace Repository.Entities
 
         public double callPrice { set; get; }
 
+        public long workingDaysPerMonth { set; get; }
+
+        public long workingHoursPerDay { set; get; }
 
         public bool active { set; get; }
 

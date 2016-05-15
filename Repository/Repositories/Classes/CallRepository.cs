@@ -30,9 +30,9 @@ namespace Repository.Repositories.Classes
             return _context.Calls.FirstOrDefault(c=>c.employeeId==employee && c.date==date && c.fkcall_employee.active);
         }
 
-        public void assignPayroll(long payroll, DateTime endDate)
+        public void assignPayroll(long payroll, long location, DateTime endDate)
         {
-            _context.Calls.Where(c => c.payrollId == null && c.date <= endDate && c.fkcall_employee.active).ToList().ForEach(c => c.payrollId = payroll);
+            _context.Calls.Where(c => c.payrollId == null && c.fkcall_employee.locationId==location&& c.date <= endDate && c.fkcall_employee.active).ToList().ForEach(c => c.payrollId = payroll);
         }
     }
 }

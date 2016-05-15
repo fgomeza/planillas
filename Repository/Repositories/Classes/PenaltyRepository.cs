@@ -17,9 +17,9 @@ namespace Repository.Repositories.Classes
             return _context.Penalties.Where((p)=>p.EmployeeId==employee && p.payrollId == null && p.Date<=endDate ).ToList();
         }
 
-        public void assignPayroll(long payroll, DateTime endDate)
+        public void assignPayroll(long payroll,long location, DateTime endDate)
         {
-            _context.Penalties.Where(c => c.payrollId == null && c.Date <= endDate).ToList().ForEach(c => c.payrollId = payroll);
+            _context.Penalties.Where(c => c.payrollId == null && c.Date<=endDate && c.Date <= endDate).ToList().ForEach(c => c.payrollId = payroll);
         }
     }
 }

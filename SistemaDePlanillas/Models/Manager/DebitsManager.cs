@@ -36,7 +36,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -58,14 +58,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
 
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -83,13 +83,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -108,13 +108,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -132,13 +132,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -162,7 +162,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -183,7 +183,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -217,7 +217,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -233,7 +233,7 @@ namespace SistemaDePlanillas.Models.Manager
                     if (debit != null && debit.active)
                     {
                         if (total < paid)
-                            validateException(App_LocalResoures.Errors.negativeAmount);
+                            throw validateException(App_LocalResoures.Errors.negativeAmount);
 
                         debit.totalAmount = total;
                         debit.remainingAmount = debit.totalAmount - paid;
@@ -243,13 +243,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(debit != null ? App_LocalResoures.Errors.debitInactive : App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(debit != null ? App_LocalResoures.Errors.debitInactive : App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -270,6 +270,7 @@ namespace SistemaDePlanillas.Models.Manager
                 result.interestRate = (double)debit.fkdebit_type.interestRate;
                 result.type = debit.debitTypeId;
                 result.typeName = debit.fkdebit_type.name;
+                result.pastDays = debit.pastDays;
                 return result;
             }
             else if (type == "A")
@@ -286,6 +287,7 @@ namespace SistemaDePlanillas.Models.Manager
                 result.interestRate = debit.fkdebit_type.interestRate;
                 result.type = debit.debitTypeId;
                 result.typeName = debit.fkdebit_type.name;
+                result.pastDays = debit.pastDays;
                 result.period = debit.period;
                 return result;
             }
@@ -299,6 +301,7 @@ namespace SistemaDePlanillas.Models.Manager
                     detail = debit.description,
                     type = debit.debitTypeId,
                     typeName = debit.fkdebit_type.name,
+                    pastDays = debit.pastDays,
                     period = debit.period
                 };
             }
@@ -318,13 +321,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -348,7 +351,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -377,7 +380,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -409,7 +412,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -428,13 +431,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentDebit);
+                        throw validateException(App_LocalResoures.Errors.inexistentDebit);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -458,7 +461,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -485,7 +488,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -510,7 +513,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -521,7 +524,7 @@ namespace SistemaDePlanillas.Models.Manager
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     if (interestRate == 0)
-                        validateException(App_LocalResoures.Errors.zeroInterestRate);
+                        throw validateException(App_LocalResoures.Errors.zeroInterestRate);
                     repository.DebitTypes.Add(new DebitTypeEntity()
                     {
                         name = name,
@@ -537,7 +540,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -555,7 +558,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -575,7 +578,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -595,7 +598,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -612,7 +615,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -642,7 +645,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -674,7 +677,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -706,56 +709,65 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
 
-        public void payDebit(long debitId, long payroll)
+        public void payDebit(long debitId, long payroll,long workedDays,DateTime initialDate)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debit = repository.Debits.Get(debitId);
+                    long payments = Math.Min(((workedDays + debit.pastDays) / debit.period), debit.remainingPays);
                     if (debit.fkdebit_type.type == "P")
                     {
-                        double pay = (debit.remainingAmount / debit.remainingPays);
-                        debit.remainingAmount -= pay;
-                        debit.remainingPays -= 1;
-                        debit.paysMade += 1;
-                        repository.DebitPayments.Add(new DebitPaymentEntity()
+                        double pay = (debit.remainingAmount / debit.remainingPays) * payments;
+                        debit.remainingPays -= payments;
+                        debit.remainingAmount = debit.remainingPays==0?0: debit.remainingAmount-pay;
+                        debit.paysMade += payments;
+                        for(int i = 1; i <= payments; i++)
                         {
-                            DebitId = debit.id,
-                            payrollId = payroll,
-                            Amount = pay + debit.totalAmount + debit.totalAmount * debit.fkdebit_type.interestRate,
-                            InterestRate = debit.fkdebit_type.interestRate,
-                            RemainingAmount = debit.remainingAmount
-                        });
+                            repository.DebitPayments.Add(new DebitPaymentEntity()
+                            {
+                                DebitId = debit.id,
+                                date = initialDate.AddDays((debit.period * i)-debit.pastDays),
+                                payrollId = payroll,
+                                Amount = pay + debit.totalAmount + debit.totalAmount * debit.fkdebit_type.interestRate,
+                                InterestRate = debit.fkdebit_type.interestRate,
+                                RemainingAmount = debit.remainingAmount
+                            });
+                        }
+                        
                     }
                     else if (debit.fkdebit_type.type == "A")
                     {
-                        double amortization = Models.Operations.PayrollGroup.calculateAmortization(debit.totalAmount, debit.remainingPays + debit.paysMade, debit.fkdebit_type.interestRate);
-                        double pay = debit.totalAmount / (debit.remainingPays + debit.paysMade);
-
-                        debit.remainingAmount -= pay;
-                        debit.remainingPays -= 1;
-                        debit.paysMade += 1;
-                        repository.DebitPayments.Add(new DebitPaymentEntity()
+                        double amortization = Models.Operations.PayrollGroup.calculateAmortization(debit.totalAmount, debit.remainingPays + debit.paysMade, debit.fkdebit_type.interestRate) * payments;
+                        for (int i = 1; i <= payments; i++)
                         {
-                            DebitId = debit.id,
-                            payrollId = payroll,
-                            Amount = amortization,
-                            InterestRate = debit.fkdebit_type.interestRate,
-                            RemainingAmount = debit.remainingAmount
-                        });
+                            double pay = amortization - debit.remainingAmount * (debit.fkdebit_type.interestRate / 365) * debit.period;
+                            debit.remainingPays -= 1;
+                            debit.remainingAmount = debit.remainingPays==0?0 : debit.remainingAmount-pay;
+                            debit.paysMade += 1;
+                            repository.DebitPayments.Add(new DebitPaymentEntity()
+                            {
+                                DebitId = debit.id,
+                                payrollId = payroll,
+                                Amount = amortization,
+                                InterestRate = debit.fkdebit_type.interestRate,
+                                RemainingAmount = debit.remainingAmount
+                            });
+                        }
+                           
                     }
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 

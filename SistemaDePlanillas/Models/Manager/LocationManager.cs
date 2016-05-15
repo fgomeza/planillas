@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class LocationManager : IErrors
     {
-        public Location addLocation(string name, double call_price, long administrator)
+        public Location addLocation(string name, double call_price, long administrator, long workingDaysPerMonth, long workingHoursPerDay)
         {
             Location result = null;
             try
@@ -18,13 +18,13 @@ namespace SistemaDePlanillas.Models.Manager
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     LocationEntity location = new LocationEntity()
-                    { name = name, callPrice = call_price, active = true , isPendingToApprove= false};
+                    { name = name, callPrice = call_price, active = true , isPendingToApprove= false, workingDaysPerMonth=workingDaysPerMonth,workingHoursPerDay=workingHoursPerDay};
                     location = repository.Locations.Add(location);
                     repository.Complete();
                     updateAdministrator(location.id, administrator);
                     result = new Location();
                     result.Name = location.name;
-                    result.CallPrice = (long)location.callPrice;
+                    result.CallPrice = location.callPrice;
                     result.LastPayroll = location.lastPayrollId;
                     result.CurrentPayroll = location.currentPayrollId;
                     result.Active = location.active;
@@ -33,7 +33,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -56,16 +56,18 @@ namespace SistemaDePlanillas.Models.Manager
                         result.CurrentPayroll = location.currentPayrollId;
                         result.Active = location.active;
                         result.isPendingToApprove = location.isPendingToApprove;
+                        result.workingDaysPerMonth = location.workingDaysPerMonth;
+                        result.workingHoursPerDay = location.workingHoursPerDay;
                     }
                     else
                     {
-                        validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -85,13 +87,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(location != null ? App_LocalResoures.Errors.locationInactive : App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -120,7 +122,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -139,13 +141,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -165,14 +167,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -196,13 +198,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -220,14 +222,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -245,14 +247,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentLocation);
+                        throw validateException(App_LocalResoures.Errors.inexistentLocation);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -277,7 +279,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -303,7 +305,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }

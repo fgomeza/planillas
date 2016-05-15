@@ -28,6 +28,23 @@ namespace SistemaDePlanillas.Models
         public DateTime activeSince;
     }
 
+    public class Salary
+    {
+        public long payroll;
+        public long employee;
+        public double salary;
+        public double netSalary;
+        public long workedDays;
+    }
+
+    public class Vacation
+    {
+        public long employee;
+        public DateTime date;
+        public double vacationPrice;
+
+    }
+
     public class Call
     {
         public long employee;
@@ -40,6 +57,7 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public DateTime endDate;
+        public DateTime initialDate;
         public long user;
         public string json;
     }
@@ -63,6 +81,7 @@ namespace SistemaDePlanillas.Models
         public long type;
         public string typeName;
         public long period;
+        public long pastDays;
     }
 
     public class PaymentDebit
@@ -79,6 +98,7 @@ namespace SistemaDePlanillas.Models
         public long type;
         public string typeName;
         public long period;
+        public long pastDays;
     }
 
     public class AmortizationDebit
@@ -95,6 +115,7 @@ namespace SistemaDePlanillas.Models
         public long type;
         public string typeName;
         public long period;
+        public long pastDays;
     }
 
     public class Extra
@@ -149,6 +170,8 @@ namespace SistemaDePlanillas.Models
         public Nullable<long> CurrentPayroll;
         public bool Active;
         public bool isPendingToApprove;
+        public long workingDaysPerMonth;
+        public long workingHoursPerDay;
     }
 
     public class Role

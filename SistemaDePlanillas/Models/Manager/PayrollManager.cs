@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class PayrollManager : IErrors
     {
-        public Payroll addPayroll(DateTime endDate, double callPrice, long user, string json, long location)
+        public Payroll addPayroll(DateTime initialDate,DateTime endDate, double callPrice, long user, string json, long location)
         {
             Payroll result = null;
             try
@@ -23,6 +23,7 @@ namespace SistemaDePlanillas.Models.Manager
                         userId = user,
                         locationId = location,
                         endDate = endDate,
+                        initialDate=initialDate,
                         callPrice = callPrice,
                         JSON = json
                     });
@@ -31,6 +32,7 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         id = payroll.id,
                         endDate = payroll.endDate,
+                        initialDate=initialDate,
                         json = payroll.JSON,
                         user = payroll.userId
                     };
@@ -38,7 +40,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -51,7 +53,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (NpgsqlException e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -63,7 +65,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (NpgsqlException e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -76,12 +78,13 @@ namespace SistemaDePlanillas.Models.Manager
                     var payroll = repository.PayRolls.Get(id);
                     if (payroll == null)
                     {
-                        validateException(App_LocalResoures.Errors.inexistentPayroll);
+                        throw validateException(App_LocalResoures.Errors.inexistentPayroll);
                     }
                     return new Payroll()
                     {
                         id = payroll.id,
                         endDate = payroll.endDate,
+                        initialDate=payroll.initialDate,
                         user = payroll.userId,
                         json = payroll.JSON
                     };
@@ -89,7 +92,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
                 return null;
             }
         }
@@ -103,7 +106,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (NpgsqlException e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -117,7 +120,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (NpgsqlException e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }

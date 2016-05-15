@@ -39,7 +39,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -65,13 +65,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -95,7 +95,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -116,7 +116,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -135,13 +135,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -160,13 +160,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -200,13 +200,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(employee != null ? App_LocalResoures.Errors.employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(employee != null ? App_LocalResoures.Errors.employeeInactive : App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -238,13 +238,112 @@ namespace SistemaDePlanillas.Models.Manager
                             locationName = employee.location
                         });
                     }
+                    return result;
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
-            return result;
+        }
+
+        public Vacation addVacation(long employeeId,DateTime date, double price)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                   var vacation= repository.Vacations.Add(new VacationEntity()
+                    {
+                        employeeId=employeeId,
+                        date=date,
+                        vacationsPrice=price
+                    });
+                    return new Vacation()
+                    {
+                        employee = vacation.employeeId,
+                        date = vacation.date,
+                        vacationPrice = vacation.vacationsPrice
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                throw validateException(e);
+            }
+        }
+
+        public List<Vacation> selectVacations(long employeeId)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    return repository.Vacations.selectVacationsByEmployee(employeeId).Select(v=>new Vacation()
+                    {
+                        employee=v.employeeId,
+                        date=v.date,
+                        vacationPrice=v.vacationsPrice
+                    }).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw validateException(e);
+            }
+        }
+
+        public List<Vacation> selectVacations(long employeeId, DateTime endDate)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    return repository.Vacations.selectVacationsByEmployee(employeeId,endDate).Select(v => new Vacation()
+                    {
+                        employee = v.employeeId,
+                        date = v.date,
+                        vacationPrice = v.vacationsPrice
+                    }).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw validateException(e);
+            }
+        }
+
+        public void removeVacation(long employeeId, DateTime date)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    repository.Vacations.Remove(repository.Vacations.Get(employeeId, date));
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw validateException(e);
+            }
+        }
+
+        public void assingVacationsToPayroll(long payroll,long location,DateTime endDate)
+        {
+
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    repository.Vacations.assignPayroll(payroll,location, endDate);
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw validateException(e);
+            }
         }
 
     }

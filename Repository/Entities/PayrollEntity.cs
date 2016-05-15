@@ -15,8 +15,11 @@ namespace Repository.Entities
         [Column("id")]
         public long id { set; get; }
 
-        [Index("UKpayroll_ENDATE", 1, IsUnique = true)]
+        [Index("UKpayroll_ENDATE", IsUnique = true)]
         public DateTime endDate { set; get; }
+
+        [Index("UKpayroll_INITIALDATE", IsUnique = true)]
+        public DateTime initialDate { set; get; }
 
         [ForeignKey("fkpayroll_user")]
         [Column("user_id")]

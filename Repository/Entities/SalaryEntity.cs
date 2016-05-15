@@ -38,5 +38,6 @@ namespace Repository.Entities
 
         public double salary { get; set; }
 
+        public long workedDays { get; set; }
     }
 }

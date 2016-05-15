@@ -142,6 +142,24 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La fechas proporcionadas son incorrectas..
+        /// </summary>
+        internal static string invalidDate {
+            get {
+                return ResourceManager.GetString("invalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La fecha inicial contempla días ya procesador en la planilla anterior..
+        /// </summary>
+        internal static string invalidInitialDate {
+            get {
+                return ResourceManager.GetString("invalidInitialDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No se puede realizar esta operación en el estado actual del sistema.
         /// </summary>
         internal static string invalidProcedure {

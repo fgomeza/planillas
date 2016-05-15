@@ -16,9 +16,13 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long DebitId { set; get; }
 
-        [Column("payrollId", Order = 2), Key, ForeignKey("fkpayment_payroll")]
+        [Column("date", Order = 2), Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public Nullable<long> payrollId { get; set; }
+        public DateTime date { set; get; }
+
+        [Column("payrollId"), ForeignKey("fkpayment_payroll")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long payrollId { get; set; }
 
         public virtual PayrollEntity fkpayment_payroll { set; get; }
 

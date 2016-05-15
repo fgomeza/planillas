@@ -53,5 +53,15 @@ namespace SistemaDePlanillas.Models.Operations
         {
             return DBManager.Instance.employees.selectEmployee(id);
         }
+
+        public static object add_vacations(User user,long employee, IEnumerable<DateTime>dates, double vacationPrice)
+        {
+            return dates.Select(d=>DBManager.Instance.employees.addVacation(employee,d,vacationPrice));
+        }
+
+        public static void remove_vacation(User user, long employee, DateTime date)
+        {
+            DBManager.Instance.employees.removeVacation(employee,date);
+        }
     }
 }

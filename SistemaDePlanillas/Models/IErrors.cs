@@ -16,7 +16,7 @@ namespace SistemaDePlanillas.Models
        // private static ResourceManager Errors = new ResourceManager(Errors.BaseName, Assembly.GetExecutingAssembly());
        // private static ResourceManager DescriptionErrors = new ResourceManager(DescriptionError.ResourceManager., Assembly.GetExecutingAssembly());
 
-        public static void validateException(Exception e)
+        public static Exception  validateException(Exception e)
         {
             if (e.InnerException != null)
             {
@@ -25,16 +25,16 @@ namespace SistemaDePlanillas.Models
                 {
                     string code = App_LocalResoures.Errors.ResourceManager.GetString((e.InnerException as NpgsqlException).ConstraintName);
                     string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-                    throw new AppException(code, description);
+                    return new AppException(code, description);
                 }
             }
-            throw e;
+            return e;
         }
 
-        public static void validateException(string code)
+        public static Exception  validateException(string code)
         {
             string description = App_LocalResoures.DescriptionError.ResourceManager.GetString(code);
-            throw new AppException(code, description);
+            return new AppException(code, description);
         }
 
         
