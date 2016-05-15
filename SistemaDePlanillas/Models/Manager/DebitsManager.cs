@@ -24,32 +24,24 @@ namespace SistemaDePlanillas.Models.Manager
                         description = Detail,
                         totalAmount = amount,
                         debitTypeId = type,
-                        period=period,
-                        initialDate= DateTime.Now,
-                        activeSince= DateTime.Now,
-                        pastDays= 0,
+                        period = period,
+                        initialDate = DateTime.Today,
+                        activeSince = DateTime.Today,
+                        pastDays = 0,
                         active = true,
                     });
                     repository.Complete();
-                    result = new Debit()
-                    {
-                        id = debit.id,
-                        employee = debit.employeeId,
-                        amount = debit.totalAmount,
-                        detail = debit.description,
-                        type = debit.debitTypeId,
-                        typeName = debit.fkdebit_type.name
-                    };
+                    result = (Debit)toModel(debit);
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public void updateFixedDebit(long idDebit, string Detail, double amount)
+        public void updateFixedDebit(long idDebit, string Detail, double amount, long period)
         {
             Result<string> result = new Result<string>();
             try
@@ -61,6 +53,7 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         debit.description = Detail;
                         debit.totalAmount = amount;
+                        debit.period = period;
                         repository.Complete();
                     }
                     else
@@ -70,7 +63,7 @@ namespace SistemaDePlanillas.Models.Manager
 
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -94,7 +87,7 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -110,6 +103,7 @@ namespace SistemaDePlanillas.Models.Manager
                     if (debit != null)
                     {
                         debit.active = true;
+                        debit.activeSince = DateTime.Today;
                         repository.Complete();
                     }
                     else
@@ -118,7 +112,7 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -134,15 +128,7 @@ namespace SistemaDePlanillas.Models.Manager
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        result = new Debit()
-                        {
-                            id = debit.id,
-                            employee = debit.employeeId,
-                            amount = debit.totalAmount,
-                            detail = debit.description,
-                            type = debit.debitTypeId,
-                            typeName = debit.fkdebit_type.name
-                        };
+                        result = (Debit)toModel(debit);
                     }
                     else
                     {
@@ -150,14 +136,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public List<Debit> selectActiveDebits(long employee)
+        public List<Debit> selectActiveFixedDebits(long employee)
         {
             List<Debit> result = new List<Debit>();
             try
@@ -169,26 +155,19 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         if (debit.active)
                         {
-                            result.Add(new Debit()
-                            {
-                                id = debit.id,
-                                amount = debit.totalAmount,
-                                employee = debit.employeeId,
-                                detail = debit.description,
-                                type = debit.debitTypeId
-                            });
+                            result.Add((Debit)toModel(debit));
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public List<Debit> selectDebits(long employee)
+        public List<Debit> selectFixedDebits(long employee)
         {
             List<Debit> result = new List<Debit>();
             try
@@ -198,25 +177,18 @@ namespace SistemaDePlanillas.Models.Manager
                     var debits = repository.Debits.selectFixedDebitsByEmployee(employee);
                     foreach (var debit in debits)
                     {
-                        result.Add(new Debit()
-                        {
-                            id = debit.id,
-                            amount = debit.totalAmount,
-                            employee = debit.employeeId,
-                            detail = debit.description,
-                            type = debit.debitTypeId
-                        });
+                        result.Add((Debit)toModel(debit));
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public PaymentDebit addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long pays, long type)
+        public PaymentDebit addPaymentDebit(long employee, DateTime initialDate, string Detail, double total, long pays, long type, long period)
         {
             PaymentDebit result = null;
             try
@@ -233,32 +205,24 @@ namespace SistemaDePlanillas.Models.Manager
                         paysMade = 0,
                         remainingPays = pays,
                         debitTypeId = type,
-                        active = true
+                        active = true,
+                        period = period,
+                        activeSince = DateTime.Today,
+                        pastDays = 0
                     });
                     repository.Complete();
-                    result = new PaymentDebit();
-                    result.id = debit.id;
-                    result.initialDate = debit.initialDate;
-                    result.detail = debit.description;
-                    result.employee = debit.employeeId;
-                    result.total = debit.totalAmount;
-                    result.remainingAmount = debit.remainingAmount;
-                    result.paymentsMade = (long)debit.paysMade;
-                    result.missingPayments = (long)debit.remainingPays;
-                    result.interestRate = (double)debit.fkdebit_type.interestRate;
-                    result.type = debit.debitTypeId;
-                    result.typeName = debit.fkdebit_type.name;
+                    result = (PaymentDebit)toModel(debit);
                 }
 
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public void updatePaymentDebit(long idDebit, double total, long remainingPays)
+        public void updatePaymentDebit(long idDebit, double total, long remainingPays, long period)
         {
             try
             {
@@ -274,6 +238,7 @@ namespace SistemaDePlanillas.Models.Manager
                         debit.totalAmount = total;
                         debit.remainingAmount = debit.totalAmount - paid;
                         debit.remainingPays = remainingPays;
+                        debit.period = period;
                         repository.Complete();
                     }
                     else
@@ -282,9 +247,60 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
+            }
+        }
+
+        private object toModel(DebitEntity debit) 
+        {
+            string type = debit.fkdebit_type.type;
+            if (type == "P")
+            {
+                PaymentDebit result = new PaymentDebit();
+                result.id = debit.id;
+                result.initialDate = debit.initialDate;
+                result.detail = debit.description;
+                result.employee = debit.employeeId;
+                result.total = debit.totalAmount;
+                result.remainingAmount = debit.remainingAmount;
+                result.paymentsMade = (long)debit.paysMade;
+                result.missingPayments = (long)debit.remainingPays;
+                result.interestRate = (double)debit.fkdebit_type.interestRate;
+                result.type = debit.debitTypeId;
+                result.typeName = debit.fkdebit_type.name;
+                return result;
+            }
+            else if (type == "A")
+            {
+                AmortizationDebit result = new AmortizationDebit();
+                result.id = debit.id;
+                result.initialDate = debit.initialDate;
+                result.detail = debit.description;
+                result.employee = debit.employeeId;
+                result.total = debit.totalAmount;
+                result.remainingAmount = debit.remainingAmount;
+                result.paymentsMade = debit.paysMade;
+                result.missingPayments = debit.remainingPays;
+                result.interestRate = debit.fkdebit_type.interestRate;
+                result.type = debit.debitTypeId;
+                result.typeName = debit.fkdebit_type.name;
+                result.period = debit.period;
+                return result;
+            }
+            else
+            {
+                return new Debit()
+                {
+                    id = debit.id,
+                    employee = debit.employeeId,
+                    amount = debit.totalAmount,
+                    detail = debit.description,
+                    type = debit.debitTypeId,
+                    typeName = debit.fkdebit_type.name,
+                    period = debit.period
+                };
             }
         }
 
@@ -298,17 +314,7 @@ namespace SistemaDePlanillas.Models.Manager
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        result.id = debit.id;
-                        result.initialDate = debit.initialDate;
-                        result.detail = debit.description;
-                        result.employee = debit.employeeId;
-                        result.total = debit.totalAmount;
-                        result.remainingAmount = debit.remainingAmount;
-                        result.paymentsMade = (long)debit.paysMade;
-                        result.missingPayments = (long)debit.remainingPays;
-                        result.interestRate = (double)debit.fkdebit_type.interestRate;
-                        result.type = debit.debitTypeId;
-                        result.typeName = debit.fkdebit_type.name;
+                        return (PaymentDebit)toModel(debit);
                     }
                     else
                     {
@@ -316,7 +322,7 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -335,25 +341,12 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         if (debit.active)
                         {
-                            result.Add(new PaymentDebit()
-                            {
-                                id = debit.id,
-                                initialDate = debit.initialDate,
-                                detail = debit.description,
-                                employee = debit.employeeId,
-                                total = debit.totalAmount,
-                                remainingAmount = debit.remainingAmount,
-                                paymentsMade = (long)debit.paysMade,
-                                missingPayments = (long)debit.remainingPays,
-                                interestRate = (double)debit.fkdebit_type.interestRate,
-                                type = debit.debitTypeId,
-                                typeName = debit.fkdebit_type.name
-                            });
+                            result.Add((PaymentDebit)toModel(debit));
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -382,13 +375,13 @@ namespace SistemaDePlanillas.Models.Manager
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
         }
 
-        public AmortizationDebit addAmortizationDebit(long employee, DateTime initialDate, string Detail, double total, long pays, long type)
+        public AmortizationDebit addAmortizationDebit(long employee, string Detail, double total, long pays, long type, long period)
         {
             AmortizationDebit result = null;
             try
@@ -397,7 +390,7 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     var debit = repository.Debits.Add(new DebitEntity()
                     {
-                        initialDate = initialDate,
+                        initialDate = DateTime.Today,
                         description = Detail,
                         employeeId = employee,
                         totalAmount = total,
@@ -405,25 +398,16 @@ namespace SistemaDePlanillas.Models.Manager
                         paysMade = 0,
                         remainingPays = pays,
                         debitTypeId = type,
-                        active = true
+                        active = true,
+                        period = period,                      
+                        activeSince = DateTime.Today
                     });
                     repository.Complete();
-                    result = new AmortizationDebit();
-                    result.id = debit.id;
-                    result.initialDate = debit.initialDate;
-                    result.detail = debit.description;
-                    result.employee = debit.employeeId;
-                    result.total = debit.totalAmount;
-                    result.remainingAmount = debit.remainingAmount;
-                    result.paymentsMade = (long)debit.paysMade;
-                    result.missingPayments = (long)debit.remainingPays;
-                    result.interestRate = (double)debit.fkdebit_type.interestRate;
-                    result.type = debit.debitTypeId;
-                    result.typeName = debit.fkdebit_type.name;
+                    result = (AmortizationDebit)toModel(debit);
                 }
 
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -440,17 +424,7 @@ namespace SistemaDePlanillas.Models.Manager
                     DebitEntity debit = repository.Debits.Get(idDebit);
                     if (debit != null && debit.active)
                     {
-                        result.id = debit.id;
-                        result.initialDate = debit.initialDate;
-                        result.detail = debit.description;
-                        result.employee = debit.employeeId;
-                        result.total = debit.totalAmount;
-                        result.remainingAmount = debit.remainingAmount;
-                        result.paymentsMade = (long)debit.paysMade;
-                        result.missingPayments = (long)debit.remainingPays;
-                        result.interestRate = (double)debit.fkdebit_type.interestRate;
-                        result.type = debit.debitTypeId;
-                        result.typeName = debit.fkdebit_type.name;
+                        result = (AmortizationDebit)toModel(debit);
                     }
                     else
                     {
@@ -458,7 +432,7 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -477,25 +451,12 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         if (debit.active)
                         {
-                            result.Add(new AmortizationDebit()
-                            {
-                                id = debit.id,
-                                initialDate = debit.initialDate,
-                                detail = debit.description,
-                                employee = debit.employeeId,
-                                total = debit.totalAmount,
-                                remainingAmount = debit.remainingAmount,
-                                paymentsMade = (long)debit.paysMade,
-                                missingPayments = (long)debit.remainingPays,
-                                interestRate = (double)debit.fkdebit_type.interestRate,
-                                type = debit.debitTypeId,
-                                typeName = debit.fkdebit_type.name
-                            });
+                            result.Add((AmortizationDebit)toModel(debit));
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -504,7 +465,7 @@ namespace SistemaDePlanillas.Models.Manager
 
 
 
-        public void addFixedDebitType(string name, long location)
+        public void addFixedDebitType(string name, long location, long period)
         {
             try
             {
@@ -515,19 +476,20 @@ namespace SistemaDePlanillas.Models.Manager
                         name = name,
                         locationId = location,
                         interestRate = 0,
-                        type = "F"
+                        type = "F",
+                        period=period
                     });
 
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
         }
 
-        public void addPaymentDebitType(string name, long location, long pays, double interestRate)
+        public void addPaymentDebitType(string name, long location, long pays, double interestRate, long period)
         {
             try
             {
@@ -539,19 +501,20 @@ namespace SistemaDePlanillas.Models.Manager
                         locationId = location,
                         pays = pays,
                         interestRate = interestRate,
-                        type = "P"
+                        type = "P",
+                        period=period
                     });
 
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
         }
 
-        public void addAmortizationDebitType(string name, long location, long pays, double interestRate)
+        public void addAmortizationDebitType(string name, long location, long pays, double interestRate, long period)
         {
             try
             {
@@ -565,19 +528,20 @@ namespace SistemaDePlanillas.Models.Manager
                         locationId = location,
                         pays = pays,
                         interestRate = interestRate,
-                        type = "A"
+                        type = "A",
+                        period=period
                     });
 
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
         }
 
-        public void updateFixedDebitType(long id, string name)
+        public void updateFixedDebitType(long id, string name, long period)
         {
             try
             {
@@ -585,36 +549,17 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     DebitTypeEntity type = repository.DebitTypes.Get(id);
                     type.name = name;
-
+                    type.period = period;
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
         }
 
-        public void updatePaymentDebitType(long id, string name, double interestRate, long pays)
-        {
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    DebitTypeEntity type = repository.DebitTypes.Get(id);
-                    type.name = name;
-                    type.interestRate = interestRate;
-                    type.pays = pays;
-                    repository.Complete();
-                }
-            }
-            catch (NpgsqlException e)
-            {
-                validateException(e);
-            }
-        }
-
-        public void updateAmortizationDebitType(long id, string name, double interestRate, long pays)
+        public void updatePaymentDebitType(long id, string name, double interestRate, long pays, long period)
         {
             try
             {
@@ -624,10 +569,31 @@ namespace SistemaDePlanillas.Models.Manager
                     type.name = name;
                     type.interestRate = interestRate;
                     type.pays = pays;
+                    type.period = period;
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
+            {
+                validateException(e);
+            }
+        }
+
+        public void updateAmortizationDebitType(long id, string name, double interestRate, long pays, long period)
+        {
+            try
+            {
+                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
+                {
+                    DebitTypeEntity type = repository.DebitTypes.Get(id);
+                    type.name = name;
+                    type.interestRate = interestRate;
+                    type.pays = pays;
+                    type.period = period;
+                    repository.Complete();
+                }
+            }
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -644,7 +610,7 @@ namespace SistemaDePlanillas.Models.Manager
                     repository.Complete();
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -668,13 +634,13 @@ namespace SistemaDePlanillas.Models.Manager
                                 name = type.name,
                                 location = type.locationId,
                                 interestRate = type.interestRate,
-                                payment = false
+                                period = type.period
                             });
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -700,13 +666,13 @@ namespace SistemaDePlanillas.Models.Manager
                                 location = type.locationId,
                                 months = type.pays,
                                 interestRate = type.interestRate,
-                                payment = true
+                                period=type.period
                             });
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
@@ -732,27 +698,27 @@ namespace SistemaDePlanillas.Models.Manager
                                 location = type.locationId,
                                 months = type.pays,
                                 interestRate = type.interestRate,
-                                payment = true
+                                period=type.period
                             });
                         }
                     }
                 }
             }
-            catch (NpgsqlException e)
+            catch (Exception e)
             {
                 validateException(e);
             }
             return result;
         }
 
-        public void payDebit(long debitId,long payroll)
+        public void payDebit(long debitId, long payroll)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var debit = repository.Debits.Get(debitId);
-                    if(debit.fkdebit_type.type == "P")
+                    if (debit.fkdebit_type.type == "P")
                     {
                         double pay = (debit.remainingAmount / debit.remainingPays);
                         debit.remainingAmount -= pay;
@@ -761,10 +727,10 @@ namespace SistemaDePlanillas.Models.Manager
                         repository.DebitPayments.Add(new DebitPaymentEntity()
                         {
                             DebitId = debit.id,
-                            payrollId= payroll,
-                            Amount= pay+ debit.totalAmount + debit.totalAmount * debit.fkdebit_type.interestRate,
+                            payrollId = payroll,
+                            Amount = pay + debit.totalAmount + debit.totalAmount * debit.fkdebit_type.interestRate,
                             InterestRate = debit.fkdebit_type.interestRate,
-                            RemainingAmount= debit.remainingAmount
+                            RemainingAmount = debit.remainingAmount
                         });
                     }
                     else if (debit.fkdebit_type.type == "A")

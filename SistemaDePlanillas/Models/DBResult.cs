@@ -51,7 +51,7 @@ namespace SistemaDePlanillas.Models
         public Nullable<double> interestRate;
         public Nullable<long> months;
         public long location;
-        public bool payment;
+        public long period;
     }
 
     public class Debit
@@ -62,6 +62,7 @@ namespace SistemaDePlanillas.Models
         public double amount;
         public long type;
         public string typeName;
+        public long period;
     }
 
     public class PaymentDebit
@@ -77,6 +78,7 @@ namespace SistemaDePlanillas.Models
         public double remainingAmount;
         public long type;
         public string typeName;
+        public long period;
     }
 
     public class AmortizationDebit
@@ -92,6 +94,7 @@ namespace SistemaDePlanillas.Models
         public double remainingAmount;
         public long type;
         public string typeName;
+        public long period;
     }
 
     public class Extra

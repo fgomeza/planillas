@@ -21,6 +21,7 @@ namespace Repository.Entities
 
         public long pays { set; get; }
 
+        public long period { set; get; }
 
         public double interestRate { set; get; }
 
