@@ -247,12 +247,12 @@
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
-    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.min.css" />
-    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.css" />
-    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.min.css" />
+    <Content Include="Content\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-toggle.css" />
+    <Content Include="Content\bootstrap-toggle.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\daterangepicker.css" />
@@ -273,6 +273,9 @@
     <Content Include="Scripts\AppScripts\Controllers\test.js" />
     <Content Include="Scripts\AppScripts\Controllers\uploadfile.js" />
     <Content Include="Scripts\AppScripts\Controllers\users.js" />
+    <Content Include="Scripts\AppScripts\knockout-config.js" />
+    <Content Include="Scripts\lib\knockstrap.js" />
+    <Content Include="Scripts\lib\knockstrap.min.js" />
     <Content Include="Scripts\lib\knockout-DataGrid.js" />
     <Content Include="Scripts\AppScripts\ViewModels\contacts.js" />
     <Content Include="Scripts\AppScripts\ViewModels\debits.js" />

@@ -53,7 +53,7 @@ namespace SistemaDePlanillas
             bundles.Add(new StyleBundle("~/bundles/styles").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
-                      "~/Content/bootstrap-toggle.css",
+                      "~/Content/bootstrap-switch.css",
                       "~/Content/daterangepicker.css",
                       "~/Content/dropzone/dropzone.css",
                       "~/Content/site.css"));
