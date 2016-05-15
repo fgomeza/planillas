@@ -20,7 +20,7 @@ namespace SistemaDePlanillas.Controllers
             {
                 registers = FilesReader.readFromCMSFile(file.InputStream);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "El archivo no tiene el formato esperado, no puede ser procesado");
             }
@@ -31,7 +31,7 @@ namespace SistemaDePlanillas.Controllers
                 {
                     DBManager.Instance.calls.addCall(r.cmsid, r.calls, r.hours, r.date);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     errors.Add(r);
                 }

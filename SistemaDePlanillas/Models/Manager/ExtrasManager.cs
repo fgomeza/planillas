@@ -143,13 +143,13 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-        public void assignExtrasToPayroll(long payrollId)
+        public void assignExtrasToPayroll(long payrollId, long location)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Extras.assignPayroll(payrollId);
+                    repository.Extras.assignPayroll(payrollId, location);
                     repository.Complete();
                 }
             }

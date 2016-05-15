@@ -19,9 +19,9 @@ namespace Repository.Repositories.Classes
             return extras.ToList();
         }
 
-        public void assignPayroll(long payroll)
+        public void assignPayroll(long payroll, long location)
         {
-            _context.Extras.Where(c => c.payrollId == null).ToList().ForEach(c => c.payrollId = payroll);
+            _context.Extras.Where(e => e.payrollId == null && e.fkextra_employee.locationId==location).ToList().ForEach(e => e.payrollId = payroll);
         }
     }
 }

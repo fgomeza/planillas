@@ -16,16 +16,15 @@ namespace Repository.Entities
         [Column("id")]
         public long id { set; get; }
 
-
         public string name { set; get; }
+
+        public string location { set; get; }
 
         [Index("UKEMPLOYEE_IDCARD", 1, IsUnique = true)]
         public string idCard { set; get; }
 
         [Index("UKEMPLOYEE_CMS", 2, IsUnique = true)]
         public string cms { get; set; }
-
-        public bool iscms { get; set; }
 
         [ForeignKey("fkemployee_location")]
         [Column("location")]
@@ -34,16 +33,19 @@ namespace Repository.Entities
 
         public virtual LocationEntity fkemployee_location { get; set; }
 
-
-        public bool active { get; set; }
-
+        public bool active { get; set; }          
 
         public double salary { get; set; }
-
 
         public string account { get; set; }
 
         public double negativeAmount { get; set; }
+
+        public long avalaibleVacations { get; set; }
+
+        public long workedDays { get; set; }
+
+        public DateTime activeSince { get; set; }
 
     }
 }

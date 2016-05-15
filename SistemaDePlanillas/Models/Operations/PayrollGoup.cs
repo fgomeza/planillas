@@ -72,7 +72,7 @@ namespace SistemaDePlanillas.Models.Operations
             }
             var current = DBManager.Instance.payrolls.selectPayroll((long)location.CurrentPayroll);
             DBManager.Instance.calls.assignCallsToPayroll(current.id, current.endDate);
-            DBManager.Instance.extras.assignExtrasToPayroll(current.id);
+            DBManager.Instance.extras.assignExtrasToPayroll(current.id,user.Location);
             DBManager.Instance.penalties.assignPenaltiesToPayroll(current.id, current.endDate);
 
             var employees = DBManager.Instance.employees.selectAllActiveEmployees(user.Location);

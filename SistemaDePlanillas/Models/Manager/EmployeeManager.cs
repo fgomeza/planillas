@@ -10,7 +10,7 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class EmployeeManager : IErrors
     {
-        public Employee addCmsEmployee(string idCard, string CMS, string name, long location, string account)
+        public Employee addEmployee(string idCard, string locationName, string name, long location, string account, double salary, long avalaibleVacations, string CMS = null)
         {
             Employee result = null;
             try
@@ -18,7 +18,7 @@ namespace SistemaDePlanillas.Models.Manager
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     EmployeeEntity employee = new EmployeeEntity()
-                    { idCard = idCard, cms = CMS, iscms = true, name = name, locationId = location, active = true, account = account };
+                    { idCard = idCard, location=locationName,cms = CMS, name = name, locationId = location, active = true, account = account, salary=salary,workedDays=0, negativeAmount=0,  avalaibleVacations=avalaibleVacations};
                     var x = repository.Employees.Add(employee);
                     repository.Complete();
                     result = new Employee()
@@ -27,11 +27,13 @@ namespace SistemaDePlanillas.Models.Manager
                         idCard = x.idCard,
                         name = x.name,
                         location = x.locationId,
+                        locationName = x.location,
                         account = x.account,
-                        cms = true,
-                        cmsText= CMS,
+                        cmsText = CMS,
                         salary = x.salary,
-                        active = x.active
+                        active = x.active,
+                        avalaibleVacations = x.avalaibleVacations,
+                        activeSince = DateTime.Now                 
                     };
                 }
             }
@@ -42,7 +44,7 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-        public void updateCmsEmployeee(long id, string idCard, string CMS, string name, long location, string account)
+        public void updateEmployeee(long id, string idCard, string locationName, string name, long location, string account, double salary, long avalaibleVacations, string CMS = null)
         {
             try
             {
@@ -51,11 +53,14 @@ namespace SistemaDePlanillas.Models.Manager
                     EmployeeEntity employee = repository.Employees.Get(id);
                     if (employee != null)
                     {
+                        employee.location = locationName;
                         employee.idCard = idCard;
                         employee.cms = CMS;
                         employee.name = name;
                         employee.locationId = location;
                         employee.account = account;
+                        employee.salary = salary;
+                        employee.avalaibleVacations = avalaibleVacations;
                         repository.Complete();
                     }
                     else
@@ -70,20 +75,20 @@ namespace SistemaDePlanillas.Models.Manager
             }
         }
 
-        public List<Employee> selectAllCmsEmployees(long location)
+        public List<Employee> selectAllEmployees(long location)
         {
             List<Employee> result = new List<Employee>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var employees = repository.Employees.selectCMSEmployees(location);
+                    var employees = repository.Employees.selectEmployees(location);
                     foreach (var x in employees)
                     {
                         var calls = repository.Calls.callsbyEmployee(x.id, DateTime.Now);
 
                         Employee employee = new Employee()
-                        { id = x.id, idCard = x.idCard, name = x.name, location = x.locationId, account = x.account, cms = true, cmsText = x.cms, calls = calls, active = x.active };
+                        { id = x.id, idCard = x.idCard, name = x.name, locationName=x.location, location = x.locationId, account = x.account, cmsText = x.cms, calls = calls, active = x.active, activeSince=x.activeSince, salary=x.salary, avalaibleVacations=x.avalaibleVacations };
                         result.Add(employee);
                     }
                 }
@@ -106,96 +111,6 @@ namespace SistemaDePlanillas.Models.Manager
                     foreach (var call in calls)
                     {
                         result.Add(new Call() { employee = call.employeeId, calls = call.calls, date = call.date, hours = call.time });
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-            return result;
-        }
-
-        public Employee addNonCmsEmployee(string idCard, string name, long location, string account, float salary)
-        {
-            Employee result = null;
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    EmployeeEntity employee = new EmployeeEntity()
-                    { idCard = idCard, name = name, cms = " ", iscms = false, locationId = location, active = true, account = account, salary = salary };
-                    var x = repository.Employees.Add(employee);
-                    repository.Complete();
-                    result = new Employee()
-                    {
-                        id = x.id,
-                        idCard = x.idCard,
-                        name = x.name,
-                        location = x.locationId,
-                        account = x.account,
-                        cms = false,
-                        salary = x.salary,
-                        active = x.active
-                    };
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-            return result;
-        }
-
-        public void updateNonCmsEmployeee(long id, string idCard, string name, long location, string account, double salary)
-        {
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    EmployeeEntity employee = repository.Employees.Get(id);
-                    if (employee != null)
-                    {
-                        employee.idCard = idCard;
-                        employee.name = name;
-                        employee.locationId = location;
-                        employee.account = account;
-                        employee.salary = salary;
-                        repository.Complete();
-                    }
-                    else
-                    {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-        }
-
-        public List<Employee> selectAllNonCmsEmployees(long location)
-        {
-            List<Employee> result = new List<Employee>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var employees = repository.Employees.selectNonCMSEmployees(location);
-                    foreach (var x in employees)
-                    {
-                        result.Add(new Employee()
-                        {
-                            id = x.id,
-                            idCard = x.idCard,
-                            name = x.name,
-                            location = x.locationId,
-                            account = x.account,
-                            cms = false,
-                            salary = x.salary,
-                            active = x.active
-                        });
                     }
                 }
             }
@@ -240,6 +155,7 @@ namespace SistemaDePlanillas.Models.Manager
                     if (employee != null)
                     {
                         employee.active = true;
+                        employee.activeSince = DateTime.Now;
                         repository.Complete();
                     }
                     else
@@ -271,12 +187,15 @@ namespace SistemaDePlanillas.Models.Manager
                             idCard = employee.idCard,
                             location = employee.locationId,
                             name = employee.name,
-                            cms = employee.cms == null ? false : true,
                             cmsText = employee.cms,
                             account = employee.account,
                             salary = employee.salary,
                             active = employee.active,
-                            negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                            negativeAmount = employee.negativeAmount,
+                            activeSince = employee.activeSince,
+                            calls = repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
+                            avalaibleVacations = employee.avalaibleVacations,
+                            locationName = employee.location
                         };
                     }
                     else
@@ -308,13 +227,15 @@ namespace SistemaDePlanillas.Models.Manager
                             idCard = employee.idCard,
                             location = employee.locationId,
                             name = employee.name,
-                            cms = employee.cms == null ? false : true,
-                            calls = employee.cms == null ? 0 : repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
+                            calls = repository.Calls.callsbyEmployee(employee.id, DateTime.Now),
                             cmsText = employee.cms,
                             account = employee.account,
                             salary = employee.salary,
                             active = employee.active,
-                            negativeAmount = employee.negativeAmount == null ? 0 : (double)employee.negativeAmount
+                            negativeAmount = employee.negativeAmount,
+                            activeSince = employee.activeSince,
+                            avalaibleVacations = employee.avalaibleVacations,
+                            locationName = employee.location
                         });
                     }
                 }
@@ -326,43 +247,6 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-        public List<Employee> selectAllEmployees(long location)
-        {
-            List<Employee> result = new List<Employee>();
-            try
-            {
-                using (var repository = new MainRepository(new AppContext("PostgresConnection")))
-                {
-                    var employees = repository.Employees.GetAll();
-                    foreach (var employee in employees)
-                    {
-                        if (employee.active)
-                        {
-                            result.Add(new Employee()
-                            {
-                                id = employee.id,
-                                idCard = employee.idCard,
-                                location = employee.locationId,
-                                name = employee.name,
-                                cms = employee.iscms,
-                                calls = employee.iscms ? repository.Calls.callsbyEmployee(employee.id, DateTime.Now) : 0,
-                                cmsText = employee.cms,
-                                account = employee.account,
-                                salary = employee.salary,
-                                active = employee.active,
-                                negativeAmount = employee.negativeAmount
-                            });
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                validateException(e);
-            }
-            return result;
-        }
-       
     }
 
 }

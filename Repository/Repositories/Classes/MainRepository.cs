@@ -14,6 +14,7 @@ namespace Repository.Repositories.Classes
     {
         private readonly AppContext _context;
 
+        public VacationRepository Vacations { get; }
         public CallRepository Calls { get; }
         public UserRepository Users { get; }
         public LocationRepository Locations { get; }

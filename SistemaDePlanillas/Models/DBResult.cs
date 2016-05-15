@@ -18,12 +18,14 @@ namespace SistemaDePlanillas.Models
         public string name;
         public long location;
         public string account;
-        public bool cms;
         public string cmsText;
         public long calls;
         public double salary;
         public bool active;
         public double negativeAmount;
+        public long avalaibleVacations;
+        public string locationName;
+        public DateTime activeSince;
     }
 
     public class Call

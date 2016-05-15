@@ -74,6 +74,7 @@
     <Compile Include="Entities\SalaryEntity.cs" />
     <Compile Include="Entities\SavingsEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />
+    <Compile Include="Entities\VacationEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\CallEntity.cs" />
     <Compile Include="Repositories\Classes\AdministratorRepository.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Repositories\Classes\SalaryRepository.cs" />
     <Compile Include="Repositories\Classes\SavingRepository.cs" />
     <Compile Include="Repositories\Classes\UserRepository.cs" />
+    <Compile Include="Repositories\Classes\VacationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Classes\MainRepository.cs" />
   </ItemGroup>
