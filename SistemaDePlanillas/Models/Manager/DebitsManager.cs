@@ -11,7 +11,7 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class DebitsManager : IErrors
     {
-        public Debit addFixedDebit(long employee, string Detail, double amount, long type)
+        public Debit addFixedDebit(long employee, string Detail, double amount, long type, long period)
         {
             Debit result = null;
             try
@@ -24,6 +24,10 @@ namespace SistemaDePlanillas.Models.Manager
                         description = Detail,
                         totalAmount = amount,
                         debitTypeId = type,
+                        period=period,
+                        initialDate= DateTime.Now,
+                        activeSince= DateTime.Now,
+                        pastDays= 0,
                         active = true,
                     });
                     repository.Complete();

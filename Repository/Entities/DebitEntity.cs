@@ -17,6 +17,8 @@ namespace Repository.Entities
 
         public DateTime initialDate { set; get; }
 
+        public DateTime activeSince { set; get; }
+
 
         public string description { set; get; }
 
@@ -36,6 +38,10 @@ namespace Repository.Entities
         public long remainingPays { set; get; }
 
         public long paysMade { set; get; }
+
+        public long period { set; get; }
+
+        public long pastDays { set; get; }
 
         [Column("type"), ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
