@@ -1,0 +1,52 @@
+﻿<div id="rolesSection" class="container-fluid">
+
+    <div class="row">
+        <a href="#" data-bind="text: strings.createRoleLink, hidden: isFormOpen, click: openCreateForm"></a>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="list-group" data-bind="foreach: roles">
+                <a href="#" class="list-group-item" data-bind="text: name, click: $root.openEditForm"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="roleEditSection" class="panel panel-primary" data-bind="visible: isFormOpen">
+            <div class="panel-heading" data-bind="text: formTitle"></div>
+            <div class="panel-body">
+                <div data-bind="with: editingObject">
+                    <div data-bind="text: name"></div>
+                    <div class="list-group" data-bind="foreach: groups">
+                        <a href="#" class="list-group-item" data-bind="text: description, click: $root.openGroup"></a>
+                        <div class="collapse">
+                            <div class="well well-sm">
+                                <div class="container-fluid" data-bind="foreach: privileges">
+                                    <div class="row">
+                                        <div class="col-sm-3" data-bind="text: description"></div>
+                                        <div class="col-sm-3">
+                                            <input type="checkbox" data-bind="bootstrapToggle: active" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="saveCancelButtonsRegion" class="container-fluid">
+                    <div class="pull-left">
+                        <button type="button" class="btn btn-danger" data-bind="click: submitDelete, visible: isEditMode">Eliminar</button>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" data-bind="click: closeForm">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-bind="click: submitCreate, visible: isCreateMode">Guardar cambios</button>
+                        <button type="submit" class="btn btn-success" data-bind="click: submitChanges, visible: isEditMode">Guardar cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

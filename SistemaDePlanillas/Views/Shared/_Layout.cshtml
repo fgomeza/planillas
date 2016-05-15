@@ -1,54 +1,49 @@
 ﻿@using SistemaDePlanillas.Models
-@{ 
-    var config = (ViewConfig)ViewData["config"];
-    string title = config!= null && config.title != null ? config.title : "Sin especificar titulo o config";
-    string bodyClass = config != null && config.showNavbar ? "body-navbar" : "body-nonNavbar";
-}
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>@title</title>
-        
-        <link rel="stylesheet" href="~/Content/bootstrap.css" />
-        <link rel="stylesheet" href="~/Content/site.css" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <script src="~/Scripts/jquery-1.10.2.js"></script>
-        <script src="~/Scripts/bootstrap.js"></script>
-        <script src="~/Scripts/site.js"></script>    
+    <title data-bind="text: applicationTitle"></title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-    </head>
-    <body>
-        @{
-            if (config != null && config.showNavbar)
-            {
-                @Html.Partial("~/Views/Shared/Navbar.cshtml")
+    @Styles.Render("~/bundles/styles")
 
-            }
-        }
-        <div class="@bodyClass">
-            <div class="content">
-                @{
-                    if (config != null && config.showMenubar)
-                    {
-                        <div class="row">
-                            <div class="col-md-2">
-                                @Html.Partial("~/Views/Shared/Menubar.cshtml")
-                            </div>
-                            <div class="col-md-10">
-                                @RenderBody()
-                            </div>
-                        </div>
-                    }
-                    else
-                    {           
-                        @RenderBody()
-                    }
-                }
-            </div>
+    @Scripts.Render("~/Scripts/AppScripts/require-config.js")
+    @Scripts.Render("~/Scripts/lib/require.js")
+</head>
+
+<body>
+
+    @if (Request.IsAuthenticated)
+    {
+        var model = (IEnumerable<ApplicationSubMenu>) ViewBag.NavigationMenuModel;
+        Html.RenderPartial("Sidebar", model);
+        Html.RenderPartial("TopBanner");
+    }
+
+    <div class="body-content">
+
+        <div id="errorHolder" class="alert alert-danger alert-dismissible fade in" style="display:none;">
+            <button type="button" class="close" aria-label="close">&times;</button>
+            <strong id="errorText">@ViewBag.Error</strong>
         </div>
-    </body>
+
+        <main id="page">
+            @RenderBody()
+        </main>
+        @RenderSection("scripts", required: false)
+    </div>
+
+    <div id="divLoading" hidden>
+        <div class="loading">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+            Cargando...
+        </div>
+    </div>
+
+</body>
 </html>

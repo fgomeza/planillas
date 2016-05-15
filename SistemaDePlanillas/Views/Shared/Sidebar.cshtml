@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SistemaDePlanillas.Models.ApplicationSubMenu>
+
+<nav id="sidebar" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm">
+
+    <a href="@Url.Action("Index", "Home")" class="navmenu-brand" data-bind="text: applicationName"></a>
+
+    <ul id="navmenu-links" class="nav navmenu-nav">
+        @foreach(var subMenu in Model)
+        {
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon @subMenu.Glyphicon"></span>
+                    @subMenu.DisplayName
+                    <span class="glyphicon glyphicon-menu-right"></span>
+                </a>
+                <ul class="dropdown-menu nav navmenu-nav">
+                    @foreach (var link in subMenu.Links)
+                    {
+                        <li><a href="/#/navigation?page=@link.Page">@link.DisplayName</a></li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+    
+</nav>

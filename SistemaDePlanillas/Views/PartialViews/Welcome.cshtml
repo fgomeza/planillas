@@ -1,0 +1,27 @@
+﻿<div id="welcomeSection">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="jumbotron">
+                <div class="container-fluid">
+                    <h1>Coopesuperación</h1>
+                    <h3>Sistema de planillas</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel panel-heading">Desarrolladores</div>
+        <div class="panel-body">
+            <ul class="list-group" data-bind="foreach: contacts">
+                <li class="list-group-item">
+                    <h4 class="list-group-item-heading" data-bind="text: name"></h4>
+                    <p class="list-group-item-text">
+                        <a data-bind="text: email, attr: { href: 'mailto:' + email}"></a>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

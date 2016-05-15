@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using SistemaDePlanillas.Filters;
 
 namespace SistemaDePlanillas
 {
@@ -7,7 +8,9 @@ namespace SistemaDePlanillas
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            //filters.Add(new HandleErrorAttribute());
+            filters.Add(new AuthorizeAttribute());
+
         }
     }
 }

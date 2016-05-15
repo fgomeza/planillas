@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Linq;
 
 namespace SistemaDePlanillas.Models
 {
     public class Result<T>
     {
-        public static int OK = 0;
-        public static int ERROR = 1;
-
-        public int status;
-        public T detail;
+        public long Status = 0;
+        public T Detail;
     }
 
     public class Employee
@@ -18,21 +16,40 @@ namespace SistemaDePlanillas.Models
         public long id;
         public string idCard;
         public string name;
-        public string location;
+        public long location;
         public string account;
         public bool cms;
         public string cmsText;
         public long calls;
         public double salary;
+        public bool active;
+        public double negativeAmount;
+    }
 
+    public class Call
+    {
+        public long employee;
+        public long calls;
+        public Nullable<DateTime> date;
+        public Nullable<TimeSpan> hours;
     }
 
     public class Payroll
     {
         public long id;
-        public NpgsqlTypes.NpgsqlDate date;
+        public DateTime endDate;
         public long user;
-        public string file;
+        public string json;
+    }
+
+    public class DebitType
+    {
+        public long id;
+        public string name;
+        public Nullable<double> interestRate;
+        public Nullable<long> months;
+        public long location;
+        public bool payment;
     }
 
     public class Debit
@@ -41,6 +58,8 @@ namespace SistemaDePlanillas.Models
         public long employee;
         public string detail;
         public double amount;
+        public long type;
+        public string typeName;
     }
 
     public class PaymentDebit
@@ -48,88 +67,103 @@ namespace SistemaDePlanillas.Models
         public long id;
         public long employee;
         public string detail;
+        public DateTime initialDate;
         public double total;
         public double interestRate;
         public long paymentsMade;
         public long missingPayments;
-        public double remainingDebt;
-        public double payment;
+        public double remainingAmount;
+        public long type;
+        public string typeName;
     }
+
+    public class AmortizationDebit
+    {
+        public long id;
+        public long employee;
+        public string detail;
+        public DateTime initialDate;
+        public double total;
+        public double interestRate;
+        public long paymentsMade;
+        public long missingPayments;
+        public double remainingAmount;
+        public long type;
+        public string typeName;
+    }
+
     public class Extra
     {
         public long id;
         public long employee;
         public string detail;
-        public double amount;
+        public long hours;
     }
 
-    public class Recess
+    public class Penalty
     {
         public long id;
         public long employee;
+        public DateTime date;
         public string detail;
+        public bool active;
         public double amount;
-        public long paymentsMade;
-        public long missingPayments;
-        public double remainingRecess;
-        public double payment;
+        public long type;
+        public string typeName;
+        public double penaltyPrice;
     }
 
-    public class User
+    public class PenaltyType
     {
         public long id;
         public string name;
-        public string username;
-        public string password;
-        public long role;
-        public long location;
-        public string email;
-        public HttpSessionStateBase session;
+        public double price;
+    }
+
+
+    public class User
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public long Role { get; set; }
+        public long Location { get; set; }
+        public string Email { get; set; }
+        public bool Active { get; set; }
+        //public HttpSessionStateBase session { get; set; }
     }
 
     public class Location
     {
-        public long id;
-        public string name;
+        public long Id;
+        public string Name;
+        public double CallPrice;
+        public double Capitalization=0.04;
+        public Nullable<long> LastPayroll;
+        public Nullable<long> CurrentPayroll;
+        public bool Active;
+        public bool isPendingToApprove;
     }
 
     public class Role
     {
-        public NavbarConfig navbar;
         public long id;
         public string name;
-        public Dictionary<string, HashSet<string>> privileges;
+        public long location;
+        public bool active;
+        public Dictionary<string, Dictionary<string,bool>> privileges;
 
-        public Role(long id, string name, List<Tuple<string,string>> privs)
+        public Role(long id, string name, long location, bool active, List<Tuple<string,string,bool>> privs)
         {
             this.id = id;
             this.name = name;
-            privileges = new Dictionary<string, HashSet<string>>();
-            foreach(var priv in privs)
-            {
-                if (!privileges.ContainsKey(priv.Item1))
-                {
-                    privileges.Add(priv.Item1, new HashSet<string>());
-                }
-                privileges[priv.Item1].Add(priv.Item2);
-            }
-            navbar = new NavbarConfig(privileges);
+            this.location = location;
+            this.active = active;
+            this.privileges = 
+                privs.GroupBy(p => p.Item1, p => p, (k, l) => new { key = k, list = l }).ToDictionary(g => g.key, g => g.list.ToDictionary(o => o.Item2, o => o.Item3));
         }
 
-        public void update()
-        {
-            var privs = DBManager.getInstance().selectRolePrivileges(id).detail;
-            privileges = new Dictionary<string, HashSet<string>>();
-            foreach (var priv in privs)
-            {
-                if (!privileges.ContainsKey(priv.Item1))
-                {
-                    privileges.Add(priv.Item1, new HashSet<string>());
-                }
-                privileges[priv.Item1].Add(priv.Item2);
-            }
-            navbar = new NavbarConfig(privileges);
-        }
     }
 
     public class OperationsGroup
@@ -138,35 +172,32 @@ namespace SistemaDePlanillas.Models
         public readonly string desc;
         public readonly string name;
         public readonly string icon;
-        public readonly bool rightAlign;
-        public readonly Dictionary<string, Operation> operations;
+        public readonly List<Operation> operations;
 
-        public OperationsGroup(string desc, string name, string icon, bool rightAlign, List<Operation> operations)
+        public OperationsGroup(string desc, string name, string icon, List<Operation> operations)
         {
             this.desc = desc;
             this.name = name;
             this.icon = "".Equals(icon) ? "" : "glyphicon glyphicon-" + icon;
-            this.rightAlign = rightAlign;
-            this.operations = new Dictionary<string, Operation>();
-            foreach(Operation op in operations)
-            {
-                this.operations[op.name] = op;
-            }
+            this.operations = operations;
         }
     }
 
     public class Operation
     {
-        public readonly int id;
-        public readonly string desc;
-        public readonly string url;
-        public readonly string name;
+        public string Id;
+        public  string Name;
+        public  string Description;
+        public bool isPayrollCalculationRelated;
+        public string Group;
 
-        public Operation(string desc, string operationName, string groupName)
+        public Operation(string id, string operationName, string groupName, string desc, bool isPayrollCalculationRelated)
         {
-            this.desc = desc;
-            name = operationName;
-            url = "/action/" + groupName + "/" + operationName;
+            Id = id;
+            Name = operationName;
+            Description = desc;
+            Group = groupName;
+            this.isPayrollCalculationRelated = isPayrollCalculationRelated;
         }
     }
 }

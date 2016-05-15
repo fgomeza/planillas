@@ -8,63 +8,53 @@ namespace SistemaDePlanillas.Models
 {
     public class Responses
     {
-        public static readonly string OK= "{status:'OK'}";
+        public static string Ok = "OK";
+        public static Response OK = new Response() { status = "OK" };
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
-        public static string Error(int errorCode)
+
+        public static Response ExceptionError(Exception e)
         {
-            return "{status:'ERROR', error:"+errorCode+", detail:'"+
-                Errors.getInstance().getDetail(errorCode)+"'}";
+            return new ErrorResponse() { status = "ERROR", error = -1, detail = e.InnerException.Message!=null?e.InnerException.Message:e.Message };
         }
 
-        public static string ExceptionError(Exception e)
+
+        public static Response Error(long errorCode, string detail)
         {
-            return "{status:'ERROR', error: -1, detail:'" +e.Message+ "'}";
+            return new ErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
+        }
+        public static Response AplicationError(string errorCode, string detail)
+        {
+            return new AplicationErrorResponse() { status = "ERROR", error = errorCode, detail = detail };
         }
 
-        public static string Simple(int status)
+        public static Response WithData(object data)
         {
-            return status == 0 ? OK : Error(status);
+            return new DataResponse() { status = "OK", data = data };
         }
 
-        public static string Error(int errorCode, string detail)
-        {
-            return "{status:'ERROR', error:"+errorCode+", detail:'" + detail + "'}";
-        }
-
-        public static string WithData(string JSON)
-        {
-            return "{status:'OK', data:" + JSON + "}";
-        }
-
-        public static string WithData(object data)
-        {
-            return "{status:'OK', data:"+js.Serialize(data)+"}";
-        }
 
     }
 
-    public class Errors
+    public class Response {
+        public string status;
+    };
+
+    public class ErrorResponse : Response
     {
-        private Dictionary<int, string> details;
-
-        private static Errors instance;
-
-        private Errors()
-        {
-            details = new Dictionary<int, string>();
-            //leer errores de la base de datos
-            //insertarlos
-        }
-        
-        public static Errors getInstance()
-        {
-            return instance != null ? instance : (instance = new Errors());
-        }
-
-        public string getDetail(int errorCode)
-        {
-            return details.ContainsKey(errorCode) ? details[errorCode] : "Error desconocido";
-        }
+        public long error;
+        public string detail;
     }
+
+    public class AplicationErrorResponse : Response
+    {
+        public string error;
+        public string detail;
+    }
+
+    public class DataResponse : Response
+    {
+        public object data;
+    }
+
 }

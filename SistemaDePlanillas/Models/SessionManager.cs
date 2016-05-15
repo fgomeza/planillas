@@ -1,109 +1,155 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http.Controllers;
+using System.Web.Security;
 using System.Web.SessionState;
 
 namespace SistemaDePlanillas.Models
 {
     public class SessionManager
     {
-        private static SessionManager single;
-        private Dictionary<long, User> loggedUsers;
+        private static SessionManager instance;
         private Dictionary<long, Role> roles;
 
-        public static SessionManager getInstance()
+        class InexistentUserException : Exception
         {
-            return single != null ? single : single = new SessionManager();
+            long id;
+            public InexistentUserException(long id)
+            {
+                this.id = id;
+            }
+
+            public override string Message
+            {
+                get
+                {
+                    return "The user with id = "+id+", not longer exist in the database, CLOSE HIS SESSION!";
+                }
+            }
+        }
+
+        public static SessionManager Instance
+        {
+            get
+            {
+                return instance == null ? (instance = new SessionManager()) : instance;
+            }
         }
 
         private SessionManager()
         {
-            loggedUsers = new Dictionary<long, User>();
-            roles = new Dictionary<long, Role>();
-
-            var rolesList = DBManager.getInstance().selectRoles().detail;
-            foreach(Role role in rolesList)
-            {
-                roles[role.id] = role;
-            }
+            updateRoles();
         }
 
-        private Role getRole(long id)
+        public void updateRoles()
         {
-                return roles[id];
+            var rolesList = DBManager.Instance.roles.selectAllActiveRoles();
+            roles = rolesList.ToDictionary(r => r.id);
         }
 
-        public NavbarConfig getNavbarConfig(User user)
+        public IEnumerable<Role> getRoles()
         {
-            return getRole(user.role).navbar;
+            return roles.Values;
         }
 
-        public MenubarConfig getMenuBarConfig(User user, string group)
+        public Role getRole(long id)
         {
-            return getRole(user.role).navbar.menus[group];
-        }
-
-        public void updateRole(int roleId)
-        {
-            roles[roleId].update();
+            return roles[id];
         }
 
         public bool verifyOperation(User user, string group, string operation)
         {
-            var privileges = getRole(user.role).privileges;
-            return privileges.ContainsKey(group) && privileges[group].Contains(operation);
+            var current = DBManager.Instance.locations.getLocation(user.Location).CurrentPayroll;
+            if (current == null)
+                return verifyOperation(user.Role, group.ToLower(), operation.ToLower());
+            else
+                return verifyOperationLocked(user.Role, group.ToLower(), operation.ToLower());
+        }
+
+        private bool verifyOperation(long role, string group, string operation)
+        {
+            var privileges = getRole(role).privileges;
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation);
+        }
+
+        private bool verifyOperationLocked(long role, string group, string operation)
+        {
+            var privileges = getRole(role).privileges;
+            return privileges.ContainsKey(group) && privileges[group].ContainsKey(operation) && !privileges[group][operation];
         }
 
         public string getRoleName(User user)
         {
-            return getRole(user.role).name;
+            return getRole(user.Role).name;
         }
 
-        public bool isLogged(HttpSessionStateBase session)
+        private User userFromTicket(FormsAuthenticationTicket ticket)
         {
-            return session["user"] != null;
+            long userId = long.Parse(ticket.UserData);
+            User user = DBManager.Instance.users.selectUser(userId);
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                throw new InexistentUserException(userId);
+            }
         }
 
-        public User getUser(HttpSessionStateBase session)
+        public void setSessionUser(HttpResponseBase response, User user, bool isPersistent)
         {
-            return (User)session["user"];
+            string userId = user.Id.ToString();
+            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1,
+                user.Name,
+                DateTime.Now,
+                DateTime.Now.AddMinutes(30),
+                isPersistent,
+                userId,
+                FormsAuthentication.FormsCookiePath);
+            // Encrypt the ticket.
+            string encTicket = FormsAuthentication.Encrypt(ticket);
+            // Create the cookie.
+            response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
         }
 
-        public bool isLogged(HttpSessionState session)
+        public void removeSessionUser(HttpRequestBase request)
         {
-            return session["user"] != null;
+            FormsAuthentication.SignOut();
         }
 
-        public User getUser(HttpSessionState session)
+        public User getSessionUser(HttpRequestContext request)
         {
-            return (User)session["user"];
+            FormsIdentity id = (FormsIdentity)request.Principal.Identity;
+            FormsAuthenticationTicket ticket = id.Ticket;
+            return userFromTicket(ticket);
         }
 
-        public bool login(string username, string password, HttpSessionStateBase session)
-        {        
-            User user = DBManager.getInstance().login(username,password).detail;
-            user.session = session;
-            session["user"] = user;
-            loggedUsers[user.id] = user;
-            return true;
-        }
-
-        public bool logout(HttpSessionStateBase session)
+        public User getSessionUser(HttpRequestBase request)
         {
-            User user = getUser(session);
-            loggedUsers.Remove(user.id);
-            session.Remove("user");
-            return true;
+            var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+            return userFromTicket(ticket);
         }
 
-        public bool logout(int id)
+        public bool validateUser(string username, string password , out User user, out AppException error)
         {
-            User user = loggedUsers[id];
-            loggedUsers.Remove(id);
-            user.session.Remove("user");
-            return true;
+            try
+            {
+                user= DBManager.Instance.users.login(username, password);
+                error = null;
+                return true;
+            }
+            catch(AppException e)
+            {
+                user = null;
+                error = e;
+                return false;
+            }
         }
 
     }

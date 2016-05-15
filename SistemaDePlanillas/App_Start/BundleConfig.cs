@@ -5,27 +5,60 @@ namespace SistemaDePlanillas
 {
     public class BundleConfig
     {
-        // Para obtener más información sobre Bundles, visite http://go.microsoft.com/fwlink/?LinkId=301862
+        // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+            /******************/
+            /*      Libs      */
+            /******************/
+            bundles.Add(new ScriptBundle("~/bundles/js/libs").Include(
+                        "~/Scripts/lib/jquery-{version}.js",
+                        "~/Scripts/lib/knockout-{version}.js",
+                        "~/Scripts/lib/sammy-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+            bundles.Add(new ScriptBundle("~/bundles/js/scripts").Include(
+                        "~/Scripts/lib/jquery-{version}.js",
+                        "~/Scripts/lib/bootstrap.js",
+                        "~/Scripts/lib/jasny-bootstrap.js",
+                        "~/Scripts/lib/bootstrap-switch.js"));
 
-            // Utilice la versión de desarrollo de Modernizr para desarrollar y obtener información. De este modo, estará
-            // preparado para la producción y podrá utilizar la herramienta de compilación disponible en http://modernizr.com para seleccionar solo las pruebas que necesite.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            bundles.Add(new ScriptBundle("~/bundles/js/modernizr").Include(
+                        "~/Scripts/lib/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+            bundles.Add(new ScriptBundle("~/bundles/js/dropzone").Include(
+                      "~/Scripts/lib/dropzone.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+
+            /*****************/
+            /*      App      */
+            /*****************/
+            bundles.Add(new ScriptBundle("~/bundles/js/knockout").Include(
+                        "~/Scripts/App/knockout-config.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/sammy").Include(
+                        "~/Scripts/App/sammy-routing.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/app-scripts").Include(
+                        "~/Scripts/App/site.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
+                      "~/Scripts/lib/bootstrap.js",
+                      "~/Scripts/lib/respond.js",
+                      "~/Scripts/lib/jasny-bootstrap.js"));
+
+
+            /********************/
+            /*      Styles      */
+            /********************/
+            bundles.Add(new StyleBundle("~/bundles/styles").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/jasny-bootstrap.css",
+                      "~/Content/bootstrap-toggle.css",
+                      "~/Content/daterangepicker.css",
+                      "~/Content/dropzone/dropzone.css",
                       "~/Content/site.css"));
+
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

@@ -1,0 +1,33 @@
+﻿<div id="topBanner" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header pull-left">
+            <!--<button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target="#sidebar" aria-expanded="false">-->
+            <button type="button" class="navbar-toggle pull-left" data-toggle="offcanvas" data-target="#sidebar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="#" data-bind="text: partialViewTitle"></a>
+        </div>
+
+        <div class="navbar-header pull-right">
+            <ul class="nav navbar-nav navbar-right top-nav">
+                @if (Request.IsAuthenticated)
+                {
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-user"></span>
+                            @HttpContext.Current.User.Identity.Name
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Salir", "SignOut", "Account")</li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

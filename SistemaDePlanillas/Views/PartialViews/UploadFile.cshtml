@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Cargar Archivos";
+
+    var bundle = System.Web.Optimization.BundleTable.Bundles.GetBundleFor("~/styles/partials");
+    //bundle.Include("~/Content/dropzone/dropzone.css");
+
+}
+
+<div id="uploadSection">
+    @using (Html.BeginForm("uploadCmsFile", "FileManage", FormMethod.Post, new
+    {
+        enctype = "multipart/form-data",
+        id = "uploadDemo",
+        @class = "dropzone"
+    }))
+    {
+        <div class="fallback">
+            <input name="file" type="file" multiple />
+            <input type="submit" value="Upload" />
+        </div>
+    }
+
+</div>

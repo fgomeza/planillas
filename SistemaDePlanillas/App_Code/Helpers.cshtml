@@ -1,0 +1,17 @@
+﻿@using System.Web.Mvc;
+@using System.Web.Mvc.Html;
+@using System.Web.Mvc.Routing;
+@using System.Web.Mvc.Razor;
+@using System.Web.Mvc.Ajax;
+
+@functions {
+    private static WebViewPage page { get { return PageContext.Page as WebViewPage; } }
+    private static System.Web.Mvc.HtmlHelper Html { get { return page.Html; } }
+    private static UrlHelper Url { get { return page.Url; } }
+    private static dynamic ViewBag { get { return page.ViewBag; } }
+    private static AjaxHelper Ajax { get { return page.Ajax;  } }
+}
+
+@helper AjaxLink(String displayName, String action, String controller) {
+    @Ajax.ActionLink(@displayName, @action, @controller, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "page", OnBegin = "ajaxNavigationBegin", OnComplete = "ajaxNavigationComplete", OnSuccess = "ajaxNavigationSuccess", OnFailure = "ajaxNavigationFailure" })
+}

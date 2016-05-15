@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDePlanillas.Models.Manager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +9,25 @@ namespace SistemaDePlanillas.Models
 {
     public  class ViewManager
     {
-        static private ViewManager single;
+        static private ViewManager instance;
         private Dictionary<string, OperationsGroup> groups;
 
         private ViewManager()
         {
             groups = new Dictionary<string, OperationsGroup>();
-            var groupsList = DBManager.getInstance().selectOperationsGroups().detail;
+            var groupsList = DBManager.Instance.groups.selectAllOperationsGroup();
             foreach(var group in groupsList)
             {
                 groups[group.name] = group;
             }
         }
 
-        public static ViewManager getInstance()
+        public static ViewManager Instance
         {
-            return single != null ? single : single = new ViewManager();
+            get
+            {
+                return instance == null ? (instance = new ViewManager()) : instance;
+            }
         }  
         
         public OperationsGroup getOperationsGroup(string name)
@@ -36,12 +40,14 @@ namespace SistemaDePlanillas.Models
     {
         public string name;
         public string icon;
+        public string desc;
         public List<Tuple<string, string>> options;
 
-        public MenubarConfig(string name, List<Tuple<string, string>> options, string icon)
+        public MenubarConfig(string name, List<Tuple<string, string>> options, string icon, string desc)
         {
             this.name = name;
             this.icon=icon;
+            this.desc = desc;
             this.options = options;
         }
     }
@@ -57,18 +63,18 @@ namespace SistemaDePlanillas.Models
             leftMenus = new List<MenubarConfig>();
             rightMenus = new List<MenubarConfig>();
             menus = new Dictionary<string, MenubarConfig>();
-            ViewManager vm = ViewManager.getInstance();
+            ViewManager vm = ViewManager.Instance;
             foreach(KeyValuePair<string, HashSet<string>> grupo in privileges)
             {
                 OperationsGroup og = vm.getOperationsGroup(grupo.Key);
                 var options = new List<Tuple<string, string>>();
                 foreach(string operacion in grupo.Value)
                 {
-                    Operation op = og.operations[operacion];
-                    options.Add(new Tuple<string,string>(op.desc,op.url));
+                    Operation op = og.operations.First(o=>o.Name==operacion);
+                    options.Add(new Tuple<string,string>(op.Description,op.Description)); // Revisar
                 }
-                MenubarConfig menu = new MenubarConfig(og.desc, options, og.icon);
-                (og.rightAlign ? rightMenus : leftMenus).Add(menu);
+                MenubarConfig menu = new MenubarConfig(og.name, options, og.icon, og.desc);
+                //(og.rightAlign ? rightMenus : leftMenus).Add(menu);
                 menus[grupo.Key] = menu;
             }
         }
