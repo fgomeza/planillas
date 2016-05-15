@@ -27,7 +27,6 @@ namespace Repository.Entities
         public string cms { get; set; }
 
         [ForeignKey("fkemployee_location")]
-        [Column("location")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long locationId { get; set; }
 
