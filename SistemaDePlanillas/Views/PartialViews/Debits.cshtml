@@ -7,26 +7,58 @@
         </p>
     </div>
         -->
-
-    <div class="row" data-bind="visible: fixedDebitsVisible">
+    <div class="row">
         <div class="panel panel-default">
-            <div class="panel-heading">Débitos fijos</div>
-            <div class="table-responsive table-scroll" data-bind="simpleGrid: fixedData"></div>
+            <div class="panel-body">
+                <div class="pull-right">
+                    <div class="btn-group" data-toggle="buttons" data-bind="radio: debitTypeSelected">
+                        <label class="btn btn-primary">
+                            <input type="radio" name="debitGroup" value="fixed" />
+                            Débitos fijos
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="debitGroup" value="payments" />
+                            Débitos a pagos
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="debitGroup" value="amortization" />
+                            Débitos amortizaciones
+                        </label>
+                    </div>
+                </div>
+                <div class="pull-left">
+                    <select data-bind="options: employees, optionsText: 'name', optionsValue: 'id', value: employeeId, optionsCaption: 'Asociado'"></select>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row" data-bind="visible: paymentsDebitsVisible">
-        <div class="panel panel-default">
-            <div class="panel-heading">Débitos a pagos</div>
-            <div class="table-responsive table-scroll" data-bind="simpleGrid: paymentsData"></div>
+    <div data-bind="visible: fixedDebitsVisible">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">Débitos fijos</div>
+                <div class="table-responsive table-scroll" data-bind="simpleGrid: fixedData"></div>
+            </div>
         </div>
     </div>
 
-    <div class="row" data-bind="visible: amortizationDebitsVisible">
-        <div class="panel panel-default">
-            <div class="panel-heading">Débitos amortizaciones</div>
-            <div class="table-responsive table-scroll" data-bind="simpleGrid: amortizationData"></div>
+    <div data-bind="visible: paymentsDebitsVisible">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">Débitos a pagos</div>
+                <div class="table-responsive table-scroll" data-bind="simpleGrid: paymentsData"></div>
+            </div>
+        </div>
+    </div>
+
+    <div data-bind="visible: amortizationDebitsVisible">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">Débitos amortizaciones</div>
+                <div class="table-responsive table-scroll" data-bind="simpleGrid: amortizationData"></div>
+            </div>
         </div>
     </div>
 
 </div>
+

@@ -1,27 +1,5 @@
-﻿define(['jquery', 'knockout', 'app/driver', 'simpleGrid'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver', 'viewModels/employees', 'simpleGrid'], function ($, ko, app, employees) {
     
-    function FixedDebit(data) {
-        this.id = ko.observable();
-        this.employeeId = ko.observable();
-        this.detail = ko.observable();
-        this.amount = ko.observable();
-        this.type = ko.observable();
-        this.typeName = ko.observable();
-        this.update(data);
-    }
-
-    ko.utils.extend(FixedDebit.prototype, {
-        update: function (data) {
-            data = data || {};
-            this.id(data.id);
-            this.employeeId(data.employee);
-            this.detail(data.detail);
-            this.amount(data.amount);
-            this.type(data.type);
-            this.typeName(data.typeName);
-        }
-    });
-
     function EditableObject(data) {
         data = data || {};
         var self = this;
@@ -47,28 +25,42 @@
         var self = this;
 
         self.loading = null;
+        self.employees = null;
 
         self.employeeId = ko.observable();
+        self.debitTypeSelected = ko.observable();
         self.fixedDebits = ko.observableArray();
         self.paymentsDebits = ko.observableArray();
         self.amortizationDebits = ko.observableArray();
         self.fixedDebitsVisible = ko.computed(function () {
-            return self.fixedDebits().length > 0;
+            return self.debitTypeSelected() == "fixed" && self.fixedDebits().length > 0;
         });
 
         self.paymentsDebitsVisible = ko.computed(function () {
-            return self.paymentsDebits().length > 0;
+            return self.debitTypeSelected() == "payments" && self.paymentsDebits().length > 0;
         });
 
         self.amortizationDebitsVisible = ko.computed(function () {
-            return self.amortizationDebits().length > 0;
+            return self.debitTypeSelected() == "amortization" && self.amortizationDebits().length > 0;
         });
+
+        self.loading = $.when(self.loading, employees.loading).
+            then(function () {
+                self.employees = employees.employees;
+            });
 
         self.employeeId.subscribe(function (newValue) {
             if (!newValue) return;
 
+            if (app.urlParameterExists("employee")) {
+                location.href = location.href.replace(/employee=[0-9]+/, "employee=" + newValue);
+            } else {
+                location.href += "&employee=" + newValue;
+            }
+
             var args = { employee: newValue };
             self.loading = $.when(
+                self.loading,
                 getDebits('get/AllFixed', self.fixedDebits, args),
                 getDebits('get/AllPayment', self.paymentsDebits, args),
                 getDebits('get/AllAmortization', self.amortizationDebits, args));

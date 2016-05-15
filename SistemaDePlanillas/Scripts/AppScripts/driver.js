@@ -73,6 +73,17 @@
             self.hideLoading();
         }
 
+        this.urlParameterExists = function (parameter) {
+            var url = window.location.href;
+
+            if (url.indexOf("?" + parameter + "=") != -1)
+                return true;
+            else if (url.indexOf("&" + parameter + "=") != -1)
+                return true;
+
+            return false;
+        }
+
     }
 
     return new AppHandler();
