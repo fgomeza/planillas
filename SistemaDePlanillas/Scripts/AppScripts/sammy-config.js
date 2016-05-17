@@ -57,7 +57,7 @@
                         }
                         app.stopLoadingTimeout(loading);
                     }, function (error) {
-                        console.log(error);
+                        console.error(error);
                         app.stopLoadingTimeout(loading);
                     });
                 });

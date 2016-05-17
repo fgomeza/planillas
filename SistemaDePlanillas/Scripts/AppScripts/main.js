@@ -2,6 +2,7 @@
     'bootstrap',
     'respond',
     'jasny',
+    'bootstrap-select',
     'simpleGrid',
     'knockstrap',
     'app/site'],

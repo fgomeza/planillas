@@ -21,6 +21,7 @@
         'switch': ['jquery', 'bootstrap'],
         'toggle': ['jquery', 'bootstrap'],
         'daterangepicker': ['moment', 'jquery', 'bootstrap'],
+        'bootsrap-select': ['jquery', 'bootstrap'],
         'jquery.validate': ['jquery'],
         'jquery.validate.unobtrusive': ['jquery.validate'],
         'jquery.unobtrusive-ajax': ['jquery'],

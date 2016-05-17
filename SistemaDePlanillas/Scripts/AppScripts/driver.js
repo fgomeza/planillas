@@ -1,4 +1,4 @@
-﻿define([], function () {
+﻿define(['jquery', 'knockout'], function ($, ko) {
 
     function AppHandler() {
 
@@ -83,6 +83,27 @@
 
             return false;
         }
+
+        this.EditableObject = function(data) {
+            data = data || {};
+            var self = this;
+            $.each(data, function (property) {
+                if ($.isArray(property))
+                    self[property] = ko.observableArray();
+                else
+                    self[property] = ko.observable();
+            });
+            this.update(data)
+        }
+
+        ko.utils.extend(self.EditableObject.prototype, {
+            update: function (data) {
+                var self = this;
+                $.each(data, function (propertyName, value) {
+                    self[propertyName](value);
+                });
+            }
+        });
 
     }
 
