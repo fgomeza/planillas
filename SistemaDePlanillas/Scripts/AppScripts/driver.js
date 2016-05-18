@@ -49,9 +49,13 @@
                 $('#errorHolder').slideUp();
             }, 10000);
 
-            $('#errorholder').on('close.bs.alert', function () {
+            $('#errorHolder').on('close.bs.alert', function () {
                 clearTimeout(timeout);
             });
+        }
+
+        this.hideError = function () {
+            $("#errorHolder").slideUp();
         }
 
         this.showLoading = function () {

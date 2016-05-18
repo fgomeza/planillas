@@ -131,24 +131,36 @@
             require(['bootstrap-select'], function () {
                 ko.bindingHandlers.selectPicker = {
                     init: function (element, valueAccessor, allBindingsAccessor) {
-                        var value = valueAccessor()();
+
                         var $element = $(element);
                         if ($element.is('select')) {
+                            var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                            var options = selectPickerOptions.options;
 
-                            if (ko.isObservable(valueAccessor())) {
-                                if ($element.prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
-                                    ko.bindingHandlers.selectedOptions.init(element, valueAccessor, allBindingsAccessor);
-                                } else {
-                                    ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor);
-                                }
-                            }
+                            ko.bindingHandlers.options.init(element, options, allBindingsAccessor);
 
                             $element.addClass('selectpicker').selectpicker();
-                            $element.selectpicker('val', value);
+
+                            $element.on("changed.bs.select", function () {
+                                valueAccessor()(element.value);
+                            });
                         }
                     },
                     update: function (element, valueAccessor, allBindingsAccessor) {
-                        console.log(valueAccessor()());
+
+                        var $element = $(element);
+                        if ($element.is('select')) {
+                            var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                            var options = selectPickerOptions.options;
+
+                            ko.bindingHandlers.options.update(element, options, allBindingsAccessor);
+
+                            $element.selectpicker("refresh");
+                            $element.selectpicker("val", valueAccessor()());
+                        }
+                    }
+                    /*
+                    update: function (element, valueAccessor, allBindingsAccessor) {
                         var $element = $(element);
                         if ($element.is('select')) {
                             var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
@@ -184,6 +196,7 @@
                             $element.selectpicker('refresh');
                         }
                     }
+                    */
                 }
             });
         }

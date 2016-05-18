@@ -54,6 +54,7 @@
                     require(['controllers/' + context.params.page], function (controller) {
                         if (controller && controller.init) {
                             controller.init(context.params);
+                            app.hideError();
                         }
                         app.stopLoadingTimeout(loading);
                     }, function (error) {

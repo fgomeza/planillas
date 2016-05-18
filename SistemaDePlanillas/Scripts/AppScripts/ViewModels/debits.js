@@ -80,7 +80,7 @@
             });
 
         self.employeeId.subscribe(function (newValue) {
-            if (!newValue) return;
+            if (newValue == null) return;
 
             if (app.urlParameterExists("employee")) {
                 location.href = location.href.replace(/employee=[0-9]+/, "employee=" + newValue);
