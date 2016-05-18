@@ -7,12 +7,14 @@
             var $containerElement = $('#debitsSection');
 
             params = params || {};
-            viewModel.employeeId(params.employee);
+            var employeeId = parseInt(params.employee);
+            if (employeeId) {
+                viewModel.employeeId(employeeId);
+            }
 
             $.when(viewModel.loading).then(function () {
                 ko.applyBindings(viewModel, $containerElement[0]);
                 $containerElement.parent().fadeIn();
-                $(window).trigger('load.bs.select.data-api');
             });
 
             title.partialViewTitle('Débitos');

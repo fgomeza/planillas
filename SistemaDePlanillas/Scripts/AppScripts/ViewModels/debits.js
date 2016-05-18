@@ -39,7 +39,8 @@
             remainingAmount: "Monto pendiente",
             createFixedDebitLink: "Agregar un débito fijo",
             createPaymentsDebitLink: "Agregar un débito a pagos",
-            pays: "Total de pagos"
+            pays: "Total de pagos",
+            createAmortizationDebitLink: "Agregar un débito amortizado"
         };
 
         self.loading = null;

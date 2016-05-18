@@ -2,7 +2,6 @@
     'bootstrap',
     'respond',
     'jasny',
-    'bootstrap-select',
     'simpleGrid',
     'knockstrap',
     'app/site'],
@@ -23,6 +22,7 @@
     require(['app/knockout-config'], function (koConfig) {
         koConfig.hiddenBindingHandler();
         koConfig.dateRangePicker();
-        koConfig.bootstrapSwitch();
+        koConfig.bootstrapToggle();
+        koConfig.bootstrapSelect();
     });
 });

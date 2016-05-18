@@ -54,7 +54,7 @@ namespace SistemaDePlanillas
                       "~/Content/bootstrap.css",
                       "~/Content/jasny-bootstrap.css",
                       "~/Content/bootstrap-select.css",
-                      "~/Content/bootstrap-switch.css",
+                      "~/Content/bootstrap-toggle.css",
                       "~/Content/daterangepicker.css",
                       "~/Content/dropzone/dropzone.css",
                       "~/Content/site.css"));
