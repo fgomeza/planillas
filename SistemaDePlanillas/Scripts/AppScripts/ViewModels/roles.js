@@ -58,6 +58,8 @@
             createRoleLink: "Crear Rol"
         };
 
+        self.selectedObject = null;
+
         self.roles = ko.observableArray();
         self.isFormOpen = ko.observable(false);
         self.isEditMode = ko.observable(false);
@@ -85,7 +87,9 @@
         }
 
         self.openEditForm = function (data, event) {
-            self.editingObject(data);
+            var jsData = ko.toJS(data);
+            self.editingObject(new Role(jsData));
+            self.selectedObject = data;
             self.isEditMode(true);
             self.isCreateMode(false);
             self.openForm();
@@ -104,7 +108,8 @@
             var obj = ko.toJS(self.editingObject);
             var args = { id: obj.id, name: obj.name, operations: createOperationsList(obj) };
             app.consumeAPI("roles", "modify", args).done(function (data) {
-                console.log(data);
+                var edited = ko.toJS(self.editingObject());
+                self.selectedObject.update(edited);
             }).fail(function (error) {
                 console.error(error);
                 app.showError(error);
