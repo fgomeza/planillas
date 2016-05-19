@@ -27,7 +27,6 @@ namespace SistemaDePlanillas.Models.Operations
             }
             return actions;
         }
-
         public static object actions(User user, string group)
         {
             string @namespace = "SistemaDePlanillas.Models.Operations";
