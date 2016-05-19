@@ -41,7 +41,7 @@ namespace SistemaDePlanillas.Models.Manager
             {
                 validateException(e);
             }
-            return roleId;
+            return null;
         }
 
         public Role getRole(long id)
