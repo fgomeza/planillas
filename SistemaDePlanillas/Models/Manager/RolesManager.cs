@@ -202,7 +202,7 @@ namespace SistemaDePlanillas.Models.Manager
                             Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
-                        result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                        result.Add(new Role(x.id, x.name, x.locationId, x.active, list));
                     }
                 }
             }
@@ -231,7 +231,7 @@ namespace SistemaDePlanillas.Models.Manager
                                 Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
                                 list.Add(tuple);
                             }
-                            result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                            result.Add(new Role(x.id, x.name, x.locationId, x.active, list));
                         }
                     }
                 }
