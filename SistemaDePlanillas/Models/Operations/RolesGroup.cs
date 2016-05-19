@@ -44,7 +44,7 @@ namespace SistemaDePlanillas.Models.Operations
             return roles.Select(r => formatRole(r, groups));
         }
 
-        public static long add(User user, string name, IEnumerable<object> operations)
+        public static Role add(User user, string name, IEnumerable<object> operations)
         {
             long roleId = DBManager.Instance.roles.addRole(name, user.Location, operations.Select(o => o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
