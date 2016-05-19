@@ -122,7 +122,9 @@
             var obj = ko.toJS(self.editingObject);
             var args = { name: obj.name, operations: createOperationsList(obj) };
             app.consumeAPI("roles", "add", args).done(function (data) {
-                console.log("it worked!", data);
+                // TODO: arreglar esto
+                data = data || {}; obj.id = data.id; obj.active = true;
+                self.roles.push(new Role(obj));
             }).fail(function (error) {
                 console.error(error);
                 app.showError(error);

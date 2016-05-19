@@ -139,32 +139,7 @@ namespace SistemaDePlanillas.Models.Manager
                     RoleEntity role = repository.Roles.Get(id);
                     if (role != null)
                     {
-                        //var Users = selectAllActiveUsers(role.locationId);
-                        List<User> userResult = new List<User>();
-
-                        var users = repository.Users.GetAll();
-                        foreach (UserEntity ue in users)
-                        {
-                            if (ue.active == true)
-                            {
-                                userResult.Add(new User()
-                                {
-                                    Id = ue.id,
-                                    Email = ue.email,
-                                    Location = ue.locationId,
-                                    Name = ue.name,
-                                    Password = ue.password,
-                                    Role = ue.roleId,
-                                    Username = ue.userName,
-                                    Active = true
-                                 });
-                              }
-                          }
-                            
-                        if (userResult.TrueForAll(u => u.Role != role.id))
-                            role.active = false;
-                        else
-                            validateException(App_LocalResoures.Errors.roleWithUser);
+                        role.active = false;
                         repository.Complete();
                     }
                     else
@@ -222,7 +197,7 @@ namespace SistemaDePlanillas.Models.Manager
                             Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
-                        result.Add(new Role(x.id, x.name, x.locationId, true, list));
+                        result.Add(new Role(x.id, x.name, x.locationId, x.active, list));
                     }
                 }
             }

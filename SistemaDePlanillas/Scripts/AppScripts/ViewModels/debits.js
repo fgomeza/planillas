@@ -62,15 +62,22 @@
 
         // Computed
         self.fixedDebitsVisible = ko.computed(function () {
-            return self.debitTypeSelected() == "fixed" && self.fixedDebits().length > 0;
+            return self.debitTypeSelected() == "fixed";
         });
-
         self.paymentsDebitsVisible = ko.computed(function () {
-            return self.debitTypeSelected() == "payments" && self.paymentsDebits().length > 0;
+            return self.debitTypeSelected() == "payments";
         });
-
         self.amortizationDebitsVisible = ko.computed(function () {
-            return self.debitTypeSelected() == "amortization" && self.amortizationDebits().length > 0;
+            return self.debitTypeSelected() == "amortization";
+        });
+        self.fixedDebitsTableVisible = ko.computed(function () {
+            return self.fixedDebits().length > 0;
+        });
+        self.paymentsDebitsTableVisible = ko.computed(function () {
+            return self.paymentsDebits().length > 0;
+        });
+        self.amortizationDebitsTableVisible = ko.computed(function () {
+            return self.amortizationDebits().length > 0;
         });
 
         //functions
