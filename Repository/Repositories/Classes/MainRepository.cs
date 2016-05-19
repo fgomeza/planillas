@@ -14,6 +14,7 @@ namespace Repository.Repositories.Classes
     {
         private readonly AppContext _context;
 
+        public RoleOperationRepository RoleOperations { get; }
         public CallRepository Calls { get; }
         public UserRepository Users { get; }
         public LocationRepository Locations { get; }
@@ -52,6 +53,7 @@ namespace Repository.Repositories.Classes
             DebitPayments = new DebitPaymentRepository(_context);
             Administrators = new AdministratorRepository(_context);
             Savings = new SavingRepository(_context);
+            RoleOperations = new RoleOperationRepository(_context);
         }
 
 

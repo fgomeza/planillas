@@ -16,6 +16,7 @@ namespace Repository.Context
         {
             
         }
+        public DbSet<RoleOperationEntity> RoleOperations { get; set; }
         public DbSet<PenaltyTypeEntity> PenaltyTypes { get; set; }
         public DbSet<PenaltyEntity> Penalties { get; set; }
         public DbSet<AdministratorEntity> Administrators { get; set; }

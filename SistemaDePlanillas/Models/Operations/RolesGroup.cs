@@ -71,10 +71,11 @@ namespace SistemaDePlanillas.Models.Operations
             SessionManager.Instance.updateRoles();
         }
 
-        public static void modify(User user, long id, string name, IEnumerable<object> operations)
+        public static Role modify(User user, long id, string name, IEnumerable<object> operations)
         {
-            DBManager.Instance.roles.updateRole(id, name, user.Location, operations.Select(o=>o.ToString()).ToList());
+            var role =DBManager.Instance.roles.updateRole(id, name, user.Location, operations.Select(o=>o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
+            return role;
         }
 
         public static object get_groups(User user)
