@@ -118,7 +118,6 @@
 
         self.submitCreate = function () {
             var obj = ko.toJS(self.editingObject());
-            console.log(obj);
             var args, operation = 'add';
             if (obj.cms) {
                 operation += '/CMS';

@@ -4,6 +4,7 @@
         this.id = ko.observable();
         this.name = ko.observable();
         this.groups = ko.observableArray();
+        this["_destroy"] = !data.active;
         this.update(data);
     }
 
@@ -162,7 +163,7 @@
         self.loading = $.when(self.loading, loadRoles(), loadGroups());
 
         function loadRoles() {
-            return app.consumeAPI('roles', 'get/active').done(function (data) {
+            return app.consumeAPI('roles', 'get').done(function (data) {
                 var mappedData = $.map(data, function (item) { return new Role(item); });
                 self.roles(mappedData);
                 return mappedData;
