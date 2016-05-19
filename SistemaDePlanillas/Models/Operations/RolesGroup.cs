@@ -70,7 +70,7 @@ namespace SistemaDePlanillas.Models.Operations
             SessionManager.Instance.updateRoles();
         }
 
-        public static void modify(User user, long id, string name, List<String> operations)
+        public static void modify(User user, long id, string name, List<string> operations)
         {
             DBManager.Instance.roles.updateRole(id, name, user.Location, operations);
             SessionManager.Instance.updateRoles();
