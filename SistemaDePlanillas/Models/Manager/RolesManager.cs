@@ -10,16 +10,15 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class RolesManager :IErrors
     {
-        public long addRole(string name, long location, List<string> operations)//**
+        public Role addRole(string name, long location, List<string> operations)
         {
-            long roleId = 0;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    RoleEntity role = new RoleEntity()
-                    { name = name, locationId = location, active = true };
-                    roleId = repository.Roles.Add(role).id;
+                    RoleEntity role = repository.Roles.Add(new RoleEntity()
+                    { name = name, locationId = location, active = true });
+
                     foreach (var op in operations)
                     {
                         OperationEntity operation = repository.Operations.Get(op);
@@ -29,6 +28,13 @@ namespace SistemaDePlanillas.Models.Manager
                         }
                     }
                     repository.Complete();
+                    List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
+                    foreach (var op in role.operations)
+                    {
+                        Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
+                        list.Add(tuple);
+                    }
+                    return new Role(role.id, role.name, role.locationId, role.active, list);
                 }
             }
             catch (Exception e)
