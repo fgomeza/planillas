@@ -17,19 +17,32 @@
     <div class="row">
         <div id="roleEditSection" class="panel panel-primary" data-bind="visible: isFormOpen">
             <div class="panel-heading" data-bind="text: formTitle"></div>
-            <div class="panel-body">
-                <div data-bind="with: editingObject">
-                    <div data-bind="text: name"></div>
-                    <div class="list-group" data-bind="foreach: groups">
-                        <a href="#" class="list-group-item" data-bind="text: description, click: $root.openGroup"></a>
-                        <div class="collapse">
-                            <div class="well well-sm">
-                                <div class="container-fluid" data-bind="foreach: privileges">
-                                    <div class="row">
-                                        <div class="col-sm-3" data-bind="text: description"></div>
-                                        <div class="col-sm-3">
-                                            <input type="checkbox" data-bind="bootstrapToggle: active" />
-                                        </div>
+
+            <div data-bind="with: editingObject">
+
+                <div class="panel-body">
+                    <div class="form-group" data-bind="visible: $root.isCreateMode">
+                        <label class="col-sm-2 control-label" for="rolNameField">
+                            Nombre del rol:
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="rolNameField" data-bind="value: name" />
+                        </div>
+                    </div>
+                    <div data-bind="visible: $root.isEditMode">
+                        <h4 data-bind="text: name"></h4>
+                    </div>
+                </div>
+
+                <div class="list-group" data-bind="foreach: groups">
+                    <a href="#" class="list-group-item" data-bind="text: description, click: $root.openGroup"></a>
+                    <div class="collapse">
+                        <div class="well well-sm">
+                            <div class="container-fluid" data-bind="foreach: privileges">
+                                <div class="row">
+                                    <div class="col-sm-3" data-bind="text: description"></div>
+                                    <div class="col-sm-3">
+                                        <input type="checkbox" data-bind="bootstrapToggle: active" />
                                     </div>
                                 </div>
                             </div>
