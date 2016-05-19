@@ -41,10 +41,6 @@
         this.description = ko.observable();
         this.active = ko.observable();
         this.update(data);
-
-        this.active.subscribe(function (newValue) {
-            console.log(newValue);
-        });
     }
 
     ko.utils.extend(Privilege.prototype, {
@@ -104,7 +100,33 @@
 
         self.submitDelete = function () { self.closeForm(); }
         self.submitCreate = function () { self.closeForm(); }
-        self.submitChanges = function () { self.closeForm(); }
+        self.submitChanges = function () {
+            var obj = ko.toJS(self.editingObject);
+            var args = { id: obj.id, name: obj.name, operations: createOperationsList(obj) };
+            app.consumeAPI("roles", "modify", args).done(function (data) {
+                console.log(data);
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            }).always(function () {
+                self.closeForm();
+            });
+        }
+
+        function createOperationsList(obj) {
+            var operations = [];
+            for (var i = 0; i < obj.groups.length; ++i) {
+                var group = obj.groups[i];
+                for (var j = 0; j < group.privileges.length; ++j) {
+                    var privilege = group.privileges[j];
+                    if (privilege.active == true) {
+                        operations.push(privilege.id);
+                    }
+                }
+            }
+
+            return operations;
+        }
 
         self.loading = app.consumeAPI('roles', 'get').done(function (data) {
             var mappedData = $.map(data, function (item) { return new Role(item); });

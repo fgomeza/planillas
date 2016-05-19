@@ -14,7 +14,7 @@
                 dataType: 'json',
             };
 
-            console.log('requesting ' + xhr.url + ' args = ' + xhr.data);
+            console.log('requesting ' + xhr.url + ' args = ', args);
 
             return $.ajax(xhr).then(function (response) {
                 var $deferred = $.Deferred(function (deferred) {
