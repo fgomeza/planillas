@@ -317,39 +317,39 @@ INSERT INTO Savings values (25, 120000);
 	values ('Debit_type3', 12, 5, 1, 'F');
 
 --Debits
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-04-10', 'Sin comentarios', 25, 20000, 20000, 4, 0, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-03-10', 'Sin comentarios', 1, 10000, 7500, 3, 1, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-02-10', 'Sin comentarios', 4, 35000, 17500, 2, 2, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-01-10', 'Sin comentarios', 5, 40000, 30000, 1, 3, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-02-10', 'Sin comentarios', 6, 25000, 12500, 2, 2, 1, true);
 
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-04-05', 'Sin comentarios', 4, 20000, 20000, 6, 0, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-03-05', 'Sin comentarios', 6, 15000, 12500, 5, 1, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-02-05', 'Sin comentarios', 9, 24000, 16000, 4, 2, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-01-05', 'Sin comentarios', 13, 12000, 6000, 3, 3, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-03-05', 'Sin comentarios', 2, 30000, 25000, 5, 1, 2, true);
 
 
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-04-01', 'Sin comentarios', 3, 40200, 40200, 12, 0, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-01-01', 'Sin comentarios', 6, 40200, 30150, 9, 3, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-02-01', 'Sin comentarios', 13, 40200, 33500, 10, 2, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-03-01', 'Sin comentarios', 9, 40200, 36850, 11, 1, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-02-01', 'Sin comentarios', 2, 40200, 33500, 10, 2, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active)
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
 	values('2016-04-01', 'Sin comentarios', 27, 40200, 40200, 12, 0, 3, true);
 

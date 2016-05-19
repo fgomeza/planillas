@@ -20,21 +20,22 @@ namespace SistemaDePlanillas.Models.Manager
                 {
                     var debit = repository.Debits.Add(new DebitEntity()
                     {
-                        employeeId = employee,
+                        employee = employee,
                         description = Detail,
                         totalAmount = amount,
-                        debitTypeId = type,
+                        debitType = type,
                         active = true,
                     });
                     repository.Complete();
+                    
                     result = new Debit()
                     {
                         id = debit.id,
-                        employee = debit.employeeId,
+                        employee = debit.employee,
                         amount = debit.totalAmount,
                         detail = debit.description,
-                        type = debit.debitTypeId,
-                        typeName = debit.fkdebit_type.name
+                        type = debit.debitType,
+                        typeName = repository.DebitTypes.Get(debit.debitType).name
                     };
                 }
             }
@@ -133,10 +134,10 @@ namespace SistemaDePlanillas.Models.Manager
                         result = new Debit()
                         {
                             id = debit.id,
-                            employee = debit.employeeId,
+                            employee = debit.employee,
                             amount = debit.totalAmount,
                             detail = debit.description,
-                            type = debit.debitTypeId,
+                            type = debit.debitType,
                             typeName = debit.fkdebit_type.name
                         };
                     }
@@ -169,9 +170,9 @@ namespace SistemaDePlanillas.Models.Manager
                             {
                                 id = debit.id,
                                 amount = debit.totalAmount,
-                                employee = debit.employeeId,
+                                employee = debit.employee,
                                 detail = debit.description,
-                                type = debit.debitTypeId
+                                type = debit.debitType
                             });
                         }
                     }
@@ -198,9 +199,9 @@ namespace SistemaDePlanillas.Models.Manager
                         {
                             id = debit.id,
                             amount = debit.totalAmount,
-                            employee = debit.employeeId,
+                            employee = debit.employee,
                             detail = debit.description,
-                            type = debit.debitTypeId
+                            type = debit.debitType
                         });
                     }
                 }
@@ -223,12 +224,12 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         initialDate = initialDate,
                         description = Detail,
-                        employeeId = employee,
+                        employee = employee,
                         totalAmount = total,
                         remainingAmount = total,
                         paysMade = 0,
                         remainingPays = pays,
-                        debitTypeId = type,
+                        debitType = type,
                         active = true
                     });
                     repository.Complete();
@@ -236,14 +237,14 @@ namespace SistemaDePlanillas.Models.Manager
                     result.id = debit.id;
                     result.initialDate = debit.initialDate;
                     result.detail = debit.description;
-                    result.employee = debit.employeeId;
+                    result.employee = debit.employee;
                     result.total = debit.totalAmount;
                     result.remainingAmount = debit.remainingAmount;
                     result.paymentsMade = (long)debit.paysMade;
                     result.missingPayments = (long)debit.remainingPays;
                     result.interestRate = (double)debit.fkdebit_type.interestRate;
-                    result.type = debit.debitTypeId;
-                    result.typeName = debit.fkdebit_type.name;
+                    result.type = debit.debitType;
+                    result.typeName = repository.DebitTypes.Get(debit.debitType).name;
                 }
 
             }
@@ -297,14 +298,14 @@ namespace SistemaDePlanillas.Models.Manager
                         result.id = debit.id;
                         result.initialDate = debit.initialDate;
                         result.detail = debit.description;
-                        result.employee = debit.employeeId;
+                        result.employee = debit.employee;
                         result.total = debit.totalAmount;
                         result.remainingAmount = debit.remainingAmount;
                         result.paymentsMade = (long)debit.paysMade;
                         result.missingPayments = (long)debit.remainingPays;
                         result.interestRate = (double)debit.fkdebit_type.interestRate;
-                        result.type = debit.debitTypeId;
-                        result.typeName = debit.fkdebit_type.name;
+                        result.type = debit.debitType;
+                        result.typeName = repository.DebitTypes.Get(debit.debitType).name;
                     }
                     else
                     {
@@ -336,13 +337,13 @@ namespace SistemaDePlanillas.Models.Manager
                                 id = debit.id,
                                 initialDate = debit.initialDate,
                                 detail = debit.description,
-                                employee = debit.employeeId,
+                                employee = debit.employee,
                                 total = debit.totalAmount,
                                 remainingAmount = debit.remainingAmount,
                                 paymentsMade = (long)debit.paysMade,
                                 missingPayments = (long)debit.remainingPays,
                                 interestRate = (double)debit.fkdebit_type.interestRate,
-                                type = debit.debitTypeId,
+                                type = debit.debitType,
                                 typeName = debit.fkdebit_type.name
                             });
                         }
@@ -395,12 +396,12 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         initialDate = initialDate,
                         description = Detail,
-                        employeeId = employee,
+                        employee = employee,
                         totalAmount = total,
                         remainingAmount = total,
                         paysMade = 0,
                         remainingPays = pays,
-                        debitTypeId = type,
+                        debitType = type,
                         active = true
                     });
                     repository.Complete();
@@ -408,14 +409,14 @@ namespace SistemaDePlanillas.Models.Manager
                     result.id = debit.id;
                     result.initialDate = debit.initialDate;
                     result.detail = debit.description;
-                    result.employee = debit.employeeId;
+                    result.employee = debit.employee;
                     result.total = debit.totalAmount;
                     result.remainingAmount = debit.remainingAmount;
                     result.paymentsMade = (long)debit.paysMade;
                     result.missingPayments = (long)debit.remainingPays;
                     result.interestRate = (double)debit.fkdebit_type.interestRate;
-                    result.type = debit.debitTypeId;
-                    result.typeName = debit.fkdebit_type.name;
+                    result.type = debit.debitType;
+                    result.typeName = repository.DebitTypes.Get(debit.debitType).name;
                 }
 
             }
@@ -439,13 +440,13 @@ namespace SistemaDePlanillas.Models.Manager
                         result.id = debit.id;
                         result.initialDate = debit.initialDate;
                         result.detail = debit.description;
-                        result.employee = debit.employeeId;
+                        result.employee = debit.employee;
                         result.total = debit.totalAmount;
                         result.remainingAmount = debit.remainingAmount;
                         result.paymentsMade = (long)debit.paysMade;
                         result.missingPayments = (long)debit.remainingPays;
                         result.interestRate = (double)debit.fkdebit_type.interestRate;
-                        result.type = debit.debitTypeId;
+                        result.type = debit.debitType;
                         result.typeName = debit.fkdebit_type.name;
                     }
                     else
@@ -478,13 +479,13 @@ namespace SistemaDePlanillas.Models.Manager
                                 id = debit.id,
                                 initialDate = debit.initialDate,
                                 detail = debit.description,
-                                employee = debit.employeeId,
+                                employee = debit.employee,
                                 total = debit.totalAmount,
                                 remainingAmount = debit.remainingAmount,
                                 paymentsMade = (long)debit.paysMade,
                                 missingPayments = (long)debit.remainingPays,
                                 interestRate = (double)debit.fkdebit_type.interestRate,
-                                type = debit.debitTypeId,
+                                type = debit.debitType,
                                 typeName = debit.fkdebit_type.name
                             });
                         }

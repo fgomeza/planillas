@@ -16,19 +16,19 @@ namespace Repository.Repositories.Classes
 
         public IEnumerable<DebitEntity> selectFixedDebitsByEmployee(long employeeId)
         {
-            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.active && e.remainingAmount>0 && e.fkdebit_type.type == "F");
+            var debits = _context.Debits.Where(e => e.employee == employeeId && e.active && e.remainingAmount>0 && e.fkdebit_type.type == "F");
             return debits.ToList();
         }
 
         public IEnumerable<DebitEntity> selectPaymentDebitsByEmployee(long employeeId)
         {
-            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.active && e.remainingAmount > 0 && e.fkdebit_type.type == "P");
+            var debits = _context.Debits.Where(e => e.employee == employeeId && e.active && e.remainingAmount > 0 && e.fkdebit_type.type == "P");
             return debits.ToList();
         }
 
         public IEnumerable<DebitEntity> selectAmortizationDebitsByEmployee(long employeeId)
         {
-            var debits = _context.Debits.Where(e => e.employeeId == employeeId && e.active && e.remainingAmount > 0 && e.fkdebit_type.type == "A");
+            var debits = _context.Debits.Where(e => e.employee == employeeId && e.active && e.remainingAmount > 0 && e.fkdebit_type.type == "A");
             return debits.ToList();
         }
     }
