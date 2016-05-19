@@ -20,10 +20,11 @@ namespace Repository.Entities
 
         public string description { set; get; }
 
-        [Column("employee"), ForeignKey("fkdebit_employee")]
+        [ForeignKey("fkdebit_employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long employeeId { set; get; }
+        public long employee { set; get; }
 
+       
         public virtual EmployeeEntity fkdebit_employee { set; get; }
 
 
@@ -37,9 +38,9 @@ namespace Repository.Entities
 
         public long paysMade { set; get; }
 
-        [Column("type"), ForeignKey("fkdebit_type")]
+        [ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long debitTypeId { set; get; }
+        public long debitType { set; get; }
 
         public virtual DebitTypeEntity fkdebit_type { set; get; }
 
