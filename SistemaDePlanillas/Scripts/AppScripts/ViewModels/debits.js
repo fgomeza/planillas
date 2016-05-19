@@ -131,7 +131,7 @@
         function submitCreateFixedDebit () {
             var args = { employee: self.employeeId(), detail: self.modalBodyData().detail(), amount: self.modalBodyData().amount(), type: self.modalBodyData().type() };
             app.consumeAPI("debits", "add/Fixed", args).done(function (data) {
-                self.fixedDebits.push(new editables.FixedDebit(data));
+                self.fixedDebits.push(new editables.Debit(data));
                 self.modalBodyData(new editables.Debit());
                 return data;
             }).fail(function (error) {
@@ -145,7 +145,7 @@
         function submitCreatePaymentsDebit () {
             var args = { employee: self.employeeId(), initialDate: self.modalBodyData().initialDate(), detail: self.modalBodyData().detail(), total: self.modalBodyData().total(), interestRate: self.modalBodyData().interestRate(), pays: self.modalBodyData().missingPayments(), type: self.modalBodyData().type() };
             app.consumeAPI("debits", "add/Payment", args).done(function (data) {
-                self.paymentsDebits.push(new editables.FixedDebit(data));
+                self.paymentsDebits.push(new editables.Debit(data));
                 self.modalBodyData(new editables.Debit());
                 return data;
             }).fail(function (error) {
@@ -159,7 +159,7 @@
         function submitCreateAmortizationDebit() {
             var args = { employee: self.employeeId(), initialDate: self.modalBodyData().initialDate(), detail: self.modalBodyData().detail(), total: self.modalBodyData().total(), interestRate: self.modalBodyData().interestRate(), pays: self.modalBodyData().missingPayments(), type: self.modalBodyData().type() };
             app.consumeAPI("debits", "add/Amortization", args).done(function (data) {
-                self.amortizationDebits.push(new editables.FixedDebit(data));
+                self.amortizationDebits.push(new editables.Debit(data));
                 self.modalBodyData(new editables.Debit());
                 return data;
             }).fail(function (error) {
@@ -176,7 +176,7 @@
 
         function getDebits(operation, observable, args) {
             return app.consumeAPI('debits', operation, args).done(function (data) {
-                var mappedData = $.map(data, function (item) { return new EditableObject(item); });
+                var mappedData = $.map(data, function (item) { return new editables.Debit(item); });
                 observable(mappedData);
                 return data;
             }).fail(function (error) {
