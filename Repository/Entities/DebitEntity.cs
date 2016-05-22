@@ -24,7 +24,7 @@ namespace Repository.Entities
 
         [ForeignKey("fkdebit_employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long employee { set; get; }
+        public long employeeId { set; get; }
 
 
         public virtual EmployeeEntity fkdebit_employee { set; get; }
@@ -46,7 +46,7 @@ namespace Repository.Entities
 
         [Column("type"), ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long debitType { set; get; }
+        public long debitTypeId { set; get; }
 
         public virtual DebitTypeEntity fkdebit_type { set; get; }
 
