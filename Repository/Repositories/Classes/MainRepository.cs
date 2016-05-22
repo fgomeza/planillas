@@ -13,7 +13,7 @@ namespace Repository.Repositories.Classes
     public class MainRepository : IDisposable
     {
         private readonly AppContext _context;
-
+        public RoleOperationRepository RoleOperations { get; }
         public VacationRepository Vacations { get; }
         public CallRepository Calls { get; }
         public UserRepository Users { get; }
@@ -53,6 +53,8 @@ namespace Repository.Repositories.Classes
             DebitPayments = new DebitPaymentRepository(_context);
             Administrators = new AdministratorRepository(_context);
             Savings = new SavingRepository(_context);
+            Vacations = new VacationRepository(_context);
+            RoleOperations = new RoleOperationRepository(_context);
         }
 
 

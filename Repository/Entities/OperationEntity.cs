@@ -28,7 +28,6 @@ namespace Repository.Entities
 
         public virtual GroupEntity fkoperation_group { set; get; }
 
-        public virtual ICollection<RoleEntity> Roles { set; get; }
 
     }
 }

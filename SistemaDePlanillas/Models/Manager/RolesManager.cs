@@ -10,32 +10,41 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class RolesManager :IErrors
     {
-        public long addRole(string name, long location, List<string> operations)//**
+        public Role addRole(string name, long location, List<string> operations)
         {
-            long roleId = 0;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    RoleEntity role = new RoleEntity()
-                    { name = name, locationId = location, active = true };
-                    roleId = repository.Roles.Add(role).id;
+                    RoleEntity role = repository.Roles.Add(new RoleEntity()
+                    { name = name, locationId = location, active = true });
+
                     foreach (var op in operations)
                     {
                         OperationEntity operation = repository.Operations.Get(op);
                         if (operation != null)
                         {
-                            role.operations.Add(operation);
+                            repository.RoleOperations.Add(new RoleOperationEntity()
+                            { role= role.id,operation=operation.Name});
                         }
                     }
                     repository.Complete();
+                    List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
+                    var roleOperations = repository.RoleOperations.getOperationsByRole(role.id);
+                    foreach (var op in roleOperations)
+                    {
+                        var operation = repository.Operations.Get(op.operation);
+                        Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
+                        list.Add(tuple);
+                    }
+                    return new Role(role.id, role.name, role.locationId, role.active, list);
                 }
             }
             catch (Exception e)
             {
                 throw validateException(e);
             }
-            return roleId;
+            return null;
         }
 
         public Role getRole(long id)
@@ -50,9 +59,11 @@ namespace SistemaDePlanillas.Models.Manager
                     if (role != null && role.active == true)
                     {
                         List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
-                        foreach (var op in role.operations)
+                        var operations = repository.RoleOperations.getOperationsByRole(role.id);
+                        foreach (var op in operations)
                         {
-                            Tuple<string, string,bool> tuple = new Tuple<string, string,bool>(op.GroupId, op.Name.Split('/')[1],op.isPayrollCalculationRelated);
+                            var operation = repository.Operations.Get(op.operation);
+                            Tuple<string, string,bool> tuple = new Tuple<string, string,bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
                         Role role_result = new Role(role.id, role.name, role.locationId, true, list);
@@ -71,7 +82,7 @@ namespace SistemaDePlanillas.Models.Manager
             return result;
         }
 
-        public void updateRole(long id, string name, long location, List<string> operations)
+        public Role updateRole(long id, string name, long location, List<string> operations)
         {
             try
             {
@@ -82,27 +93,40 @@ namespace SistemaDePlanillas.Models.Manager
                     {
                         role.name = name;
                         role.locationId = location;
-                        role.operations.Clear();
+                        repository.RoleOperations.removeAllOperationByRole(role.id);
                         foreach (var op in operations)
                         {
                             OperationEntity operation = repository.Operations.Get(op);
-                            if (operation != null && role != null)
+                            if (operation != null)
                             {
-                                role.operations.Add(operation);
+                                repository.RoleOperations.Add(new RoleOperationEntity()
+                                { role = role.id, operation = operation.Name });
                             }
                         }
                         repository.Complete();
+
+                        List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
+                        var roleOperations = repository.RoleOperations.getOperationsByRole(role.id);
+                        foreach (var op in roleOperations)
+                        {
+                            var operation = repository.Operations.Get(op.operation);
+                            Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
+                            list.Add(tuple);
+                        }
+                        return new Role(role.id, role.name, role.locationId, role.active, list);
                     }
                     else
                     {
                         throw validateException(App_LocalResoures.Errors.inexistentRole);
                     }
+                    
                 }
             }
             catch (Exception e)
             {
                 throw validateException(e);
             }
+            return null;
         }
 
         public void deleteRole(long id)
@@ -191,12 +215,14 @@ namespace SistemaDePlanillas.Models.Manager
                     foreach (var x in roles)
                     {
                         List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
-                        foreach (var op in x.operations)
+                        var operations = repository.RoleOperations.getOperationsByRole(x.id);
+                        foreach (var op in operations)
                         {
-                            Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
+                            var operation = repository.Operations.Get(op.operation);
+                            Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
                             list.Add(tuple);
                         }
-                        result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                        result.Add(new Role(x.id, x.name, x.locationId, true, list));
                     }
                 }
             }
@@ -220,12 +246,14 @@ namespace SistemaDePlanillas.Models.Manager
                         if (x.active == true)
                         {
                             List<Tuple<string, string, bool>> list = new List<Tuple<string, string, bool>>();
-                            foreach (var op in x.operations)
+                            var operations = repository.RoleOperations.getOperationsByRole(x.id);
+                            foreach (var op in operations)
                             {
-                                Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(op.GroupId, op.Name.Split('/')[1], op.isPayrollCalculationRelated);
+                                var operation = repository.Operations.Get(op.operation);
+                                Tuple<string, string, bool> tuple = new Tuple<string, string, bool>(operation.GroupId, operation.Name.Split('/')[1], operation.isPayrollCalculationRelated);
                                 list.Add(tuple);
                             }
-                            result.Add(new Role(x.id, x.name, x.locationId, (bool)x.active, list));
+                            result.Add(new Role(x.id, x.name, x.locationId, true, list));
                         }
                     }
                 }

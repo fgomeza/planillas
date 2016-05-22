@@ -29,6 +29,5 @@ namespace Repository.Entities
         public virtual LocationEntity fkrole_location { set; get; }
 
 
-        public virtual ICollection<OperationEntity> operations { set; get; }
     }
 }

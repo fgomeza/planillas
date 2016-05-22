@@ -71,6 +71,7 @@
     <Compile Include="Entities\PenaltyEntity.cs" />
     <Compile Include="Entities\PenaltyTypeEntity.cs" />
     <Compile Include="Entities\RoleEntity.cs" />
+    <Compile Include="Entities\RoleOperationEntity.cs" />
     <Compile Include="Entities\SalaryEntity.cs" />
     <Compile Include="Entities\SavingsEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Repositories\Classes\PenaltyRepository.cs" />
     <Compile Include="Repositories\Classes\PenaltyTypeRepository.cs" />
     <Compile Include="Repositories\Classes\Repository.cs" />
+    <Compile Include="Repositories\Classes\RoleOperationRepository.cs" />
     <Compile Include="Repositories\Classes\RoleRepository.cs" />
     <Compile Include="Repositories\Classes\SalaryRepository.cs" />
     <Compile Include="Repositories\Classes\SavingRepository.cs" />
