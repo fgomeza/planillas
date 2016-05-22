@@ -67,111 +67,111 @@ INSERT INTO users(name,email,"userName",password,active,role,location) VALUES ( 
 INSERT INTO users(name,email,"userName",password,active,role,location) VALUES ( 'No me acuerdo su nombre', 'nomeacuerdosunombre@gmail.com', 'nomeacuerdo', '$2a$10$hsWmqrs7Z5kW6RpEJHV/Ve6/OBqZ3tNZMivur9SYZT2OBvIymxU.2', true, 1, 1);
 
 
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/activate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/activate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/activate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 1);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 2);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/activate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('users/activate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/remove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/activate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 3);
-INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('locations/add', 1);
+INSERT INTO "RoleOperations" VALUES ('locations/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('locations/get', 1);
+INSERT INTO "RoleOperations" VALUES ('locations/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('locations/activate', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/add', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/get', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/activate', 1);
+INSERT INTO "RoleOperations" VALUES ('debits/add', 1);
+INSERT INTO "RoleOperations" VALUES ('debits/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('debits/get', 1);
+INSERT INTO "RoleOperations" VALUES ('debits/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('debits/activate', 1);
+INSERT INTO "RoleOperations" VALUES ('penalty/add', 1);
+INSERT INTO "RoleOperations" VALUES ('penalty/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('penalty/get', 1);
+INSERT INTO "RoleOperations" VALUES ('penalty/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('extras/add', 1);
+INSERT INTO "RoleOperations" VALUES ('extras/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('extras/get', 1);
+INSERT INTO "RoleOperations" VALUES ('extras/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('users/add', 1);
+INSERT INTO "RoleOperations" VALUES ('users/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('users/get', 1);
+INSERT INTO "RoleOperations" VALUES ('users/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('users/activate', 1);
+INSERT INTO "RoleOperations" VALUES ('roles/add', 1);
+INSERT INTO "RoleOperations" VALUES ('roles/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('roles/get', 1);
+INSERT INTO "RoleOperations" VALUES ('roles/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('roles/activate', 1);
+INSERT INTO "RoleOperations" VALUES ('payroll/calculate', 1);
+INSERT INTO "RoleOperations" VALUES ('payroll/aprove', 1);
+INSERT INTO "RoleOperations" VALUES ('payroll/get', 1);
+INSERT INTO "RoleOperations" VALUES ('debittypes/add', 1);
+INSERT INTO "RoleOperations" VALUES ('debittypes/modify', 1);
+INSERT INTO "RoleOperations" VALUES ('debittypes/get', 1);
+INSERT INTO "RoleOperations" VALUES ('debittypes/remove', 1);
+INSERT INTO "RoleOperations" VALUES ('employees/add', 2);
+INSERT INTO "RoleOperations" VALUES ('employees/modify', 2);
+INSERT INTO "RoleOperations" VALUES ('employees/get', 2);
+INSERT INTO "RoleOperations" VALUES ('employees/remove', 2);
+INSERT INTO "RoleOperations" VALUES ('employees/activate', 2);
+INSERT INTO "RoleOperations" VALUES ('debits/add', 2);
+INSERT INTO "RoleOperations" VALUES ('debits/modify', 2);
+INSERT INTO "RoleOperations" VALUES ('debits/get', 2);
+INSERT INTO "RoleOperations" VALUES ('debits/remove', 2);
+INSERT INTO "RoleOperations" VALUES ('debits/activate', 2);
+INSERT INTO "RoleOperations" VALUES ('penalty/add', 2);
+INSERT INTO "RoleOperations" VALUES ('penalty/modify', 2);
+INSERT INTO "RoleOperations" VALUES ('penalty/get', 2);
+INSERT INTO "RoleOperations" VALUES ('penalty/remove', 2);
+INSERT INTO "RoleOperations" VALUES ('extras/add', 2);
+INSERT INTO "RoleOperations" VALUES ('extras/modify', 2);
+INSERT INTO "RoleOperations" VALUES ('extras/get', 2);
+INSERT INTO "RoleOperations" VALUES ('extras/remove', 2);
+INSERT INTO "RoleOperations" VALUES ('payroll/calculate', 2);
+INSERT INTO "RoleOperations" VALUES ('payroll/aprove', 2);
+INSERT INTO "RoleOperations" VALUES ('payroll/get', 2);
+INSERT INTO "RoleOperations" VALUES ('debittypes/add', 2);
+INSERT INTO "RoleOperations" VALUES ('debittypes/modify', 2);
+INSERT INTO "RoleOperations" VALUES ('debittypes/get', 2);
+INSERT INTO "RoleOperations" VALUES ('debittypes/remove', 2);
+INSERT INTO "RoleOperations" VALUES ('locations/add', 3);
+INSERT INTO "RoleOperations" VALUES ('locations/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('locations/get', 3);
+INSERT INTO "RoleOperations" VALUES ('locations/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('locations/activate', 3);
+INSERT INTO "RoleOperations" VALUES ('employees/add', 3);
+INSERT INTO "RoleOperations" VALUES ('employees/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('employees/get', 3);
+INSERT INTO "RoleOperations" VALUES ('employees/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('employees/activate', 3);
+INSERT INTO "RoleOperations" VALUES ('debits/add', 3);
+INSERT INTO "RoleOperations" VALUES ('debits/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('debits/get', 3);
+INSERT INTO "RoleOperations" VALUES ('debits/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('debits/activate', 3);
+INSERT INTO "RoleOperations" VALUES ('penalty/add', 3);
+INSERT INTO "RoleOperations" VALUES ('penalty/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('penalty/get', 3);
+INSERT INTO "RoleOperations" VALUES ('penalty/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('extras/add', 3);
+INSERT INTO "RoleOperations" VALUES ('extras/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('extras/get', 3);
+INSERT INTO "RoleOperations" VALUES ('extras/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('users/add', 3);
+INSERT INTO "RoleOperations" VALUES ('users/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('users/get', 3);
+INSERT INTO "RoleOperations" VALUES ('users/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('users/activate', 3);
+INSERT INTO "RoleOperations" VALUES ('roles/add', 3);
+INSERT INTO "RoleOperations" VALUES ('roles/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('roles/get', 3);
+INSERT INTO "RoleOperations" VALUES ('roles/remove', 3);
+INSERT INTO "RoleOperations" VALUES ('roles/activate', 3);
+INSERT INTO "RoleOperations" VALUES ('payroll/calculate', 3);
+INSERT INTO "RoleOperations" VALUES ('payroll/aprove', 3);
+INSERT INTO "RoleOperations" VALUES ('payroll/get', 3);
+INSERT INTO "RoleOperations" VALUES ('debittypes/add', 3);
+INSERT INTO "RoleOperations" VALUES ('debittypes/modify', 3);
+INSERT INTO "RoleOperations" VALUES ('debittypes/get', 3);
+INSERT INTO "RoleOperations" VALUES ('debittypes/remove', 3);
 
 select * from employees;
 --Employees
@@ -375,56 +375,56 @@ INSERT into Debit_Types (name, pays,period, "interestRate", location, type)
 	values ('Fixed Debit', 0,15, 0, 1, 'F');
 
 --Debits
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 25, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 1, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 4, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 5, 500000, 500000, 6, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 6, 500000, 500000, 6, 0, 2, true,current_date - interval '15 days',15,0);
 
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 7, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 8, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 9, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 10, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 11, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 12, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 13, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 14, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 15, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 17, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 18, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 19, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 20, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 21, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 22, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 23, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 24, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 25, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 26, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+INSERT INTO Debits ("initialDate", description, "employeeId", "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
 	values(current_date - interval '15 days', 'Sin comentarios', 27, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
 
 

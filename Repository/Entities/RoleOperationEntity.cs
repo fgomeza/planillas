@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Entities
 {
-    [Table("RoleOperation")]
+    [Table("RoleOperations")]
     public class RoleOperationEntity
     {
         [Column("operation", Order = 0), Key, ForeignKey("fkRoleOperation_Operation")]
