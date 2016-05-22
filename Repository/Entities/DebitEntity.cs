@@ -17,6 +17,8 @@ namespace Repository.Entities
 
         public DateTime initialDate { set; get; }
 
+        public DateTime activeSince { set; get; }
+
 
         public string description { set; get; }
 
@@ -24,7 +26,7 @@ namespace Repository.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long employee { set; get; }
 
-       
+
         public virtual EmployeeEntity fkdebit_employee { set; get; }
 
 
@@ -38,7 +40,11 @@ namespace Repository.Entities
 
         public long paysMade { set; get; }
 
-        [ForeignKey("fkdebit_type")]
+        public long period { set; get; }
+
+        public long pastDays { set; get; }
+
+        [Column("type"), ForeignKey("fkdebit_type")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long debitType { set; get; }
 

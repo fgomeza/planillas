@@ -1,6 +1,6 @@
 ﻿
-INSERT INTO locations(name,"callPrice",active) VALUES ( 'Tibas', 550, true);
-INSERT INTO locations(name,"callPrice",active) VALUES ( 'San Pedro', 400, true);
+INSERT INTO locations(name, "callPrice", "workingDaysPerMonth", "workingHoursPerDay", active) VALUES ( 'Tibas', 550,24,8, true);
+INSERT INTO locations(name, "callPrice", "workingDaysPerMonth", "workingHoursPerDay", active) VALUES ( 'San Pedro', 400,24,8, true);
 
 INSERT INTO groups VALUES ('locations', 'Sedes', '');
 INSERT INTO groups VALUES ('employees', 'Empleados', '');
@@ -67,160 +67,206 @@ INSERT INTO users(name,email,"userName",password,active,role,location) VALUES ( 
 INSERT INTO users(name,email,"userName",password,active,role,location) VALUES ( 'No me acuerdo su nombre', 'nomeacuerdosunombre@gmail.com', 'nomeacuerdo', '$2a$10$hsWmqrs7Z5kW6RpEJHV/Ve6/OBqZ3tNZMivur9SYZT2OBvIymxU.2', true, 1, 1);
 
 
-INSERT INTO "RoleOperation" VALUES ('locations/add', 1);
-INSERT INTO "RoleOperation" VALUES ('locations/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('locations/get', 1);
-INSERT INTO "RoleOperation" VALUES ('locations/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('locations/activate', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/add', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/get', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/activate', 1);
-INSERT INTO "RoleOperation" VALUES ('debits/add', 1);
-INSERT INTO "RoleOperation" VALUES ('debits/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('debits/get', 1);
-INSERT INTO "RoleOperation" VALUES ('debits/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('debits/activate', 1);
-INSERT INTO "RoleOperation" VALUES ('penalty/add', 1);
-INSERT INTO "RoleOperation" VALUES ('penalty/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('penalty/get', 1);
-INSERT INTO "RoleOperation" VALUES ('penalty/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('extras/add', 1);
-INSERT INTO "RoleOperation" VALUES ('extras/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('extras/get', 1);
-INSERT INTO "RoleOperation" VALUES ('extras/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('users/add', 1);
-INSERT INTO "RoleOperation" VALUES ('users/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('users/get', 1);
-INSERT INTO "RoleOperation" VALUES ('users/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('users/activate', 1);
-INSERT INTO "RoleOperation" VALUES ('roles/add', 1);
-INSERT INTO "RoleOperation" VALUES ('roles/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('roles/get', 1);
-INSERT INTO "RoleOperation" VALUES ('roles/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('roles/activate', 1);
-INSERT INTO "RoleOperation" VALUES ('payroll/calculate', 1);
-INSERT INTO "RoleOperation" VALUES ('payroll/aprove', 1);
-INSERT INTO "RoleOperation" VALUES ('payroll/get', 1);
-INSERT INTO "RoleOperation" VALUES ('debittypes/add', 1);
-INSERT INTO "RoleOperation" VALUES ('debittypes/modify', 1);
-INSERT INTO "RoleOperation" VALUES ('debittypes/get', 1);
-INSERT INTO "RoleOperation" VALUES ('debittypes/remove', 1);
-INSERT INTO "RoleOperation" VALUES ('employees/add', 2);
-INSERT INTO "RoleOperation" VALUES ('employees/modify', 2);
-INSERT INTO "RoleOperation" VALUES ('employees/get', 2);
-INSERT INTO "RoleOperation" VALUES ('employees/remove', 2);
-INSERT INTO "RoleOperation" VALUES ('employees/activate', 2);
-INSERT INTO "RoleOperation" VALUES ('debits/add', 2);
-INSERT INTO "RoleOperation" VALUES ('debits/modify', 2);
-INSERT INTO "RoleOperation" VALUES ('debits/get', 2);
-INSERT INTO "RoleOperation" VALUES ('debits/remove', 2);
-INSERT INTO "RoleOperation" VALUES ('debits/activate', 2);
-INSERT INTO "RoleOperation" VALUES ('penalty/add', 2);
-INSERT INTO "RoleOperation" VALUES ('penalty/modify', 2);
-INSERT INTO "RoleOperation" VALUES ('penalty/get', 2);
-INSERT INTO "RoleOperation" VALUES ('penalty/remove', 2);
-INSERT INTO "RoleOperation" VALUES ('extras/add', 2);
-INSERT INTO "RoleOperation" VALUES ('extras/modify', 2);
-INSERT INTO "RoleOperation" VALUES ('extras/get', 2);
-INSERT INTO "RoleOperation" VALUES ('extras/remove', 2);
-INSERT INTO "RoleOperation" VALUES ('payroll/calculate', 2);
-INSERT INTO "RoleOperation" VALUES ('payroll/aprove', 2);
-INSERT INTO "RoleOperation" VALUES ('payroll/get', 2);
-INSERT INTO "RoleOperation" VALUES ('debittypes/add', 2);
-INSERT INTO "RoleOperation" VALUES ('debittypes/modify', 2);
-INSERT INTO "RoleOperation" VALUES ('debittypes/get', 2);
-INSERT INTO "RoleOperation" VALUES ('debittypes/remove', 2);
-INSERT INTO "RoleOperation" VALUES ('locations/add', 3);
-INSERT INTO "RoleOperation" VALUES ('locations/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('locations/get', 3);
-INSERT INTO "RoleOperation" VALUES ('locations/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('locations/activate', 3);
-INSERT INTO "RoleOperation" VALUES ('employees/add', 3);
-INSERT INTO "RoleOperation" VALUES ('employees/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('employees/get', 3);
-INSERT INTO "RoleOperation" VALUES ('employees/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('employees/activate', 3);
-INSERT INTO "RoleOperation" VALUES ('debits/add', 3);
-INSERT INTO "RoleOperation" VALUES ('debits/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('debits/get', 3);
-INSERT INTO "RoleOperation" VALUES ('debits/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('debits/activate', 3);
-INSERT INTO "RoleOperation" VALUES ('penalty/add', 3);
-INSERT INTO "RoleOperation" VALUES ('penalty/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('penalty/get', 3);
-INSERT INTO "RoleOperation" VALUES ('penalty/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('extras/add', 3);
-INSERT INTO "RoleOperation" VALUES ('extras/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('extras/get', 3);
-INSERT INTO "RoleOperation" VALUES ('extras/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('users/add', 3);
-INSERT INTO "RoleOperation" VALUES ('users/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('users/get', 3);
-INSERT INTO "RoleOperation" VALUES ('users/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('users/activate', 3);
-INSERT INTO "RoleOperation" VALUES ('roles/add', 3);
-INSERT INTO "RoleOperation" VALUES ('roles/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('roles/get', 3);
-INSERT INTO "RoleOperation" VALUES ('roles/remove', 3);
-INSERT INTO "RoleOperation" VALUES ('roles/activate', 3);
-INSERT INTO "RoleOperation" VALUES ('payroll/calculate', 3);
-INSERT INTO "RoleOperation" VALUES ('payroll/aprove', 3);
-INSERT INTO "RoleOperation" VALUES ('payroll/get', 3);
-INSERT INTO "RoleOperation" VALUES ('debittypes/add', 3);
-INSERT INTO "RoleOperation" VALUES ('debittypes/modify', 3);
-INSERT INTO "RoleOperation" VALUES ('debittypes/get', 3);
-INSERT INTO "RoleOperation" VALUES ('debittypes/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/activate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/activate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/activate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 1);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 2);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('locations/activate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('employees/activate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debits/activate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('penalty/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('extras/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('users/activate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/remove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('roles/activate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/calculate', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/aprove', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('payroll/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/add', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/modify', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/get', 3);
+INSERT INTO "OperationEntityRoleEntities" VALUES ('debittypes/remove', 3);
 
 select * from employees;
 --Employees
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES ( 'Adrián Antonio Marín Sosa', '114730338', 'ADRIAN MARIN',TRUE, 1, true, 0, '001-149541-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Alexander Morales Caballero', '114370688', 'ALEXANDER MORALES',TRUE, 1, true, 0, '001-0668692-3', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Arturo Clark Bustos', '108180394', 'ARTURO CLARK',TRUE, 1, true, 0, '962-0003476-2', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Cheril Eithel Fonseca Picado', '206100860', 'CHERIL FONSECA',TRUE, 1, true, 0, '001-1147624-9', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Danny Alberto Naranjo Obando', '110190812', 'DANNY NARANJO',TRUE, 1, true, 0, '001-1255216-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Douglas Ariel Salazar Salazar', '113400556', 'DOUGLAS SALAZAR',TRUE, 1, true, 0, '001-0594028-1', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Ever Román Rivera Suarez', '113270626', 'EVER RIVERA',TRUE, 1, true, 0, '001-0549916-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Fabián Andrés Arias Leiva', '112500502', 'FABIAN ARIAS',TRUE, 1, true, 0, '001-0455820-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Freddy José Enriquez Baltodano', '116710714', 'FREDDY ENRIQUEZ',TRUE, 1, true, 0, '001-1007818-5', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Freddy Manuel Mejía Gómez', '503180033', 'FREDDY MEJIA',TRUE, 1, true, 0, '001-0829071-7', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Geovanny Ordoñez Ugalde', '503790644', 'GEOVANNY ORDONEZ',TRUE, 1, true, 0, '001-1147625-7', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Greivin Alfredo Guido Bustos', '402170742', 'GREIVIN GUIDO',TRUE, 1, true, 0, '001-0569108-7', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Hadhit Sibaja Montero', '112300627', '',FALSE, 1, true, 253687.50, '001-1007815-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Hallen Gisselle Sánchez Vargas', '402020812', 'HALLEN SANCHEZ',TRUE, 1, true, 0, '001-1146082-2', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Haydee Delgado Briceño', '112970129', 'HAYDEE DELGADO',TRUE, 1, true, 0, '001-1269878-4', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Hellen Dayan Mendoza Fernández', '116370910', 'HELLEN MENDOZA',TRUE, 1, true, 0, '001-1738043-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Javier Quesada Cruz', '603310318', 'JAVIER QUESADA',TRUE, 1, true, 0, '001-1492754-3', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Jeimy Tatiana Picado Sánchez', '111310525', 'JEIMY PICADO',TRUE, 1, true, 0, '001-1659860-1', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'John Byron Márquez Chicas', '800690616', 'JOHN MARQUEZ',TRUE, 1, true, 0, '926-0007928-6', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Jorge Antonio Coto Ortega', '111400658', NULL,FALSE, 1, true, 304405.17, '001-1039245-9', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'José Fallas Robles', '115160254', 'JOSE FALLAS.',TRUE, 1, true, 0, '908-0000284-4', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'José Salas Rodríguez', '108390007', 'JOSE SALAS',TRUE, 1, true, 0, '001-0381976-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'José Vega Fallas', '110080377', 'JOSE VEGA',TRUE, 1, true, 0, '001-0427936-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Joselyn Vidaurre Bravo', '701700182', 'JOSELYN VIDAURRE',TRUE, 1, true, 0, '001-1490424-1', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Juan Gabriel Mora Araya', '206840920', 'JUAN MORA',TRUE, 1, true, 0, '001-1490512-4', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Karol Rebeca Pérez Abarca', '114040722', 'KAROL PEREZ',TRUE, 1, true, 0, '001-1490420-9', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Katherine Barrios Valenciano', '112660130', NULL,FALSE, 1, true, 304405.17, '001-0446790-6', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Leonardo Rodríguez Carrión', '800870767', NULL,FALSE, 1, false, 304405.17, '001-0309067-1', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Luis Diego Zamora Olmedo', '112170982', 'LUIS ZAMORA',TRUE, 1, true, 0, '001-0745677-8', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Magaly Fernández Trejos', '112900696', 'MAGALY FERNANDEZ',TRUE, 1, true, 0, '001-1403871-4', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Manuel Valverde Morales', '113500037', 'MANUEL VALVERDE',TRUE, 1, true, 0, '001-0801797-2', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Marcela Barrientos Castro', '206780817', 'MARCELA BARRIENTOS',TRUE, 1, true, 0, '001-1655772-7', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Marcial García Schmidt', '114620341', 'MARCIAL GARCIA',TRUE, 1, true, 0, '001-1655891-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Marco Vinicio Uribe Morelli', '112830671', 'MARCO URIBE',TRUE, 1, true, 0, '956-0010224-5', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'María Briceño Quirós', '502200745', 'MARIA BRICEÑO',TRUE, 1, true, 0, '001-0153627-3', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'María Castillo Ramírez', '107670112', 'MARIA CASTILLO',TRUE, 1, true, 0, '001-1732859-4', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Mario Botto Sibaja', '502930659', 'MARIA BOTTO',TRUE, 1, true, 0, '001-1495093-6', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Marvin Leiton Sánchez', '107620063', NULL,FALSE, 1, false, 304405.17, '960-0010351-9', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Michael Vásquez Calderón', '112220657', NULL,FALSE, 1, true, 304405.17, '001-0573164-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Oscar Arnulfo Alvarenga Torres', '122200557831', NULL,FALSE, 1, true, 304405.17, '485-0002524-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Paola Vargas Carvajal', '112590969', 'PAOLA VARGAS',TRUE, 1, true, 0, '001-1146089-0', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Pedro Rojas Duran', '205280848', 'PEDRO ROJAS',TRUE, 1, true, 0, '001-0485880-8', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Priscilla María Sibaja Porras', '112540130', 'PRISCILA SIBAJA',TRUE, 1, true, 0, '285-0035806-1', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Randall Abarca Hernández', '401840992', 'RANDAL ABARCA',TRUE, 1, true, 0, '366-0001939-9', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Raymond Sandoval Fernández', '112620423', 'RAYMOND SANDOVAL',TRUE, 1, true, 0, '001-1039460-5', 0);
-INSERT INTO employees(name,"idCard",cms,iscms,location,active,salary,account,"negativeAmount") VALUES( 'Scarlet Tayrin Porras Jiménez', '702090625', NULL,FALSE, 1, false, 304405.17, '001-1287383-7', 0);
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES ( 'Adrián Antonio Marín Sosa', 'Tibas' ,'114730338', 'ADRIAN MARIN',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Alexander Morales Caballero','San Pedro',  '114370688', 'ALEXANDER MORALES',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Arturo Clark Bustos', '108180394','Tibas' , 'ARTURO CLARK',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Cheril Eithel Fonseca Picado','Tibas' , '206100860', 'CHERIL FONSECA',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Danny Alberto Naranjo Obando', 'Tibas' ,'110190812', 'DANNY NARANJO',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Douglas Ariel Salazar Salazar','San Pedro' , '113400556', 'DOUGLAS SALAZAR',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Ever Román Rivera Suarez','Tibas' , '113270626', 'EVER RIVERA',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Fabián Andrés Arias Leiva','Tibas' , '112500502', 'FABIAN ARIAS',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Freddy José Enriquez Baltodano','Tibas' , '116710714', 'FREDDY ENRIQUEZ',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Freddy Manuel Mejía Gómez','Tibas' , '503180033', 'FREDDY MEJIA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Geovanny Ordoñez Ugalde', 'Tibas' ,'503790644', 'GEOVANNY ORDONEZ',TRUE, 1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Greivin Alfredo Guido Bustos', 'Tibas' ,'402170742', 'GREIVIN GUIDO',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Hadhit Sibaja Montero','Tibas' , '112300627', NULL,TRUE, 1,253687.50,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Hallen Gisselle Sánchez Vargas','Tibas' , '402020812', 'HALLEN SANCHEZ',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Haydee Delgado Briceño','Tibas' , '112970129', 'HAYDEE DELGADO',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Hellen Dayan Mendoza Fernández', 'San Pedro', '116370910', 'HELLEN MENDOZA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Javier Quesada Cruz','Tibas' , '603310318', 'JAVIER QUESADA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Jeimy Tatiana Picado Sánchez','Tibas' ,'111310525', 'JEIMY PICADO',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'John Byron Márquez Chicas','Tibas' , '800690616', 'JOHN MARQUEZ',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Jorge Antonio Coto Ortega','Tibas' , '111400658', NULL,TRUE, 1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'José Fallas Robles','Tibas' , '115160254', 'JOSE FALLAS.',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'José Salas Rodríguez','Tibas' , '108390007', 'JOSE SALAS',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'José Vega Fallas', 'Tibas' ,'110080377', 'JOSE VEGA',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Joselyn Vidaurre Bravo','Tibas' , '701700182', 'JOSELYN VIDAURRE',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+VALUES( 'Juan Gabriel Mora Araya','Tibas' , '206840920', 'JUAN MORA',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Karol Rebeca Pérez Abarca', 'San Pedro', '114040722', 'KAROL PEREZ',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Katherine Barrios Valenciano','Tibas' , '112660130', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Leonardo Rodríguez Carrión','Tibas' , '800870767', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Luis Diego Zamora Olmedo','Tibas' , '112170982', 'LUIS ZAMORA',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Magaly Fernández Trejos','Tibas' , '112900696', 'MAGALY FERNANDEZ',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Manuel Valverde Morales', 'Tibas' ,'113500037', 'MANUEL VALVERDE',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Marcela Barrientos Castro','Tibas' , '206780817', 'MARCELA BARRIENTOS',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Marcial García Schmidt','Tibas' , '114620341', 'MARCIAL GARCIA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Marco Vinicio Uribe Morelli','San Pedro',  '112830671', 'MARCO URIBE',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'María Briceño Quirós', 'Tibas' ,'502200745', 'MARIA BRICEÑO',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'María Castillo Ramírez','Tibas' , '107670112', 'MARIA CASTILLO',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Mario Botto Sibaja', 'Tibas' ,'502930659', 'MARIA BOTTO',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Marvin Leiton Sánchez', 'Tibas' ,'107620063', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Michael Vásquez Calderón','Tibas' , '112220657', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Oscar Arnulfo Alvarenga Torres','San Pedro',  '122200557831', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Paola Vargas Carvajal','Tibas' , '112590969', 'PAOLA VARGAS',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Pedro Rojas Duran','Tibas' ,'205280848', 'PEDRO ROJAS',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Priscilla María Sibaja Porras','Tibas' , '112540130', 'PRISCILA SIBAJA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Randall Abarca Hernández','Tibas' , '401840992', 'RANDAL ABARCA',TRUE,  1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince")
+ VALUES( 'Raymond Sandoval Fernández','Tibas' , '112620423', 'RAYMOND SANDOVAL',TRUE,   1,0,'001-149541-0',0,0,0, current_date - interval '15 days');
+INSERT INTO employees(name, location, "idCard", cms,active, "locationId",  salary, account, "negativeAmount", "avalaibleVacations", "workedDays", "activeSince") 
+VALUES( 'Scarlet Tayrin Porras Jiménez', 'San Pedro', '702090625', NULL,TRUE,  1,304405.17,'001-149541-0',0,0,0, current_date - interval '15 days');
 
 --Administrators
 INSERT INTO Administrators values (2, 1);
@@ -293,11 +339,21 @@ INSERT INTO Penalties("Description", employee, penalty_type, "Amount", "PenaltyP
 	values ('Penalty', 2, 2, 7, 1000, '2016-04-07');
 
 --Extras
-INSERT INTO Extras(employee, description, hours) values (13, 'Sin comentarios', 2);
-INSERT INTO Extras(employee, description, hours) values (20, 'Sin comentarios', 6);
-INSERT INTO Extras(employee, description, hours) values (27, 'Sin comentarios', 4);
-INSERT INTO Extras(employee, description, hours) values (28, 'Sin comentarios', 3);
-INSERT INTO Extras(employee, description, hours) values (40, 'Sin comentarios', 6);
+INSERT INTO Extras(employee, description, hours,date) values (13, 'Sin comentarios', 2,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (20, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (27, 'Sin comentarios', 4,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (28, 'Sin comentarios', 3,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (2, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (3, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (4, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (5, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (6, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (7, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (8, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (9, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (10, 'Sin comentarios', 6,current_date - interval '5 days');
+INSERT INTO Extras(employee, description, hours,date) values (11, 'Sin comentarios', 6,current_date - interval '5 days');
+
 
 --Savings
 INSERT INTO Savings values (3, 100000);
@@ -309,47 +365,69 @@ INSERT INTO Savings values (27, 254300);
 INSERT INTO Savings values (25, 120000);
 
 --Debit_Types
- INSERT into Debit_Types (name, pays, "interestRate", location, type)
-	values ('Debit_type1', 4, 9, 1, 'A');
- INSERT into Debit_Types (name, pays, "interestRate", location, type)
-	values ('Debit_type2', 6, 7, 1, 'P');
- INSERT into Debit_Types (name, pays, "interestRate", location, type)
-	values ('Debit_type3', 12, 5, 1, 'F');
+ INSERT into Debit_Types (name, pays,period, "interestRate", location, type)
+	values ('Amortization Debit', 12,15, 15, 1, 'A');
+ INSERT into Debit_Types (name, pays,period, "interestRate", location, type)
+	values ('Payment Debit 5%', 12,15, 5, 1, 'P');
+INSERT into Debit_Types (name, pays,period, "interestRate", location, type)
+	values ('Payment Debit 2%', 12,15, 2, 1, 'P');
+ INSERT into Debit_Types (name, pays,period, "interestRate", location, type)
+	values ('Fixed Debit', 0,15, 0, 1, 'F');
 
 --Debits
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-04-10', 'Sin comentarios', 25, 20000, 20000, 4, 0, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-03-10', 'Sin comentarios', 1, 10000, 7500, 3, 1, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-02-10', 'Sin comentarios', 4, 35000, 17500, 2, 2, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-01-10', 'Sin comentarios', 5, 40000, 30000, 1, 3, 1, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-02-10', 'Sin comentarios', 6, 25000, 12500, 2, 2, 1, true);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 25, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 1, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 4, 1000000, 1000000, 12, 0, 1, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 5, 500000, 500000, 6, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 6, 500000, 500000, 6, 0, 2, true,current_date - interval '15 days',15,0);
 
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-04-05', 'Sin comentarios', 4, 20000, 20000, 6, 0, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-03-05', 'Sin comentarios', 6, 15000, 12500, 5, 1, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-02-05', 'Sin comentarios', 9, 24000, 16000, 4, 2, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-01-05', 'Sin comentarios', 13, 12000, 6000, 3, 3, 2, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-03-05', 'Sin comentarios', 2, 30000, 25000, 5, 1, 2, true);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 7, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 8, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 9, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 10, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 11, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 12, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 13, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 14, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 15, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 17, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 18, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 19, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 20, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 21, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 22, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 23, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 24, 5000, 0, 0, 0, 4, true,current_date - interval '15 days',30,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 25, 50000, 50000, 1, 0,3, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 26, 1000000, 1000000, 12, 0, 2, true,current_date - interval '15 days',15,0);
+INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", type, active,"activeSince", period, "pastDays")
+	values(current_date - interval '15 days', 'Sin comentarios', 27, 2000000, 2000000, 24, 0, 2, true,current_date - interval '15 days',15,0);
 
 
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-04-01', 'Sin comentarios', 3, 40200, 40200, 12, 0, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-01-01', 'Sin comentarios', 6, 40200, 30150, 9, 3, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-02-01', 'Sin comentarios', 13, 40200, 33500, 10, 2, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-03-01', 'Sin comentarios', 9, 40200, 36850, 11, 1, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-02-01', 'Sin comentarios', 2, 40200, 33500, 10, 2, 3, true);
-INSERT INTO Debits ("initialDate", description, employee, "totalAmount", "remainingAmount", "remainingPays", "paysMade", "debitType", active)
-	values('2016-04-01', 'Sin comentarios', 27, 40200, 40200, 12, 0, 3, true);
+
+
 

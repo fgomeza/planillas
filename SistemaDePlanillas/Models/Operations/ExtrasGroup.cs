@@ -52,7 +52,7 @@ namespace SistemaDePlanillas.Models.Operations
         /// </returns>
         public static object get_all(User user,long employeeId)
         {
-                return DBManager.Instance.extras.selectExtras(employeeId);  
+                return DBManager.Instance.extras.selectExtras(employeeId, DateTime.Now);  
         }
         /// <summary>
         /// Accesa a un pago por su identificador

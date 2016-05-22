@@ -10,22 +10,21 @@ namespace SistemaDePlanillas.Models.Manager
 {
     public class SalaryManager : IErrors
     {
-        public List<double> getLastSalaries(long employeeId)
+        public List<Salary> getLastSalaries(long employeeId)
         {
-            List<double> result = new List<double>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var all = (List<SalaryEntity>)repository.Salaries.selectLastSalariesByEmployee(employeeId);
-                    all.ForEach(s => result.Add((double)s.salary));
+                    var salaries= repository.Salaries.selectLastSalariesByEmployee(employeeId);
+                    return salaries.Select(s => new Salary()
+                    { payroll = s.payrollId, employee = s.employeeId, salary = s.salary, netSalary = s.netSalary, workedDays = s.workedDays }).ToList();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
-            return result;
         }
 
         public void assignSalaryToPayroll(long employee,long payroll,double grossSalary, double netSalary)
@@ -46,26 +45,24 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
         public double selectSavingByEmployee(long employee)
         {
-            double result = 0;
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
                     var saving = repository.Savings.Get(employee);
-                    result = saving != null ? (double)saving.amount : 0;
+                    return saving != null ? saving.amount : 0;
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
-            return result;
         }
     }
 }

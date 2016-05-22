@@ -273,4 +273,10 @@
   <data name="invalidProcedure" xml:space="preserve">
     <value>invalidProcedure</value>
   </data>
+  <data name="invalidDate" xml:space="preserve">
+    <value>invalidDate</value>
+  </data>
+  <data name="invalidInitialDate" xml:space="preserve">
+    <value>invalidInitialDate</value>
+  </data>
 </root>

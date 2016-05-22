@@ -198,4 +198,10 @@
   <data name="invalidProcedure" xml:space="preserve">
     <value>No se puede realizar esta operación en el estado actual del sistema</value>
   </data>
+  <data name="invalidDate" xml:space="preserve">
+    <value>La fechas proporcionadas son incorrectas.</value>
+  </data>
+  <data name="invalidInitialDate" xml:space="preserve">
+    <value>La fecha inicial contempla días ya procesador en la planilla anterior.</value>
+  </data>
 </root>

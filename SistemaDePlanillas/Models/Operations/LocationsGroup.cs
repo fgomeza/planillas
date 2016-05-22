@@ -9,9 +9,9 @@ namespace SistemaDePlanillas.Models.Operations
     public class LocationsGroup
     {
         
-        public static Location add(User user, string name, double callPrice,long administrator)
+        public static Location add(User user, string name, double callPrice,long administrator,long workingDaysPerMonth, long workingHoursPerDay)
         {
-            return DBManager.Instance.locations.addLocation(name, callPrice,administrator);
+            return DBManager.Instance.locations.addLocation(name, callPrice,administrator,workingDaysPerMonth,workingHoursPerDay);
         }
         
 
@@ -45,9 +45,9 @@ namespace SistemaDePlanillas.Models.Operations
             DBManager.Instance.locations.updateLocationLastPayroll(location_id);
         } 
 
-        public static void modify_Current(User user, string name, long current_payroll,long administrator)
+        public static void modify_Current(User user, string name, long current_payroll,long administrator, long workingDaysPerMonth, long workingHoursPerDay)
         {
-            DBManager.Instance.locations.addLocation(name, current_payroll,administrator);
+            DBManager.Instance.locations.addLocation(name, current_payroll, administrator, workingDaysPerMonth, workingHoursPerDay);
         }
 
         public static void modify_Administrator(User user, long  location,long administrator)

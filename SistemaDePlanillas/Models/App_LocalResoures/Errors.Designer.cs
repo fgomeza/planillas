@@ -385,6 +385,24 @@ namespace SistemaDePlanillas.Models.App_LocalResoures {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to invalidDate.
+        /// </summary>
+        internal static string invalidDate {
+            get {
+                return ResourceManager.GetString("invalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to invalidInitialDate.
+        /// </summary>
+        internal static string invalidInitialDate {
+            get {
+                return ResourceManager.GetString("invalidInitialDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to invalidProcedure.
         /// </summary>
         internal static string invalidProcedure {

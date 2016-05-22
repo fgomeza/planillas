@@ -39,29 +39,29 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
-        public void assignCallsToPayroll(long payrollId, DateTime endDate)
+        public void assignCallsToPayroll(long payrollId,long location, DateTime endDate)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Calls.assignPayroll(payrollId, endDate);
+                    repository.Calls.assignPayroll(payrollId,location, endDate);
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
     }

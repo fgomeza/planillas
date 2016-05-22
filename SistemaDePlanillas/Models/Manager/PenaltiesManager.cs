@@ -43,7 +43,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -66,7 +66,7 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentExtra);
+                        throw validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
 
@@ -74,7 +74,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -92,13 +92,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -127,13 +127,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(penalty != null ? App_LocalResoures.Errors.penaltyInactive : App_LocalResoures.Errors.inexistentPenalty);
+                        throw validateException(penalty != null ? App_LocalResoures.Errors.penaltyInactive : App_LocalResoures.Errors.inexistentPenalty);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -164,7 +164,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -187,24 +187,24 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
 
-        public void assignPenaltiesToPayroll(long payrollId, DateTime endDate)
+        public void assignPenaltiesToPayroll(long payrollId,long location, DateTime endDate)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Penalties.assignPayroll(payrollId, endDate);
+                    repository.Penalties.assignPayroll(payrollId,location, endDate);
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
     }

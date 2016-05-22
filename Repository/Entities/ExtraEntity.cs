@@ -25,6 +25,7 @@ namespace Repository.Entities
 
         public string description { set; get; }
 
+        public DateTime date { set; get; }
 
         public long hours { set; get; }
 

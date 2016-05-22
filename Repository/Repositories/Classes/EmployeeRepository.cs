@@ -15,15 +15,9 @@ namespace Repository.Repositories.Classes
         public EmployeeRepository(AppContext context) : base(context)
         {}
 
-        public IEnumerable<EmployeeEntity> selectCMSEmployees(long location)
+        public IEnumerable<EmployeeEntity> selectEmployees(long location)
         {
-            var employees = _context.Employees.Where((e) => e.iscms && e.locationId==location && e.active);
-            return employees.ToList();
-        }
-
-        public IEnumerable<EmployeeEntity> selectNonCMSEmployees(long location)
-        {
-            var employees = _context.Employees.Where((e) => !e.iscms && e.locationId == location && e.active);
+            var employees = _context.Employees.Where(e=>e.locationId==location && e.active);
             return employees.ToList();
         }
 

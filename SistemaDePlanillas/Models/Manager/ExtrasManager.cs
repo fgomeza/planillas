@@ -30,7 +30,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -49,14 +49,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentExtra);
+                        throw validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -73,14 +73,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentExtra);
+                        throw validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -105,25 +105,25 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentExtra);
+                        throw validateException(App_LocalResoures.Errors.inexistentExtra);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
 
-        public List<Extra> selectExtras(long employee)
+        public List<Extra> selectExtras(long employee, DateTime date)
         {
             List<Extra> result = new List<Extra>();
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    var extras = repository.Extras.selectExtrasByEmployee(employee);
+                    var extras = repository.Extras.selectExtrasByEmployee(employee,date);
                     foreach (var ex in extras)
                     {
                         result.Add(new Extra()
@@ -138,24 +138,24 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
 
-        public void assignExtrasToPayroll(long payrollId)
+        public void assignExtrasToPayroll(long payrollId, long location,DateTime endDate)
         {
             try
             {
                 using (var repository = new MainRepository(new AppContext("PostgresConnection")))
                 {
-                    repository.Extras.assignPayroll(payrollId);
+                    repository.Extras.assignPayroll(payrollId, location,endDate);
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
     }

@@ -44,7 +44,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return user;
         }
@@ -66,14 +66,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -90,14 +90,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentEmployee);
+                        throw validateException(App_LocalResoures.Errors.inexistentEmployee);
                     }
                     repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -114,14 +114,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentUser);
+                        throw validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -138,14 +138,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentUser);
+                        throw validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                     var rows = repository.Complete();
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -173,13 +173,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(user != null ? App_LocalResoures.Errors.userInactive : App_LocalResoures.Errors.inexistentUser);
+                        throw validateException(user != null ? App_LocalResoures.Errors.userInactive : App_LocalResoures.Errors.inexistentUser);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -210,7 +210,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -244,7 +244,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -263,13 +263,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentUser);
+                        throw validateException(App_LocalResoures.Errors.inexistentUser);
                     }
                 }
             }
             catch (NpgsqlException e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }

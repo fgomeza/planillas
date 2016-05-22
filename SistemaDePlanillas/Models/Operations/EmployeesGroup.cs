@@ -17,29 +17,15 @@ namespace SistemaDePlanillas.Models.Operations
         }
 
         //employees/add/cms (string,string,string,string)
-        public static Employee add_CMS(User user, string idCard, string idCMS, string name, string BCRAccount)
+        public static Employee add(User user, string idCard, string idCMS, string name, string BCRAccount, string locationName, double salary, long vacations)
         {
-            return DBManager.Instance.employees.addCmsEmployee(idCard, idCMS, name, user.Location, BCRAccount);
+            return DBManager.Instance.employees.addEmployee(idCard, locationName, name, user.Location, BCRAccount, salary, vacations, idCMS);
         }
-
-
-        //employees/add/noncms (string,string,string,decimal)
-        public static Employee add_nonCMS(User user, string idCard, string name, string BCRAccount, double salary)
-        {
-            return DBManager.Instance.employees.addNonCmsEmployee(idCard, name, user.Location, BCRAccount, (float)salary);
-        }
-
 
         //employees/modify/cms (number, string,string,string,number,string)
-        public static void modify_CMS(User user, long id, string idCard, string idCMS, string name, long location, string BCRAccount)
+        public static void modify(User user, long id, string idCard, string idCMS, string name, string BCRAccount, string locationName, double salary, long vacations)
         {
-            DBManager.Instance.employees.updateCmsEmployeee(id, idCard, idCMS, name, location, BCRAccount);
-        }
-
-        //employees/modify/noncms (number, string,string,number,string,decimal)
-        public static void modify_nonCMS(User user, long id, string idCard, string name, long location, string BCRAccount, double salary)
-        {
-            DBManager.Instance.employees.updateNonCmsEmployeee(id, idCard, name, location, BCRAccount, salary);
+            DBManager.Instance.employees.updateEmployeee(id, idCard, locationName, name, user.Location, BCRAccount, salary, vacations, idCMS);
         }
 
         //employees/remove (number)
@@ -53,31 +39,29 @@ namespace SistemaDePlanillas.Models.Operations
             DBManager.Instance.employees.activateEmployee(id);
         }
 
+        public static object get_active(User user)
+        {
+            return DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
+        }
         //employees/get
         public static object get(User user)
         {
             return DBManager.Instance.employees.selectAllEmployees(user.Location);
         }
 
-        public static object get_active(User user)
-        {
-            return DBManager.Instance.employees.selectAllActiveEmployees(user.Location);
-        }
-        //employees/get/cms
-        public static object get_CMS(User user)
-        {
-            return DBManager.Instance.employees.selectAllCmsEmployees(user.Location);
-        }
-
-        //employees/get/noncms
-        public static object get_nonCMS(User user)
-        {
-            return DBManager.Instance.employees.selectAllNonCmsEmployees(user.Location);
-        }
-
         public static object get(User user, long id)
         {
             return DBManager.Instance.employees.selectEmployee(id);
+        }
+
+        public static object add_vacations(User user,long employee, IEnumerable<DateTime>dates, double vacationPrice)
+        {
+            return dates.Select(d=>DBManager.Instance.employees.addVacation(employee,d,vacationPrice));
+        }
+
+        public static void remove_vacation(User user, long employee, DateTime date)
+        {
+            DBManager.Instance.employees.removeVacation(employee,date);
         }
     }
 }

@@ -18,12 +18,31 @@ namespace SistemaDePlanillas.Models
         public string name;
         public long location;
         public string account;
-        public bool cms;
         public string cmsText;
         public long calls;
         public double salary;
         public bool active;
         public double negativeAmount;
+        public long avalaibleVacations;
+        public string locationName;
+        public DateTime activeSince;
+    }
+
+    public class Salary
+    {
+        public long payroll;
+        public long employee;
+        public double salary;
+        public double netSalary;
+        public long workedDays;
+    }
+
+    public class Vacation
+    {
+        public long employee;
+        public DateTime date;
+        public double vacationPrice;
+
     }
 
     public class Call
@@ -38,6 +57,7 @@ namespace SistemaDePlanillas.Models
     {
         public long id;
         public DateTime endDate;
+        public DateTime initialDate;
         public long user;
         public string json;
     }
@@ -49,7 +69,7 @@ namespace SistemaDePlanillas.Models
         public Nullable<double> interestRate;
         public Nullable<long> months;
         public long location;
-        public bool payment;
+        public long period;
     }
 
     public class Debit
@@ -60,6 +80,8 @@ namespace SistemaDePlanillas.Models
         public double amount;
         public long type;
         public string typeName;
+        public long period;
+        public long pastDays;
     }
 
     public class PaymentDebit
@@ -75,6 +97,8 @@ namespace SistemaDePlanillas.Models
         public double remainingAmount;
         public long type;
         public string typeName;
+        public long period;
+        public long pastDays;
     }
 
     public class AmortizationDebit
@@ -90,6 +114,8 @@ namespace SistemaDePlanillas.Models
         public double remainingAmount;
         public long type;
         public string typeName;
+        public long period;
+        public long pastDays;
     }
 
     public class Extra
@@ -144,6 +170,8 @@ namespace SistemaDePlanillas.Models
         public Nullable<long> CurrentPayroll;
         public bool Active;
         public bool isPendingToApprove;
+        public long workingDaysPerMonth;
+        public long workingHoursPerDay;
     }
 
     public class Role

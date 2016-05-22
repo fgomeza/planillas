@@ -42,7 +42,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return null;
         }
@@ -71,13 +71,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(role != null ? App_LocalResoures.Errors.roleInactive : App_LocalResoures.Errors.inexistentRole);
+                        throw validateException(role != null ? App_LocalResoures.Errors.roleInactive : App_LocalResoures.Errors.inexistentRole);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -117,14 +117,14 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentRole);
+                        throw validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                     
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return null;
         }
@@ -164,19 +164,19 @@ namespace SistemaDePlanillas.Models.Manager
                         if (userResult.TrueForAll(u => u.Role != role.id))
                             role.active = false;
                         else
-                            validateException(App_LocalResoures.Errors.roleWithUser);
+                            throw validateException(App_LocalResoures.Errors.roleWithUser);
                         repository.Complete();
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentRole);
+                        throw validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                 }
 
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -194,13 +194,13 @@ namespace SistemaDePlanillas.Models.Manager
                     }
                     else
                     {
-                        validateException(App_LocalResoures.Errors.inexistentRole);
+                        throw validateException(App_LocalResoures.Errors.inexistentRole);
                     }
                 }
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
         }
 
@@ -228,7 +228,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }
@@ -260,7 +260,7 @@ namespace SistemaDePlanillas.Models.Manager
             }
             catch (Exception e)
             {
-                validateException(e);
+                throw validateException(e);
             }
             return result;
         }

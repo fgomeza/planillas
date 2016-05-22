@@ -15,7 +15,9 @@ namespace Repository.Repositories.Classes
 
         public IEnumerable<SalaryEntity> selectLastSalariesByEmployee(long employee)
         {
-            return _context.Salaries.Where(s => s.employeeId == employee).OrderByDescending(s=>s.fksalary_payroll.endDate).Take(5).ToList();
+            var emp = _context.Employees.Find(employee);
+            return _context.Salaries.Where(s => s.employeeId == employee && s.fksalary_payroll.initialDate>emp.activeSince && s.fksalary_payroll.initialDate>DateTime.Today.AddMonths(-6)).ToList();
         }
+
     }
 }

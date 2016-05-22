@@ -9,23 +9,23 @@ namespace SistemaDePlanillas.Models.Operations
 {
     public class DebitsGroup
     {
-        public static Debit add_Fixed(User user, long employee, string detail, double amount, long type)
+        public static Debit add_Fixed(User user, long employee, string detail, double amount, long type, long period)
         {
-            return DBManager.Instance.debits.addFixedDebit(employee, detail, amount, type);
+            return DBManager.Instance.debits.addFixedDebit(employee, detail, amount, type, period);
         }
 
-        public static PaymentDebit add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type)
+        public static PaymentDebit add_Payment(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type,long period)
         {
-            return DBManager.Instance.debits.addPaymentDebit(employee, initialDate, detail, total, pays, type);
+            return DBManager.Instance.debits.addPaymentDebit(employee, initialDate, detail, total, pays, type,period);
         }
-        public static AmortizationDebit add_Amortization(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type)
+        public static AmortizationDebit add_Amortization(User user, long employee, DateTime initialDate, string detail, double total, double interestRate, long pays, long type, long period)
         {
-            return DBManager.Instance.debits.addAmortizationDebit(employee, initialDate, detail, total, pays, type);
+            return DBManager.Instance.debits.addAmortizationDebit(employee, detail, total, pays, type,period);
         }
 
         public static List<Debit> get_AllFixed(User user, long employee)
         {
-            return DBManager.Instance.debits.selectDebits(employee);
+            return DBManager.Instance.debits.selectActiveFixedDebits(employee);
         }
 
         public static List<PaymentDebit> get_AllPayment(User user, long employee)
@@ -53,14 +53,14 @@ namespace SistemaDePlanillas.Models.Operations
             return DBManager.Instance.debits.selectAmortizationDebit(idDebit);
         }
 
-        public static void modify_Fixed(User user, long idDebit, string detail, double amount)
+        public static void modify_Fixed(User user, long idDebit, string detail, double amount, long period)
         {
-            DBManager.Instance.debits.updateFixedDebit(idDebit, detail, amount);
+            DBManager.Instance.debits.updateFixedDebit(idDebit, detail, amount, period);
         }
 
-        public static void modify_Payment(User user, long idDebit, double total, long remainingMonths)
+        public static void modify_Payment(User user, long idDebit, double total, long remainingMonths, long period)
         {
-            DBManager.Instance.debits.updatePaymentDebit(idDebit, total, remainingMonths);
+            DBManager.Instance.debits.updatePaymentDebit(idDebit, total, remainingMonths,period);
         }
 
         public static void remove_Fixed(User user, long idDebit)
