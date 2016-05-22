@@ -5,7 +5,8 @@
         </p>
     </div>
     <div class="row">
-        <div class="panel panel-default" data-bind="visible: activeEmployees().length > 0">
+        <div class="panel panel-primary" data-bind="visible: activeEmployees().length > 0">
+            <div class="panel-heading">Lista de asociados</div>
             <div class="table-responsive table-scroll">
                 <table id="employeesTable" class="table table-striped table-hover">
                     <thead>
@@ -98,7 +99,9 @@
                                 <div class="form-group">
                                     <label for="employeeEditFormCMS" class="col-sm-4 control-label" data-bind="text: $root.strings.cms"></label>
                                     <div class="col-sm-8">
-                                        <input id="employeeEditFormCMS" type="checkbox" data-bind="bootstrapToggle: cms, disable: $root.isEditMode" />
+                                        <div tabindex="0">
+                                            <input id="employeeEditFormCMS" type="checkbox" data-bind="bootstrapToggle: cms, disable: $root.isEditMode" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -112,9 +115,9 @@
                                 <div class="form-group" data-bind="hidden: cms">
                                     <label for="employeeEditFormSalary" class="col-sm-4 control-label" data-bind="text: $root.strings.salary"></label>
                                     <div class="col-sm-8">
-                                        <input id="employeeEditFormSalary" type="number" class="form-control" data-bind="value: salary" />
+                                        <input id="employeeEditFormSalary" type="number" step="1000" class="form-control" data-bind="value: salary" />
                                     </div>
-                                </div>
+                                </div>      
                             </div>
                         </div>
                     </div>

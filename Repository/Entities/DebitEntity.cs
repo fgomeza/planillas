@@ -22,9 +22,10 @@ namespace Repository.Entities
 
         public string description { set; get; }
 
-        [Column("employee"), ForeignKey("fkdebit_employee")]
+        [ForeignKey("fkdebit_employee")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long employeeId { set; get; }
+
 
         public virtual EmployeeEntity fkdebit_employee { set; get; }
 

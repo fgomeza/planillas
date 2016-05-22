@@ -4,6 +4,7 @@
         this.id = ko.observable();
         this.name = ko.observable();
         this.groups = ko.observableArray();
+        this["_destroy"] = !data.active;
         this.update(data);
     }
 
@@ -41,10 +42,6 @@
         this.description = ko.observable();
         this.active = ko.observable();
         this.update(data);
-
-        this.active.subscribe(function (newValue) {
-            console.log(newValue);
-        });
     }
 
     ko.utils.extend(Privilege.prototype, {
@@ -62,6 +59,9 @@
             createRoleLink: "Crear Rol"
         };
 
+        self.selectedObject = null;
+        self.groups = null;
+
         self.roles = ko.observableArray();
         self.isFormOpen = ko.observable(false);
         self.isEditMode = ko.observable(false);
@@ -76,20 +76,23 @@
         }
 
         self.closeForm = function () {
-            self.editingObject();
+            self.isFormOpen(false);
             self.isEditMode(false);
             self.isCreateMode(false);
-            self.isFormOpen(false);
+            self.editingObject(null);
         }
 
         self.openCreateForm = function () {
+            self.editingObject(new Role({groups: self.groups}));
             self.isEditMode(false);
-            self.editingObject(new Role());
+            self.isCreateMode(true);
             self.openForm();
         }
 
         self.openEditForm = function (data, event) {
-            self.editingObject(data);
+            var jsData = ko.toJS(data);
+            self.editingObject(new Role(jsData));
+            self.selectedObject = data;
             self.isEditMode(true);
             self.isCreateMode(false);
             self.openForm();
@@ -102,15 +105,83 @@
             $target.next().collapse('toggle');
         }
 
-        self.submitDelete = function () { self.closeForm(); }
-        self.submitCreate = function () { self.closeForm(); }
-        self.submitChanges = function () { self.closeForm(); }
+        self.submitDelete = function () {
+            var obj = ko.toJS(self.editingObject);
+            var args = { id: obj.id };
+            app.consumeAPI("roles", "remove", args).done(function (data) {
+                self.roles.destroy(self.selectedObject);
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            }).always(function () {
+                self.closeForm();
+            });
+        }
 
-        self.loading = app.consumeAPI('roles', 'get').done(function (data) {
-            var mappedData = $.map(data, function (item) { return new Role(item); });
-            self.roles(mappedData);
-            return self.roles;
-        });
+        self.submitCreate = function () {
+            var obj = ko.toJS(self.editingObject);
+            var args = { name: obj.name, operations: createOperationsList(obj) };
+            app.consumeAPI("roles", "add", args).done(function (data) {
+                console.log("it worked!", data);
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            }).always(function () {
+                self.closeForm();
+            });
+        }
+
+        self.submitChanges = function () {
+            var obj = ko.toJS(self.editingObject);
+            var args = { id: obj.id, name: obj.name, operations: createOperationsList(obj) };
+            app.consumeAPI("roles", "modify", args).done(function (data) {
+                var edited = ko.toJS(self.editingObject());
+                self.selectedObject.update(edited);
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            }).always(function () {
+                self.closeForm();
+            });
+        }
+
+        function createOperationsList(obj) {
+            var operations = [];
+            for (var i = 0; i < obj.groups.length; ++i) {
+                var group = obj.groups[i];
+                for (var j = 0; j < group.privileges.length; ++j) {
+                    var privilege = group.privileges[j];
+                    if (privilege.active == true) {
+                        operations.push(privilege.id);
+                    }
+                }
+            }
+
+            return operations;
+        }
+
+        self.loading = $.when(self.loading, loadRoles(), loadGroups());
+
+        function loadRoles() {
+            return app.consumeAPI('roles', 'get').done(function (data) {
+                var mappedData = $.map(data, function (item) { return new Role(item); });
+                self.roles(mappedData);
+                return mappedData;
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            });
+        }
+
+        function loadGroups() {
+            return app.consumeAPI('roles', 'get/groups').done(function (data) {
+                self.groups = data.groups;
+                return data.groups;
+            }).fail(function (error) {
+                console.error(error);
+                app.showError(error);
+            });
+        }
 
     }
 

@@ -1,0 +1,29 @@
+﻿<div id="extrasSection" class="container-fluid">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Extras</div>
+            <div class="table-responsive table-scroll">
+                
+                <table id="extrasTable" class="table table-striped">
+                    <thead>
+                        <tr data-bind="with: strings">
+                            <th data-bind="text: id"></th>
+                            <th data-bind="text: employee"></th>
+                            <th data-bind="text: detail"></th>
+                            <th data-bind="text: hours"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: extras">
+                        <tr>
+                            <td data-bind="text: id"></td>
+                            <td data-bind="text: employee"></td>
+                            <td data-bind="text: detail"></td>
+                            <td data-bind="text: hours"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

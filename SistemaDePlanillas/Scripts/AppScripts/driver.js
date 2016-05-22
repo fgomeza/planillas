@@ -1,4 +1,4 @@
-﻿define([], function () {
+﻿define(['jquery', 'knockout'], function ($, ko) {
 
     function AppHandler() {
 
@@ -14,7 +14,7 @@
                 dataType: 'json',
             };
 
-            console.log('requesting ' + xhr.url + ' args = ' + xhr.data);
+            console.log('requesting ' + xhr.url + ' args = ', args);
 
             return $.ajax(xhr).then(function (response) {
                 var $deferred = $.Deferred(function (deferred) {
@@ -49,9 +49,13 @@
                 $('#errorHolder').slideUp();
             }, 10000);
 
-            $('#errorholder').on('close.bs.alert', function () {
+            $('#errorHolder').on('close.bs.alert', function () {
                 clearTimeout(timeout);
             });
+        }
+
+        this.hideError = function () {
+            $("#errorHolder").slideUp();
         }
 
         this.showLoading = function () {
@@ -72,6 +76,38 @@
             clearTimeout(loadingTimeout);
             self.hideLoading();
         }
+
+        this.urlParameterExists = function (parameter) {
+            var url = window.location.href;
+
+            if (url.indexOf("?" + parameter + "=") != -1)
+                return true;
+            else if (url.indexOf("&" + parameter + "=") != -1)
+                return true;
+
+            return false;
+        }
+
+        this.EditableObject = function(data) {
+            data = data || {};
+            var self = this;
+            $.each(data, function (property) {
+                if ($.isArray(property))
+                    self[property] = ko.observableArray();
+                else
+                    self[property] = ko.observable();
+            });
+            this.update(data)
+        }
+
+        ko.utils.extend(self.EditableObject.prototype, {
+            update: function (data) {
+                var self = this;
+                $.each(data, function (propertyName, value) {
+                    self[propertyName](value);
+                });
+            }
+        });
 
     }
 

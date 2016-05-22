@@ -14,6 +14,7 @@ namespace SistemaDePlanillas.Models.Operations
             {
                 id = role.id,
                 name = role.name,
+                active = role.active,
                 groups = groups.Select(g => new
                 {
                     id = g.name,
@@ -44,11 +45,11 @@ namespace SistemaDePlanillas.Models.Operations
             return roles.Select(r => formatRole(r, groups));
         }
 
-        public static long add(User user, string name, IEnumerable<object> operations)
+        public static Role add(User user, string name, IEnumerable<object> operations)
         {
-            long roleId = DBManager.Instance.roles.addRole(name, user.Location, operations.Select(o => o.ToString()).ToList());
+            Role role = DBManager.Instance.roles.addRole(name, user.Location, operations.Select(o => o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
-            return roleId;
+            return role;
         }
 
         public static object get(User user, long id)
@@ -70,10 +71,11 @@ namespace SistemaDePlanillas.Models.Operations
             SessionManager.Instance.updateRoles();
         }
 
-        public static void modify(User user, long id, string name, List<String> operations)
+        public static Role modify(User user, long id, string name, IEnumerable<object> operations)
         {
-            DBManager.Instance.roles.updateRole(id, name, user.Location, operations);
+            var role =DBManager.Instance.roles.updateRole(id, name, user.Location, operations.Select(o=>o.ToString()).ToList());
             SessionManager.Instance.updateRoles();
+            return role;
         }
 
         public static object get_groups(User user)

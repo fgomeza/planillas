@@ -2,6 +2,8 @@
     function Router(contentSelector, defaultRoute) {
         return Sammy(contentSelector, function (context) {
 
+            var currentPage = '';
+
             this.raise_errors = true;
 
             this.notFound = function () {
@@ -37,9 +39,14 @@
             };
 
             this.get('#/navigation', function (context) {
+                $('html').trigger('click');
+
+                if (currentPage !== context.params.page)
+                    currentPage = context.params.page;
+                else return;
+
                 var url = '/PartialViews/' + context.params.page;
                 console.log('loading', url);
-                $('html').trigger('click');
                 
                 var loading = app.startLoadingTimeout(1000);
 
@@ -47,10 +54,11 @@
                     require(['controllers/' + context.params.page], function (controller) {
                         if (controller && controller.init) {
                             controller.init(context.params);
+                            app.hideError();
                         }
                         app.stopLoadingTimeout(loading);
                     }, function (error) {
-                        console.log(error);
+                        console.error(error);
                         app.stopLoadingTimeout(loading);
                     });
                 });
