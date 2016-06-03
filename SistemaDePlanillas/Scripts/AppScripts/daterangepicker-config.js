@@ -11,8 +11,8 @@
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
         "alwaysShowCalendars": true,
-        "startDate": "04/27/2016",
-        "endDate": "05/03/2016"
+        "startDate": moment().subtract(1, 'month'),
+        "endDate": moment()
     };
 
     return options;

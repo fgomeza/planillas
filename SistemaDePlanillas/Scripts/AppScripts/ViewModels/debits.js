@@ -21,6 +21,8 @@
         }
     });
 
+    
+
     function ViewModel() {
         var self = this;
 
@@ -59,6 +61,9 @@
         self.fixedDebits = ko.observableArray();
         self.paymentsDebits = ko.observableArray();
         self.amortizationDebits = ko.observableArray();
+        self.fixedTypes = ko.observableArray();
+        self.paymentTypes = ko.observableArray();
+        self.amortizationTypes = ko.observableArray();
 
         // Computed
         self.fixedDebitsVisible = ko.computed(function () {
@@ -81,6 +86,10 @@
         });
 
         //functions
+        self.mapFixedType = mapFixedType;
+        self.mapPaymentType = mapPaymentType;
+        self.mapAmortizationType = mapAmortizationType;
+
         self.loading = $.when(self.loading, employees.loading).
             then(function () {
                 self.employees = employees.employees;
@@ -100,7 +109,10 @@
                 self.loading,
                 getDebits('get/AllFixed', self.fixedDebits, args),
                 getDebits('get/AllPayment', self.paymentsDebits, args),
-                getDebits('get/AllAmortization', self.amortizationDebits, args));
+                getDebits('get/AllAmortization', self.amortizationDebits, args),
+                getDebitTypes('get/FixedTypes', self.fixedTypes),
+                getDebitTypes('get/PaymentTypes', self.paymentTypes),
+                getDebitTypes('get/AmortizationTypes', self.amortizationTypes));
         });
 
         self.debitTypeSelected.subscribe(function (newValue) {
@@ -114,7 +126,7 @@
                     self.modalHeaderLabel("Crear débito a pagos");
                     break;
                 case "amortization":
-                    self.modalBodyTemplate("createPaymentsModalTemplate");
+                    self.modalBodyTemplate("createAmortizationModalTemplate");
                     self.modalHeaderLabel("Crear débito amortizado");
             }
         });
@@ -190,6 +202,29 @@
                 app.showError(error);
                 return error;
             });
+        }
+
+        function getDebitTypes(operation, observable) {
+            return app.consumeAPI('debitTypes', operation).done(function (data) {
+                var mappedData = $.map(data, function (item) { return new editables.DebitType(item); });
+                observable(mappedData);
+                return data;
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            });
+        }
+
+        function mapFixedType(type) {
+            return editables.getNameFromId(self.fixedTypes(), type());
+        }
+
+        function mapPaymentType(type) {
+            return editables.getNameFromId(self.paymentTypes(), type());
+        }
+
+        function mapAmortizationType(type) {
+            return editables.getNameFromId(self.amortizationTypes(), type());
         }
 
     };
