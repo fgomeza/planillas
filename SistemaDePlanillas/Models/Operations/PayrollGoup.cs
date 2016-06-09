@@ -14,6 +14,7 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
+
         public static void calculate_setAsReady(User user)
         {
             var location = DBManager.Instance.locations.getLocation(user.Location);
