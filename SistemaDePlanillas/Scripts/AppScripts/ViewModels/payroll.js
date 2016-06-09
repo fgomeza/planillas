@@ -47,7 +47,12 @@
         }
 
         self.submitApprove = function () {
-            self.submitCancel();
+            app.consumeAPI('Payroll', 'calculate/setAsReady').done(function (data) {
+                self.rows([]);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            });
         }
 
         self.submitRange = function (start, end, label) {
