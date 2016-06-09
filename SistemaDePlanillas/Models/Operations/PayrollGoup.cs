@@ -14,12 +14,18 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
+
         public static object get(User user)
         {
-            var current = DBManager.Instance.locations.getLocation(user.Location).CurrentPayroll;
+            var location = DBManager.Instance.locations.getLocation(user.Location);
             var javaScriptSerializer = new JavaScriptSerializer();
-            if (current!=null)
-               return javaScriptSerializer.DeserializeObject(DBManager.Instance.payrolls.selectPayroll((long)current).json);
+            if (location.CurrentPayroll != null)
+                return
+                     new
+                     {
+                         isPendingToApprove = location.isPendingToApprove,
+                         payroll = javaScriptSerializer.DeserializeObject(DBManager.Instance.payrolls.selectPayroll((long)location.CurrentPayroll).json)
+                     };
             return null;
         }
 
