@@ -27,15 +27,12 @@
     function ViewModel() {
         var self = this;
 
+        self.loading = null;
+
         self.rows = ko.observableArray([]);
         self.payrollVisible = ko.computed(function () {
             return self.rows().length > 0;
         });
-
-        function renderPayroll(data) {
-            var mappedData = $.map(data.employees, function (item) { return new Row(item); });
-            self.rows(mappedData);
-        }
 
         self.submitCancel = function () {
             app.consumeAPI('Payroll', 'calculate/cancel').done(function (data) {
@@ -71,6 +68,21 @@
             });
         }
 
+        self.loading = $.when(getAlreadyCalculated());
+
+        function renderPayroll(data) {
+            var mappedData = $.map(data.employees, function (item) { return new Row(item); });
+            self.rows(mappedData);
+        }
+
+        function getAlreadyCalculated() {
+            return app.consumeAPI('Payroll', 'get').done(function (data) {
+                if (data && data.isPendingToApprove === false) {
+                    console.log('Hello World', data);
+                    renderPayroll(data.payroll);
+                }
+            });
+        }
 
     }
 
