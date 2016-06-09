@@ -15,7 +15,7 @@ namespace SistemaDePlanillas.Models.Operations
         public static long workHoursByMonth = 208;
 
 
-        public static object get(User user)
+        public static object get_current(User user)
         {
             var location = DBManager.Instance.locations.getLocation(user.Location);
             var javaScriptSerializer = new JavaScriptSerializer();
