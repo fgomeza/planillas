@@ -14,6 +14,14 @@ namespace SistemaDePlanillas.Models.Operations
     {
         public static long workHoursByMonth = 208;
 
+        public static object get(User user)
+        {
+            var current = DBManager.Instance.locations.getLocation(user.Location).CurrentPayroll;
+            var javaScriptSerializer = new JavaScriptSerializer();
+            if (current!=null)
+               return javaScriptSerializer.DeserializeObject(DBManager.Instance.payrolls.selectPayroll((long)current).json);
+            return null;
+        }
 
         public static void calculate_setAsReady(User user)
         {
