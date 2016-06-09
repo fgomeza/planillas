@@ -76,10 +76,14 @@
         }
 
         function getAlreadyCalculated() {
-            return app.consumeAPI('Payroll', 'get').done(function (data) {
-                if (data && data.isPendingToApprove === false) {
-                    console.log('Hello World', data);
+            return app.consumeAPI('Payroll', 'get/current').done(function (data) {
+                if (data) {
                     renderPayroll(data.payroll);
+                }
+                if (data.isPendingToApprove) {
+                    //poner aprovar
+                } else {
+                    //poner enviar apra aprobación
                 }
             });
         }
