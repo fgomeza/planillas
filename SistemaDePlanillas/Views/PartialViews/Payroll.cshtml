@@ -52,16 +52,27 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" data-bind="visible: payrollVisible">
             <div class="panel panel-default">
-                <div class="panel-body">
+
+                <div class="panel-body" data-bind="visible: $root.isPendingToApprove">
+                    <div class="pull-left">
+                        <button class="btn btn-default" type="button" data-bind="click: submitReprove">Rechazar</button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" data-bind="click: submitApprove">Aprobar</button>
+                    </div>
+                </div>
+
+                <div class="panel-body" data-bind="hidden: $root.isPendingToApprove">
                     <div class="pull-left">
                         <button class="btn btn-default" type="button" data-bind="click: submitCancel">Cancelar planilla</button>
                     </div>
-                    <div class="pull-right" data-bind="visible: payrollVisible">
-                        <button class="btn btn-success" type="button" data-bind="click: submitApprove">Marcar como listo</button>
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" data-bind="click: submitSetAsReady">Marcar como listo</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/driver'], function ($, ko, app) {
+﻿define(['jquery', 'knockout', 'app/driver', 'moment'], function ($, ko, app, moment) {
 
     function Row(data) {
         this.amortizationDebits;
@@ -23,6 +23,7 @@
         this.list = data.list;
     }
 
+    $datePicker = $("#reportrange");
 
     function ViewModel() {
         var self = this;
@@ -30,13 +31,37 @@
         self.loading = null;
 
         self.rows = ko.observableArray([]);
+        self.isPendingToApprove = ko.observable();
+
         self.payrollVisible = ko.computed(function () {
             return self.rows().length > 0;
         });
 
         self.submitCancel = function () {
             app.consumeAPI('Payroll', 'calculate/cancel').done(function (data) {
-                self.rows([]);
+                clearTable();
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            });
+        }
+        
+        self.submitSetAsReady = function () {
+            var timeout = app.startLoadingTimeout(200);
+            app.consumeAPI('Payroll', 'calculate/setAsReady').done(function (data) {
+                self.isPendingToApprove(true);
+            }).fail(function (error) {
+                app.showError(error);
+                return error;
+            }).always(function () {
+                app.stopLoadingTimeout(timeout);
+            });
+        }
+
+        self.submitReprove = function () {
+            app.consumeAPI('Payroll', 'reprove').done(function (data) {
+                clearTable();
+                self.isPendingToApprove(false);
             }).fail(function (error) {
                 app.showError(error);
                 return error;
@@ -44,8 +69,9 @@
         }
 
         self.submitApprove = function () {
-            app.consumeAPI('Payroll', 'calculate/setAsReady').done(function (data) {
-                self.rows([]);
+            app.consumeAPI('Payroll', 'aprove').done(function (data) {
+                clearTable();
+                self.isPendingToApprove(false);
             }).fail(function (error) {
                 app.showError(error);
                 return error;
@@ -53,6 +79,7 @@
         }
 
         self.submitRange = function (start, end, label) {
+            var savedRows = self.rows();
             self.rows([]);
             app.showLoading();
             var dateFormat = 'YYYY-MM-DD';
@@ -63,6 +90,7 @@
             }).fail(function (error) {
                 console.log('it failed!', error);
                 app.showError(error);
+                self.rows(savedRows);
             }).always(function (data) {
                 app.hideLoading();
             });
@@ -73,19 +101,26 @@
         function renderPayroll(data) {
             var mappedData = $.map(data.employees, function (item) { return new Row(item); });
             self.rows(mappedData);
+
+            var start = moment(data.initialDate);
+            var end = moment(data.endDate);
+            $datePicker.find('span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
 
         function getAlreadyCalculated() {
             return app.consumeAPI('Payroll', 'get/current').done(function (data) {
                 if (data) {
                     renderPayroll(data.payroll);
-                }
-                if (data.isPendingToApprove) {
-                    //poner aprovar y reprobar  botones (aqui el de cancelar no se debe mostrar)
-                } else {
-                    //poner enviar para aprobación y cancelar
+                    if (typeof data.isPendingToApprove === "boolean") {
+                        self.isPendingToApprove(data.isPendingToApprove);
+                    }
                 }
             });
+        }
+
+        function clearTable() {
+            self.rows([]);
+            $datePicker.find('span').html('');
         }
 
     }
