@@ -81,9 +81,9 @@
                     renderPayroll(data.payroll);
                 }
                 if (data.isPendingToApprove) {
-                    //poner aprovar
+                    //poner aprovar y reprobar  botones (aqui el de cancelar no se debe mostrar)
                 } else {
-                    //poner enviar apra aprobación
+                    //poner enviar para aprobación y cancelar
                 }
             });
         }
